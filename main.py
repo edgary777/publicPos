@@ -24,6 +24,13 @@ class MainWindow(QWidget):
         layout.addWidget(menu)
         self.setLayout(layout)
 
+    def paintEvent(self, event):
+        """Set window background color"""
+        self.setAutoFillBackground(True)
+        p = self.palette()
+        p.setColor(self.backgroundRole(), Qt.white)
+        self.setPalette(p)
+
 
 app = QApplication(sys.argv)
 window = MainWindow()
