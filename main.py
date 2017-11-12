@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-
+import Buttons
 
 class MainWindow(QWidget):
     """Main window widget."""
@@ -14,7 +14,17 @@ class MainWindow(QWidget):
 
     def initUi(self):
         """Ui Setup."""
-        pass
+        style = """
+            QLabel {
+                color: black;
+                font-weight: bold;
+                font-size: 17pt;
+            };
+        """
+        self.btn = Buttons.MenuBtn(150, 90, 10, Qt.red, "Choriqueso", style)
+        layout = QVBoxLayout()
+        layout.addWidget(self.btn)
+        self.setLayout(layout)
 
 
 app = QApplication(sys.argv)
