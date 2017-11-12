@@ -1,6 +1,7 @@
-import sys
+import sys, functools
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 import Buttons
 
 
@@ -25,7 +26,7 @@ class Menu(QWidget):
         width = 150
         height = 70
         roundness = 20
-        color = Qt.red
+        color = qRgb(240, 216, 60)
         style = """
             QLabel {
                 color: white;
@@ -41,7 +42,7 @@ class Menu(QWidget):
         y = 0
         for item in items:
             setattr(self, item, Buttons.MenuBtn(width, height, roundness,
-                                                  color, item, style))
+                                                color, item, style))
             if y == 4:
                 x += 1
                 y = 0
