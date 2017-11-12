@@ -8,8 +8,13 @@ class MenuBtn(QAbstractButton):
     Color is defined as Qt.'color'
     style is a stylesheet as 'QLabel { color : color;'
     """
-    def __init__(self, width, height, rounded, color, label, style ,parent=None):
-        """Init."""
+    def __init__(self, width, height, rounded, color, label, style ,
+                 product=None, parent=None):
+        """Init.
+        product is meant to be the product ID and it is to be emmited
+        as a signal when the button is clicked so the ticket knows
+        which item it is.
+        """
         super().__init__(parent)
 
         self.width = width
@@ -30,7 +35,7 @@ class MenuBtn(QAbstractButton):
         self.setFixedSize(self.width, self.height)
 
     def paintEvent(self, event):
-        color = self.color.lighter(150) if self.underMouse() else self.color
+        color = self.color.lighter(130) if self.underMouse() else self.color
         if self.isDown():
             color = self.color.darker(150)
         painter = QPainter(self)
