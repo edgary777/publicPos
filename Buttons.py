@@ -24,6 +24,10 @@ class MenuBtn(QAbstractButton):
         self.label = label
         self.text = style
 
+        labelText = label
+
+        self.clicked.connect(lambda: print(labelText))
+
         label = QLabel(self.label)
         label.setStyleSheet(style)
         label.setAlignment(Qt.AlignCenter)
@@ -33,6 +37,7 @@ class MenuBtn(QAbstractButton):
         self.setLayout(layout)
 
         self.setFixedSize(self.width, self.height)
+
 
     def paintEvent(self, event):
         color = self.color.lighter(130) if self.underMouse() else self.color
