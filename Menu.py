@@ -69,12 +69,12 @@ class Tabs(QWidget):
         width = 150
         height = 70
         roundness = 20
-        color = qRgb(240, 216, 60)
+        color = qRgb(154, 179, 174)
         style = """
             QLabel {
                 color: black;
                 font-weight: bold;
-                font-size: 17pt;
+                font-size: 30pt;
                 font-family: Asap;
             };
             """

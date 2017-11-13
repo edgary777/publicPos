@@ -22,12 +22,15 @@ class MenuBtn(QAbstractButton):
         """
         super().__init__(parent)
 
-        self.width = width
-        self.height = height
+        self.widths = width
+        self.heights = height
         self.rounded = rounded
         self.color = QColor(color)
         self.label = label
         self.text = style
+
+        # If this is activated the buttons will grow with the screen
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
         """The text passed as label is later transformed into a QLabel object
         so this is a copy to be able to use it afterwards"""
@@ -43,7 +46,7 @@ class MenuBtn(QAbstractButton):
         layout.addWidget(label)
         self.setLayout(layout)
 
-        self.setFixedSize(self.width, self.height)
+        # self.setFixedSize(self.width, self.height)
 
     def paintEvent(self, event):
         """Paint Event."""
@@ -60,11 +63,14 @@ class MenuBtn(QAbstractButton):
 
         # Create the path for the figure
         path = QPainterPath()
-        path.addRoundedRect(QRectF(0.0, 0.0, self.width, self.height),
+        path.addRoundedRect(QRectF(0.0, 0.0, self.width(), self.height()),
                             self.rounded, self.rounded)
 
         # Fill the paths with color
         painter.fillPath(path, color)
+
+    def minimumSizeHint(self):
+        return QSize(self.widths, self.heights)
 
 
 class StrokeBtn(QAbstractButton):
@@ -92,6 +98,9 @@ class StrokeBtn(QAbstractButton):
         self.color = QColor(color)
         self.label = label
         self.text = style
+
+        # If this is activated the buttons will grow with the screen
+        # self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
         """The text passed as label is later transformed into a QLabel object
         so this is a copy to be able to use it afterwards"""
