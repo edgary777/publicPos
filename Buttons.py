@@ -86,8 +86,8 @@ class StrokeBtn(QAbstractButton):
         """
         super().__init__(parent)
 
-        self.width = width
-        self.height = height
+        self.widths = width
+        self.heights = height
         self.rounded = rounded
         self.color = QColor(color)
         self.label = label
@@ -107,7 +107,7 @@ class StrokeBtn(QAbstractButton):
         layout.addWidget(label)
         self.setLayout(layout)
 
-        self.setFixedSize(self.width, self.height)
+        # self.setFixedSize(self.width, self.height)
 
     def paintEvent(self, event):
         """Paint Event."""
@@ -124,23 +124,26 @@ class StrokeBtn(QAbstractButton):
 
         # Create the path for the big figure
         path = QPainterPath()
-        path.addRoundedRect(QRectF(0.0, 0.0, self.width, self.height),
+        path.addRoundedRect(QRectF(0.0, 0.0, self.width(), self.height()),
                             self.rounded, self.rounded)
 
         # Calculate the percentage ratio to get a 10 px margin
-        ratioX = (1 - ((10 / self.width) * 2))
-        ratioY = (1 - ((10 / self.height) * 2))
+        ratioX = (1 - ((10 / self.width()) * 2))
+        ratioY = (1 - ((10 / self.height()) * 2))
 
         # calculate the distance the shape has to be moved to be centered
-        x = (self.width - (self.width * ratioX)) / 2
-        y = (self.height - (self.height * ratioY)) / 2
+        x = (self.width() - (self.width() * ratioX)) / 2
+        y = (self.height() - (self.height() * ratioY)) / 2
 
         # Create the path for the small figure
         path2 = QPainterPath()
-        path2.addRoundedRect(QRectF(x, y, self.width * ratioX,
-                             self.height * ratioY), self.rounded * ratioY,
+        path2.addRoundedRect(QRectF(x, y, self.width() * ratioX,
+                             self.height() * ratioY), self.rounded * ratioY,
                              self.rounded * ratioY)
 
         # Fill the paths with color
         painter.fillPath(path, color)
         painter.fillPath(path2, Qt.white)
+
+    def minimumSizeHint(self):
+        return QSize(self.widths, self.heights)
