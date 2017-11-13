@@ -84,13 +84,8 @@ class StrokeBtn(QAbstractButton):
     """
 
     def __init__(self, width, height, rounded, color, label, style,
-                 product=None, parent=None):
-        """Init.
-
-        product is meant to be the product ID and it is to be emmited
-        as a signal when the button is clicked so the ticket knows
-        which item it is.
-        """
+                 index=None, obj=None, parent=None):
+        """Init."""
         super().__init__(parent)
 
         self.widths = width
@@ -99,6 +94,8 @@ class StrokeBtn(QAbstractButton):
         self.color = QColor(color)
         self.label = label
         self.text = style
+        self.index = index
+        self.obj = obj
 
         # If this is activated the buttons will grow with the screen
         # self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -107,7 +104,7 @@ class StrokeBtn(QAbstractButton):
         so this is a copy to be able to use it afterwards"""
         labelText = label
 
-        self.clicked.connect(lambda: print(labelText))
+        self.clicked.connect(lambda: self.obj.setCurrentIndex(self.index))
 
         label = QLabel(self.label)
         label.setStyleSheet(style)

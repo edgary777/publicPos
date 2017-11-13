@@ -62,8 +62,8 @@ class Tabs(QWidget):
     def initUi(self):
         """Ui Setup."""
         # List setup
-        items = self.items
-        items = [item.strip() for item in items.split(',')]
+        # items = self.items
+        # items = [item.strip() for item in items.split(',')]
 
         # Buttons configuration
         width = 150
@@ -81,8 +81,8 @@ class Tabs(QWidget):
 
         # Buttons creator
         layout = QHBoxLayout()
-        for item in items:
-            setattr(self, item, Buttons.StrokeBtn(width, height, roundness,
-                    color, item, style))
-            layout.addWidget(getattr(self, item))
+        for key, value in self.items.items():
+            setattr(self, key, Buttons.StrokeBtn(width, height, roundness,
+                    color, key, style, index=value[0], obj=value[1]))
+            layout.addWidget(getattr(self, key))
         self.setLayout(layout)

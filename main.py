@@ -1,7 +1,8 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-import Menu, TextInput
+import Menu
+import TextInput
 
 
 class MainWindow(QWidget):
@@ -23,15 +24,15 @@ class MainWindow(QWidget):
                      Agua,Naranjada,Limonada,ValleFrut,N Durazno,
                      N Guayaba,N Manzana,N Mango,J Manzana"""
 
-        tabs = """Lonches,Bebidas,Extras"""
-
         menuLonches = Menu.Menu(lonches)
         menuBebidas = Menu.Menu(bebidas)
-        tabsWidget = Menu.Tabs(tabs)
 
         itemsLayout = QStackedLayout()
         itemsLayout.addWidget(menuLonches)
         itemsLayout.addWidget(menuBebidas)
+
+        tabs = {"Lonches": (0, itemsLayout), "Bebidas": (1, itemsLayout)}
+        tabsWidget = Menu.Tabs(tabs)
 
         tabsLayout = QHBoxLayout()
         tabsLayout.addWidget(tabsWidget)
@@ -45,7 +46,7 @@ class MainWindow(QWidget):
         self.setLayout(layout)
 
     def paintEvent(self, event):
-        """Set window background color"""
+        """Set window background color."""
         self.setAutoFillBackground(True)
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.white)
