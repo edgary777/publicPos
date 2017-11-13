@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-import Menu
+import Menu, TextInput
 
 
 class MainWindow(QWidget):
@@ -36,9 +36,12 @@ class MainWindow(QWidget):
         tabsLayout = QHBoxLayout()
         tabsLayout.addWidget(tabsWidget)
 
+        inputField = TextInput.TextInput()
+
         layout = QVBoxLayout()
         layout.addLayout(tabsLayout)
         layout.addLayout(itemsLayout)
+        layout.addWidget(inputField)
         self.setLayout(layout)
 
     def paintEvent(self, event):

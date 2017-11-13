@@ -70,6 +70,7 @@ class MenuBtn(QAbstractButton):
         painter.fillPath(path, color)
 
     def minimumSizeHint(self):
+        """Set the minimum size hint."""
         return QSize(self.widths, self.heights)
 
 
@@ -155,4 +156,5 @@ class StrokeBtn(QAbstractButton):
         painter.fillPath(path2, Qt.white)
 
     def minimumSizeHint(self):
+        """Set the minimum size hint."""
         return QSize(self.widths, self.heights)

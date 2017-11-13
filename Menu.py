@@ -83,6 +83,6 @@ class Tabs(QWidget):
         layout = QHBoxLayout()
         for item in items:
             setattr(self, item, Buttons.StrokeBtn(width, height, roundness,
-                                                color, item, style))
+                    color, item, style))
             layout.addWidget(getattr(self, item))
         self.setLayout(layout)
