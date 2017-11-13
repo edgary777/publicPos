@@ -23,11 +23,22 @@ class MainWindow(QWidget):
                      Agua,Naranjada,Limonada,ValleFrut,N Durazno,
                      N Guayaba,N Manzana,N Mango,J Manzana"""
 
+        tabs = """Lonches,Bebidas,Extras"""
+
         menuLonches = Menu.Menu(lonches)
         menuBebidas = Menu.Menu(bebidas)
-        layout = QStackedLayout()
-        layout.addWidget(menuLonches)
-        layout.addWidget(menuBebidas)
+        tabsWidget = Menu.Tabs(tabs)
+
+        itemsLayout = QStackedLayout()
+        itemsLayout.addWidget(menuLonches)
+        itemsLayout.addWidget(menuBebidas)
+
+        tabsLayout = QHBoxLayout()
+        tabsLayout.addWidget(tabsWidget)
+
+        layout = QVBoxLayout()
+        layout.addLayout(tabsLayout)
+        layout.addLayout(itemsLayout)
         self.setLayout(layout)
 
     def paintEvent(self, event):
