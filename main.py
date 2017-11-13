@@ -19,9 +19,15 @@ class MainWindow(QWidget):
                      Cubana,Pierna,Pibil,Adobada,Arrachera,Torréon,
                      Vegetariana"""
 
-        menu = Menu.Menu(lonches)
-        layout = QHBoxLayout()
-        layout.addWidget(menu)
+        bebidas = """Coca,Coca Light,Sprite,Fanta,Fanta Fresa,Fresca,Manzanita,
+                     Agua,Naranjada,Limonada,ValleFrut,N Durazno,
+                     N Guayaba,N Manzana,N Mango,J Manzana"""
+
+        menuLonches = Menu.Menu(lonches)
+        menuBebidas = Menu.Menu(bebidas)
+        layout = QStackedLayout()
+        layout.addWidget(menuLonches)
+        layout.addWidget(menuBebidas)
         self.setLayout(layout)
 
     def paintEvent(self, event):
