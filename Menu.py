@@ -1,4 +1,3 @@
-import sys, functools
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -17,31 +16,30 @@ class Menu(QWidget):
 
     def initUi(self):
         """Ui Setup."""
-
-        #List setup
+        # List setup
         items = self.items
         items = [item.strip() for item in items.split(',')]
 
-        #Buttons configuration
+        # Buttons configuration
         width = 150
         height = 70
         roundness = 20
         color = qRgb(240, 216, 60)
         style = """
             QLabel {
-                color: white;
+                color: black;
                 font-weight: bold;
                 font-size: 17pt;
                 font-family: Asap;
             };
             """
 
-        #Buttons creator
+        # Buttons creator
         layout = QGridLayout()
         x = 0
         y = 0
         for item in items:
-            setattr(self, item, Buttons.MenuBtn(width, height, roundness,
+            setattr(self, item, Buttons.StrokeBtn(width, height, roundness,
                                                 color, item, style))
             if y == 4:
                 x += 1
