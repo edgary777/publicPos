@@ -7,9 +7,9 @@ import Buttons
 class Menu(QWidget):
     """Food Menu widget."""
 
-    def __init__(self, items):
+    def __init__(self, items, parent=None):
         """Init."""
-        super().__init__()
+        super().__init__(parent)
 
         self.items = items
         self.initUi()
@@ -40,7 +40,8 @@ class Menu(QWidget):
         y = 0
         for item in items:
             setattr(self, item, Buttons.MenuBtn(width, height, roundness,
-                                                color, item, style))
+                                                color, item, style,
+                                                parent=self))
             if y == 4:
                 x += 1
                 y = 0
@@ -52,9 +53,9 @@ class Menu(QWidget):
 class Tabs(QWidget):
     """Food Menu widget."""
 
-    def __init__(self, items):
+    def __init__(self, items, parent=None):
         """Init."""
-        super().__init__()
+        super().__init__(parent)
 
         self.items = items
         self.initUi()
@@ -83,6 +84,7 @@ class Tabs(QWidget):
         layout = QHBoxLayout()
         for key, value in self.items.items():
             setattr(self, key, Buttons.StrokeBtn(width, height, roundness,
-                    color, key, style, index=value[0], obj=value[1]))
+                    color, key, style, index=value[0], obj=value[1],
+                    parent=self))
             layout.addWidget(getattr(self, key))
         self.setLayout(layout)

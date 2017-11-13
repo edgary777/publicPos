@@ -24,16 +24,15 @@ class MainWindow(QWidget):
                      Agua,Naranjada,Limonada,ValleFrut,N Durazno,
                      N Guayaba,N Manzana,N Mango,J Manzana"""
 
-        menuLonches = Menu.Menu(lonches)
-        menuBebidas = Menu.Menu(bebidas)
+        menuLonches = Menu.Menu(lonches, parent=self)
+        menuBebidas = Menu.Menu(bebidas, parent=self)
 
         itemsLayout = QStackedLayout()
         itemsLayout.addWidget(menuLonches)
         itemsLayout.addWidget(menuBebidas)
 
         tabs = {"Lonches": (0, itemsLayout), "Bebidas": (1, itemsLayout)}
-        tabsWidget = Menu.Tabs(tabs)
-
+        tabsWidget = Menu.Tabs(tabs, parent=self)
         tabsLayout = QHBoxLayout()
         tabsLayout.addWidget(tabsWidget)
 
