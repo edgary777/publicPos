@@ -105,9 +105,10 @@ class Order(QWidget):
 
         # Then if any left add them back.
         if self.items:
+            print(self.items, "LIST OF ITEMS")
             for item in self.items:
                 index = self.items.index(item)
-                itui = ItemUI(item, index)
+                itui = ItemUI(item, index, parent=self)
                 self.Vlayout.addWidget(itui)
         self.Vlayout.addStretch()
 
@@ -129,12 +130,13 @@ class ItemUI(QWidget):
         self.hLayout = QHBoxLayout()
         self.setLayout(self.hLayout)
 
+        print(self.item, "NEW INSTANCE")
         self.initUi()
 
     def initUi(self):
         """Ui is created here."""
         clo = QPushButton("X")
-        clo.clicked.connect(lambda: self.parent.removeItem(self))
+        clo.clicked.connect(lambda: self.parent.removeItem(self.item))
         self.hLayout.addWidget(clo)
 
         attr = ["Name", "Quant", "Price", "Total"]
