@@ -96,10 +96,12 @@ class Order(QWidget):
     def update(self):
         """Update the UI to show changes."""
         # First remove all items.
-        print(self.Vlayout.count())
         for i in reversed(range(self.Vlayout.count())):
-            self.Vlayout.takeAt(i).widget().setParent(None)
-            self.Vlayout.removeWidget
+            it = self.Vlayout.itemAt(i)
+            if isinstance(it, QSpacerItem):
+                self.Vlayout.removeItem(it)
+            else:
+                self.Vlayout.takeAt(i).widget().setParent(None)
 
         # Then if any left add them back.
         if self.items:
@@ -107,6 +109,7 @@ class Order(QWidget):
                 index = self.items.index(item)
                 itui = ItemUI(item, index)
                 self.Vlayout.addWidget(itui)
+        self.Vlayout.addStretch()
 
 
 class ItemUI(QWidget):
