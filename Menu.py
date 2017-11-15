@@ -7,10 +7,11 @@ import Buttons
 class Menu(QWidget):
     """Food Menu widget."""
 
-    def __init__(self, items, parent=None):
+    def __init__(self, items, parent=None, hold=None):
         """Init."""
         super().__init__(parent)
 
+        self.hold = hold
         self.items = items
         self.initUi()
 
@@ -41,7 +42,7 @@ class Menu(QWidget):
         for item in items:
             setattr(self, item, Buttons.MenuBtn(width, height, roundness,
                                                 color, item, style,
-                                                parent=self))
+                                                parent=self, holder=self.hold))
             if y == 4:
                 x += 1
                 y = 0

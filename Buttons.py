@@ -13,7 +13,7 @@ class MenuBtn(QAbstractButton):
     """
 
     def __init__(self, width, height, rounded, color, label, style,
-                 product=None, parent=None):
+                 product=None, parent=None, holder=None):
         """Init.
 
         product is meant to be the product ID and it is to be emmited
@@ -28,6 +28,7 @@ class MenuBtn(QAbstractButton):
         self.color = QColor(color)
         self.label = label
         self.text = style
+        self.holder = holder
 
         # If this is activated the buttons will grow with the screen
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -36,7 +37,11 @@ class MenuBtn(QAbstractButton):
         so this is a copy to be able to use it afterwards"""
         labelText = label
 
-        self.clicked.connect(lambda: print(labelText))
+        # self.clicked.connect(lambda: print(labelText))
+        order = self.holder.getOrder()
+        li = [labelText, 1, 50]
+        if self.holder:
+            self.clicked.connect(lambda: order.addItem(li))
 
         label = QLabel(self.label)
         label.setStyleSheet(style)

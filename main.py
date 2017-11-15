@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import Menu
 import TextInput
+import Holder
 
 
 class MainWindow(QWidget):
@@ -16,6 +17,10 @@ class MainWindow(QWidget):
 
     def initUi(self):
         """Ui Setup."""
+        holder = Holder.Holder(parent=self)
+        order = Holder.Order(parent=holder)
+        holder.addOrder(order)
+
         lonches = """Jamón,Carnes Frias,Choriqueso,Campirana,Pechuga,Bistec,
                      Cubana,Pierna,Pibil,Adobada,Arrachera,Torréon,
                      Vegetariana"""
@@ -24,8 +29,8 @@ class MainWindow(QWidget):
                      Agua,Naranjada,Limonada,ValleFrut,N Durazno,
                      N Guayaba,N Manzana,N Mango,J Manzana"""
 
-        menuLonches = Menu.Menu(lonches, parent=self)
-        menuBebidas = Menu.Menu(bebidas, parent=self)
+        menuLonches = Menu.Menu(lonches, parent=self, hold=holder)
+        menuBebidas = Menu.Menu(bebidas, parent=self, hold=holder)
 
         itemsLayout = QStackedLayout()
         itemsLayout.addWidget(menuLonches)
@@ -38,10 +43,19 @@ class MainWindow(QWidget):
 
         inputField = TextInput.TextInput()
 
-        layout = QVBoxLayout()
-        layout.addLayout(tabsLayout)
-        layout.addLayout(itemsLayout)
-        layout.addWidget(inputField)
+
+        layoutC1 = QVBoxLayout()
+        layoutC1.addWidget(holder)
+
+        layoutC2 = QVBoxLayout()
+        layoutC2.addLayout(tabsLayout)
+        layoutC2.addLayout(itemsLayout)
+        layoutC2.addWidget(inputField)
+
+        layout = QHBoxLayout()
+        layout.addLayout(layoutC1)
+        layout.addLayout(layoutC2)
+
         self.setLayout(layout)
 
     def paintEvent(self, event):
