@@ -61,9 +61,24 @@ class Order(QWidget):
 
     def addItem(self, item):
         """Add an item."""
-        item = Item(item)
-        self.items.append(item)
-        self.update()
+        itemIn = Item(item)
+        search = self.searchItem(item[0])
+        if search:
+            self.editItem(search, search.getQuant() + 1)
+        else:
+            self.items.append(itemIn)
+            self.update()
+
+    def searchItem(self, item):
+        """Give a name as a string and returns the item with that name."""
+        result = None
+        for x in self.items:
+            if x.getName() == item:
+                result = x
+        if result:
+            return result
+        else:
+            return None
 
     def removeItem(self, item):
         """Remove an item."""
@@ -89,7 +104,7 @@ class Order(QWidget):
 
     def editItem(self, item, edit):
         """Edit an item."""
-        # What is passing the item??????
+        print(item)
         item.editQuant(edit)
         self.update()
 
@@ -105,7 +120,6 @@ class Order(QWidget):
 
         # Then if any left add them back.
         if self.items:
-            print(self.items, "LIST OF ITEMS")
             for item in self.items:
                 index = self.items.index(item)
                 itui = ItemUI(item, index, parent=self)
@@ -130,14 +144,17 @@ class ItemUI(QWidget):
         self.hLayout = QHBoxLayout()
         self.setLayout(self.hLayout)
 
-        print(self.item, "NEW INSTANCE")
         self.initUi()
 
     def initUi(self):
         """Ui is created here."""
-        clo = QPushButton("X")
-        clo.clicked.connect(lambda: self.parent.removeItem(self.item))
-        self.hLayout.addWidget(clo)
+        close = QPushButton("X")
+        close.clicked.connect(lambda: self.parent.removeItem(self.item))
+        self.hLayout.addWidget(close)
+
+        edit = QPushButton("~")
+        edit.clicked.connect(self.hi)
+        self.hLayout.addWidget(edit)
 
         attr = ["Name", "Quant", "Price", "Total"]
         for x in attr:
@@ -145,6 +162,9 @@ class ItemUI(QWidget):
             setattr(self, x, QLabel(str(lt)))
             getattr(self, x).setAlignment(Qt.AlignCenter)
             self.hLayout.addWidget(getattr(self, x))
+
+    def hi(self):
+        self.parent.editItem(self.item, self.item.getQuant() + 1)
 
 
 class Item(QWidget):
