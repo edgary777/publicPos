@@ -56,8 +56,15 @@ class Order(QWidget):
 
     def initUi(self):
         """Ui is created here."""
-        self.Vlayout = QVBoxLayout()
-        self.setLayout(self.Vlayout)
+        self.orderLayout = QGridLayout()
+        self.layout = QVBoxLayout()
+        self.layout.addLayout(self.orderLayout)
+        self.layout.addStretch()
+        self.setLayout(self.layout)
+
+    def addTitle(self):
+        """Add titles to layout."""
+        pass
 
     def addItem(self, item):
         """Add an item."""
@@ -70,7 +77,7 @@ class Order(QWidget):
             self.update()
 
     def searchItem(self, item):
-        """Give a name as a string and returns the item with that name."""
+        """Pass a name as a string and returns the item with that name."""
         result = None
         for x in self.items:
             if x.getName() == item:
@@ -111,20 +118,22 @@ class Order(QWidget):
     def update(self):
         """Update the UI to show changes."""
         # First remove all items.
-        for i in reversed(range(self.Vlayout.count())):
-            it = self.Vlayout.itemAt(i)
-            if isinstance(it, QSpacerItem):
-                self.Vlayout.removeItem(it)
-            else:
-                self.Vlayout.takeAt(i).widget().setParent(None)
+        for i in reversed(range(self.orderLayout.count())):
+            it = self.orderLayout.itemAt(i)
+            try:
+                self.orderLayout.takeAt(i).widget().setParent(None)
+            except AttributeError:
+                for i in reversed(range(it.count())):
+                    it.takeAt(i).widget().setParent(None)
+                self.orderLayout.removeItem(it)
 
         # Then if any left add them back.
         if self.items:
             for item in self.items:
                 index = self.items.index(item)
                 itui = ItemUI(item, index, parent=self)
-                self.Vlayout.addWidget(itui)
-        self.Vlayout.addStretch()
+                self.orderLayout.addWidget(itui.getBtn(), index + 1, 0)
+                self.orderLayout.addLayout(itui.getItem(), index + 1, 1)
 
 
 class ItemUI(QWidget):
@@ -141,36 +150,30 @@ class ItemUI(QWidget):
         self.item = item
         self.index = index
         self.parent = parent
-        self.hLayout = QHBoxLayout()
-        self.setLayout(self.hLayout)
 
-        self.initUi()
+    def getItem(self):
+        """Return Item Ui."""
+        attr = ["Name", "Quant", "Price", "Total"]
+        layout = QHBoxLayout()
+        for x in attr:
+            setattr(self, x, QLabel(str(getattr(self.item, "get" + x)())))
+            getattr(self, x).setAlignment(Qt.AlignCenter)
+            layout.addWidget(getattr(self, x))
+        return layout
 
-    def initUi(self):
-        """Ui is created here."""
+    def getBtn(self):
+        """Return the button to delete the item."""
         close = QPushButton("X")
         close.clicked.connect(lambda: self.parent.removeItem(self.item))
-        self.hLayout.addWidget(close)
+        return close
 
-        edit = QPushButton("~")
-        edit.clicked.connect(self.hi)
-        self.hLayout.addWidget(edit)
-
-        attr = ["Name", "Quant", "Price", "Total"]
-        for x in attr:
-            lt = getattr(self.item, "get" + x)()
-            setattr(self, x, QLabel(str(lt)))
-            getattr(self, x).setAlignment(Qt.AlignCenter)
-            self.hLayout.addWidget(getattr(self, x))
-
-    def hi(self):
-        self.parent.editItem(self.item, self.item.getQuant() + 1)
 
 
 class Item(QWidget):
     """This is the data representation of each product chosen."""
 
     def __init__(self, data, parent=None):
+        """Init."""
         super().__init__(parent)
 
         self.name = data[0]
