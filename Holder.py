@@ -57,14 +57,27 @@ class Order(QWidget):
     def initUi(self):
         """Ui is created here."""
         self.orderLayout = QGridLayout()
+        self.orderLayout.setColumnStretch(0, 1)
+        self.orderLayout.setColumnStretch(1, 6)
+
+        self.titles = self.createTitles()
+        print(self.titles)
+        self.orderLayout.addLayout(self.titles, 0, 1)
+
         self.layout = QVBoxLayout()
         self.layout.addLayout(self.orderLayout)
         self.layout.addStretch()
         self.setLayout(self.layout)
 
-    def addTitle(self):
+    def createTitles(self):
         """Add titles to layout."""
-        pass
+        titles = ["ARTICULO", "CANTIDAD", "PRECIO", "TOTAL"]
+        layout = QHBoxLayout()
+        for title in titles:
+            setattr(self, title, QLabel(title))
+            getattr(self, title).setAlignment(Qt.AlignCenter)
+            layout.addWidget(getattr(self, title))
+        return layout
 
     def addItem(self, item):
         """Add an item."""
@@ -111,29 +124,38 @@ class Order(QWidget):
 
     def editItem(self, item, edit):
         """Edit an item."""
-        print(item)
         item.editQuant(edit)
         self.update()
 
-    def update(self):
-        """Update the UI to show changes."""
-        # First remove all items.
+    def removeEverything(self):
+        """Remove all items from the layout."""
         for i in reversed(range(self.orderLayout.count())):
-            it = self.orderLayout.itemAt(i)
-            try:
-                self.orderLayout.takeAt(i).widget().setParent(None)
-            except AttributeError:
-                for i in reversed(range(it.count())):
-                    it.takeAt(i).widget().setParent(None)
-                self.orderLayout.removeItem(it)
+            if i > 0:
+                it = self.orderLayout.itemAt(i)
+                try:
+                    self.orderLayout.takeAt(i).widget().setParent(None)
+                except AttributeError:
+                    for i in reversed(range(it.count())):
+                        it.takeAt(i).widget().setParent(None)
+                    self.orderLayout.removeItem(it)
 
-        # Then if any left add them back.
+    def addEverything(self):
+        """Add all items to the layout."""
         if self.items:
             for item in self.items:
                 index = self.items.index(item)
                 itui = ItemUI(item, index, parent=self)
-                self.orderLayout.addWidget(itui.getBtn(), index + 1, 0)
-                self.orderLayout.addLayout(itui.getItem(), index + 1, 1)
+                x = index + 1
+                self.orderLayout.addWidget(itui.getBtn(), x, 0)
+                self.orderLayout.addLayout(itui.getItem(), x, 1)
+
+    def update(self):
+        """Update the UI to show changes."""
+        # First remove all items.
+        self.removeEverything()
+
+        # Then if any left add them back.
+        self.addEverything()
 
 
 class ItemUI(QWidget):
