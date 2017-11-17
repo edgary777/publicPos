@@ -18,8 +18,6 @@ class MainWindow(QWidget):
     def initUi(self):
         """Ui Setup."""
         holder = Holder.Holder(parent=self)
-        order = Holder.Order(parent=holder)
-        holder.addOrder(order)
 
         lonches = """Jamón,Carnes Frias,Choriqueso,Campirana,Pechuga,Bistec,
                      Cubana,Pierna,Pibil,Adobada,Arrachera,Torréon,

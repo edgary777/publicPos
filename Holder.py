@@ -10,8 +10,8 @@ class Holder(QWidget):
         """Init."""
         super().__init__(parent)
 
-        self.order = None
         self.initUI()
+        self.addOrder(Order(parent=self))
 
     def initUI(self):
         """Ui is created here."""
