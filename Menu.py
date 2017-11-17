@@ -7,7 +7,7 @@ import Buttons
 class Menu(QWidget):
     """Food Menu widget."""
 
-    def __init__(self, items, parent=None, hold=None):
+    def __init__(self, items, parent, hold=None):
         """Init."""
         super().__init__(parent)
 

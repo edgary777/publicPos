@@ -13,7 +13,7 @@ class MenuBtn(QAbstractButton):
     """
 
     def __init__(self, width, height, rounded, color, label, style,
-                 product=None, parent=None, holder=None):
+                 parent, product=None, holder=None):
         """Init.
 
         product is meant to be the product ID and it is to be emmited
@@ -89,7 +89,7 @@ class StrokeBtn(QAbstractButton):
     """
 
     def __init__(self, width, height, rounded, color, label, style,
-                 index=None, obj=None, parent=None):
+                 parent, index=None, obj=None):
         """Init."""
         super().__init__(parent)
 

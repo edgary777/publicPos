@@ -9,9 +9,9 @@ class TextInput(QWidget):
     Meant to write customer specifications.
     """
 
-    def __init__(self):
+    def __init__(self, parent):
         """Init."""
-        super().__init__()
+        super().__init__(parent)
 
         field = QTextEdit()
 

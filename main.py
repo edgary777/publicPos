@@ -39,7 +39,7 @@ class MainWindow(QWidget):
         tabsLayout = QHBoxLayout()
         tabsLayout.addWidget(tabsWidget)
 
-        inputField = TextInput.TextInput()
+        inputField = TextInput.TextInput(parent=self)
 
 
         layoutC1 = QVBoxLayout()

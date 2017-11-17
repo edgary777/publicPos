@@ -6,7 +6,7 @@ from PyQt5.QtGui import *
 class Holder(QWidget):
     """This holds and shows and manipulates all orders."""
 
-    def __init__(self, parent=None):
+    def __init__(self, parent):
         """Init."""
         super().__init__(parent)
 
@@ -46,7 +46,7 @@ class Holder(QWidget):
 class Order(QWidget):
     """This holds and shows all the selected items for the order."""
 
-    def __init__(self, discount=None, parent=None):
+    def __init__(self, parent, discount=None):
         """Init."""
         super().__init__(parent)
 
@@ -81,7 +81,7 @@ class Order(QWidget):
 
     def addItem(self, item):
         """Add an item."""
-        itemIn = Item(item)
+        itemIn = Item(item, parent=self)
         search = self.searchItem(item[0])
         if search:
             self.editItem(search, search.getQuant() + 1)
@@ -161,7 +161,7 @@ class Order(QWidget):
 class ItemUI(QWidget):
     """This is the UI representation of each product chosen."""
 
-    def __init__(self, item, index, parent=None):
+    def __init__(self, item, index, parent):
         """Init."""
         super().__init__(parent)
         """Item UI and Data representations are separated because I don't.
@@ -194,7 +194,7 @@ class ItemUI(QWidget):
 class Item(QWidget):
     """This is the data representation of each product chosen."""
 
-    def __init__(self, data, parent=None):
+    def __init__(self, data, parent):
         """Init."""
         super().__init__(parent)
 
