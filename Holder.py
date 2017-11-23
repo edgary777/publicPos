@@ -1,8 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-
-
 class Holder(QWidget):
     """This holds and shows and manipulates all orders."""
 
@@ -57,11 +55,11 @@ class Order(QWidget):
     def initUi(self):
         """Ui is created here."""
         self.orderLayout = QGridLayout()
+        self.orderLayout.setSpacing(0)
         self.orderLayout.setColumnStretch(0, 1)
         self.orderLayout.setColumnStretch(1, 6)
 
         self.titles = self.createTitles()
-        print(self.titles)
         self.orderLayout.addLayout(self.titles, 0, 1)
 
         self.layout = QVBoxLayout()
@@ -77,6 +75,10 @@ class Order(QWidget):
             setattr(self, title, QLabel(title))
             getattr(self, title).setAlignment(Qt.AlignCenter)
             layout.addWidget(getattr(self, title))
+            index = titles.index(title)
+            if index < 3:
+                setattr(self, "i" + str(index), Vdivider(parent=self))
+                layout.addWidget(getattr(self, "i" + str(index)))
         return layout
 
     def addItem(self, item):
@@ -142,12 +144,16 @@ class Order(QWidget):
     def addEverything(self):
         """Add all items to the layout."""
         if self.items:
+            h1 = []
             for item in self.items:
                 index = self.items.index(item)
                 itui = ItemUI(item, index, parent=self)
                 x = index + 1
-                self.orderLayout.addWidget(itui.getBtn(), x, 0)
-                self.orderLayout.addLayout(itui.getItem(), x, 1)
+                h1.append(Hdivider(self))
+                self.orderLayout.addWidget(h1[index], x, 1)
+
+                self.orderLayout.addWidget(itui.getBtn(), x + 1, 0)
+                self.orderLayout.addLayout(itui.getItem(), x + 1, 1)
 
     def update(self):
         """Update the UI to show changes."""
@@ -181,6 +187,10 @@ class ItemUI(QWidget):
             setattr(self, x, QLabel(str(getattr(self.item, "get" + x)())))
             getattr(self, x).setAlignment(Qt.AlignCenter)
             layout.addWidget(getattr(self, x))
+            index = attr.index(x)
+            if index < 3:
+                setattr(self, "i" + str(index), Vdivider(parent=self))
+                layout.addWidget(getattr(self, "i" + str(index)))
         return layout
 
     def getBtn(self):
@@ -223,3 +233,35 @@ class Item(QWidget):
     def getTotal(self):
         """Return the total cost of the items."""
         return self.total
+
+
+class Vdivider(QWidget):
+    """Vertical divider."""
+
+    def __init__(self, parent):
+        """Init."""
+        super().__init__(parent)
+        self.setFixedWidth(2)
+
+    def paintEvent(self, event):
+        """Set window background color."""
+        self.setAutoFillBackground(True)
+        p = self.palette()
+        p.setColor(self.backgroundRole(), Qt.black)
+        self.setPalette(p)
+
+
+class Hdivider(QWidget):
+    """Vertical divider."""
+
+    def __init__(self, parent):
+        """Init."""
+        super().__init__(parent)
+        self.setFixedHeight(2)
+
+    def paintEvent(self, event):
+        """Set window background color."""
+        self.setAutoFillBackground(True)
+        p = self.palette()
+        p.setColor(self.backgroundRole(), Qt.black)
+        self.setPalette(p)
