@@ -148,12 +148,9 @@ class Order(QWidget):
             for item in self.items:
                 index = self.items.index(item)
                 itui = ItemUI(item, index, parent=self)
-                x = index + 1
-                h1.append(Hdivider(self))
-                self.orderLayout.addWidget(h1[index], x, 1)
 
-                self.orderLayout.addWidget(itui.getBtn(), x + 1, 0)
-                self.orderLayout.addLayout(itui.getItem(), x + 1, 1)
+                self.orderLayout.addWidget(itui.getBtn(), index + 1, 0)
+                self.orderLayout.addLayout(itui.getItem(), index + 1, 1)
 
     def update(self):
         """Update the UI to show changes."""
@@ -184,8 +181,9 @@ class ItemUI(QWidget):
         attr = ["Name", "Quant", "Price", "Total"]
         layout = QHBoxLayout()
         for x in attr:
-            setattr(self, x, QLabel(str(getattr(self.item, "get" + x)())))
-            getattr(self, x).setAlignment(Qt.AlignCenter)
+            label = QLabel(str(getattr(self.item, "get" + x)()))
+            label.setAlignment(Qt.AlignCenter)
+            setattr(self, x, WidgetItem(self, label))
             layout.addWidget(getattr(self, x))
             index = attr.index(x)
             if index < 3:
@@ -198,7 +196,6 @@ class ItemUI(QWidget):
         close = QPushButton("X")
         close.clicked.connect(lambda: self.parent.removeItem(self.item))
         return close
-
 
 
 class Item(QWidget):
@@ -233,6 +230,30 @@ class Item(QWidget):
     def getTotal(self):
         """Return the total cost of the items."""
         return self.total
+
+
+class WidgetItem(QWidget):
+    """Widget Item with a border on the top and bottom."""
+
+    def __init__(self, parent, item):
+        """Init."""
+        super().__init__(parent)
+
+        self.item = item
+
+        self.initUi()
+
+    def initUi(self):
+        """Ui creator."""
+        topBar = Hdivider(self)
+
+        layout = QVBoxLayout()
+        layout.setSpacing(0)
+
+        layout.addWidget(topBar)
+        layout.addWidget(self.item)
+
+        self.setLayout(layout)
 
 
 class Vdivider(QWidget):
