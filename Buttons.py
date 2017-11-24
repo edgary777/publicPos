@@ -185,8 +185,10 @@ class SessionBtn(QAbstractButton):
         self.label = label
         self.text = style
         self.index = index
-        print(self.index, "kjadslkfjlajsdlfkjasd")
         self.obj = obj
+
+        # If this is activated the buttons will grow with the screen
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
 
         self.clicked.connect(lambda: self.obj.switchSession(self.index))
 

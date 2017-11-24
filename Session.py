@@ -77,7 +77,8 @@ class MultiSession(QWidget):
         NewSessionBtn = Buttons.NewSessionBtn(width, height, roundness, color,
                                               style, parent=self, obj=self)
 
-        self.btnLayout.addWidget(NewSessionBtn)
+        if len(self.sessions) < 13:
+            self.btnLayout.addWidget(NewSessionBtn)
 
     def removeEverything(self):
         """Remove all Sessions from the layout."""
