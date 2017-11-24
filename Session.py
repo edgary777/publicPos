@@ -5,6 +5,35 @@ import TextInput
 import Holder
 
 
+class MultiSession(QWidget):
+    """Object meant to hold sessions.
+
+    This object handles the sessions creation, destruction and switching.
+    """
+
+    def __init__(self, parent):
+        """Init."""
+        super().__init__(parent)
+
+        self.initUi()
+
+    def initUi(self):
+        """Ui is created here."""
+        pass
+
+    def createSession(self, session):
+        """Create a new session."""
+        pass
+
+    def deleteSession(self, session):
+        """Delete a session."""
+        pass
+
+    def switchSession(self, session):
+        """Switch session."""
+        pass
+
+
 class Session(QWidget):
     """Object meant to hold orders.
 
@@ -46,7 +75,6 @@ class Session(QWidget):
         tabsLayout.addWidget(tabsWidget)
 
         inputField = TextInput.TextInput(parent=self)
-
 
         layoutC1 = QVBoxLayout()
         layoutC1.addWidget(holder)

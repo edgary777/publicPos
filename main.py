@@ -1,9 +1,6 @@
 import sys
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-import Menu
-import TextInput
-import Holder
+from PyQt5.QtWidgets import QWidget, QStackedLayout, QApplication
+from PyQt5.QtCore import Qt
 import Session
 
 
