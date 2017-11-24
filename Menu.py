@@ -23,7 +23,7 @@ class Menu(QWidget):
 
         # Buttons configuration
         width = 150
-        height = 70
+        height = 60
         roundness = 20
         color = qRgb(240, 216, 60)
         style = """

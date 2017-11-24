@@ -144,7 +144,6 @@ class Order(QWidget):
     def addEverything(self):
         """Add all items to the layout."""
         if self.items:
-            h1 = []
             for item in self.items:
                 index = self.items.index(item)
                 itui = ItemUI(item, index, parent=self)

@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QWidget, QStackedLayout, QApplication
+from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout
 from PyQt5.QtCore import Qt
 import Session
 
@@ -15,11 +15,9 @@ class MainWindow(QWidget):
 
     def initUi(self):
         """Ui Setup."""
-        layout = QStackedLayout()
-
-        session = Session.Session(self)
-
-        layout.addWidget(session)
+        start = Session.MultiSession(self)
+        layout = QVBoxLayout()
+        layout.addWidget(start)
 
         self.setLayout(layout)
 
