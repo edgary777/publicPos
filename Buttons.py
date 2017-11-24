@@ -202,6 +202,14 @@ class SessionBtn(QAbstractButton):
 
         # self.setFixedSize(self.width, self.height)
 
+    def mousePressEvent(self, QMouseEvent):
+        """Reimplement mouse events."""
+        if QMouseEvent.button() == Qt.LeftButton:
+            self.obj.switchSession(self.index)
+        elif QMouseEvent.button() == Qt.RightButton:
+            session = self.obj.sessions[self.index]
+            self.obj.deleteSession(session)
+
     def paintEvent(self, event):
         """Paint Event."""
         # If the mouse is over the button make the color lighter

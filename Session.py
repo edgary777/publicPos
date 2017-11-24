@@ -5,7 +5,8 @@ import Menu
 import TextInput
 import Holder
 import Buttons
-
+import random
+import math
 
 class MultiSession(QWidget):
     """Object meant to hold sessions.
@@ -44,7 +45,9 @@ class MultiSession(QWidget):
 
     def deleteSession(self, session):
         """Delete a session."""
-        pass
+        index = self.sessions.index(session)
+        self.sessions.remove(session)
+        self.UpdateUi()
 
     def switchSession(self, index):
         """Switch session."""
@@ -67,10 +70,11 @@ class MultiSession(QWidget):
             """
 
         for session in self.sessions:
-            indexN = self.sessions.index(session)
+            indxN = self.sessions.index(session)
+            sessionN = session.getID()
 
-            btn = Buttons.SessionBtn(width, height, roundness, color, indexN,
-                                     style, parent=self, obj=self, index=indexN)
+            btn = Buttons.SessionBtn(width, height, roundness, color, sessionN,
+                                     style, parent=self, obj=self, index=indxN)
 
             self.sessionsLayout.addWidget(session)
             self.btnLayout.addWidget(btn)
@@ -110,6 +114,7 @@ class Session(QWidget):
         """Init."""
         super().__init__(parent)
 
+        self.ID = None
         self.setID()
 
         self.initUi()
@@ -156,8 +161,8 @@ class Session(QWidget):
 
     def setID(self):
         """Set an id for the session."""
-        pass
+        self.ID = math.floor((random.random()) * 1000)
 
     def getID(self):
         """Return an id for the session."""
-        pass
+        return self.ID
