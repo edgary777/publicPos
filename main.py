@@ -4,6 +4,7 @@ from PyQt5.QtCore import *
 import Menu
 import TextInput
 import Holder
+import Session
 
 
 class MainWindow(QWidget):
@@ -17,42 +18,11 @@ class MainWindow(QWidget):
 
     def initUi(self):
         """Ui Setup."""
-        holder = Holder.Holder(parent=self)
+        layout = QStackedLayout()
 
-        lonches = """Jamón,Carnes Frias,Choriqueso,Campirana,Pechuga,Bistec,
-                     Cubana,Pierna,Pibil,Adobada,Arrachera,Torréon,
-                     Vegetariana"""
+        session = Session.Session(self)
 
-        bebidas = """Coca,Coca Light,Sprite,Fanta,Fanta Fresa,Fresca,Manzanita,
-                     Agua,Naranjada,Limonada,ValleFrut,N Durazno,
-                     N Guayaba,N Manzana,N Mango,J Manzana"""
-
-        menuLonches = Menu.Menu(lonches, parent=self, hold=holder)
-        menuBebidas = Menu.Menu(bebidas, parent=self, hold=holder)
-
-        itemsLayout = QStackedLayout()
-        itemsLayout.addWidget(menuLonches)
-        itemsLayout.addWidget(menuBebidas)
-
-        tabs = {"Lonches": (0, itemsLayout), "Bebidas": (1, itemsLayout)}
-        tabsWidget = Menu.Tabs(tabs, parent=self)
-        tabsLayout = QHBoxLayout()
-        tabsLayout.addWidget(tabsWidget)
-
-        inputField = TextInput.TextInput(parent=self)
-
-
-        layoutC1 = QVBoxLayout()
-        layoutC1.addWidget(holder)
-
-        layoutC2 = QVBoxLayout()
-        layoutC2.addLayout(tabsLayout)
-        layoutC2.addLayout(itemsLayout)
-        layoutC2.addWidget(inputField)
-
-        layout = QHBoxLayout()
-        layout.addLayout(layoutC1)
-        layout.addLayout(layoutC2)
+        layout.addWidget(session)
 
         self.setLayout(layout)
 
