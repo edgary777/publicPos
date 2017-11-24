@@ -194,8 +194,9 @@ class ItemUI(QWidget):
 
     def getBtn(self):
         """Return the button to delete the item."""
-        close = QPushButton("X")
-        close.clicked.connect(lambda: self.parent.removeItem(self.item))
+        btn = QPushButton("X")
+        btn.clicked.connect(lambda: self.parent.removeItem(self.item))
+        close = WidgetItem(self, btn)
         return close
 
 
@@ -256,10 +257,6 @@ class WidgetItem(QWidget):
         layout.addWidget(self.item)
 
         self.setLayout(layout)
-
-    # def sizePolicy(self):
-    #     """Set size policy."""
-    #     return QSizePolicy(QSizePolicy.Maximum , QSizePolicy.Maximum)
 
 
 class Vdivider(QWidget):
