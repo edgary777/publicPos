@@ -180,6 +180,7 @@ class ItemUI(QWidget):
         """Return Item Ui."""
         attr = ["Name", "Quant", "Price", "Total"]
         layout = QHBoxLayout()
+        layout.setSpacing(0)
         for x in attr:
             label = QLabel(str(getattr(self.item, "get" + x)()))
             label.setAlignment(Qt.AlignCenter)
@@ -249,11 +250,16 @@ class WidgetItem(QWidget):
 
         layout = QVBoxLayout()
         layout.setSpacing(0)
+        layout.setContentsMargins(0, 0, 0, 0)
 
         layout.addWidget(topBar)
         layout.addWidget(self.item)
 
         self.setLayout(layout)
+
+    # def sizePolicy(self):
+    #     """Set size policy."""
+    #     return QSizePolicy(QSizePolicy.Maximum , QSizePolicy.Maximum)
 
 
 class Vdivider(QWidget):
