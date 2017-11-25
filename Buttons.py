@@ -173,6 +173,8 @@ class SessionBtn(QAbstractButton):
     style is a stylesheet as 'QLabel { color : color;'
     """
 
+    ActiveId = None
+
     def __init__(self, width, height, rounded, color1, color2, label, style,
                  parent, index=None, obj=None):
         """Init."""
@@ -186,7 +188,7 @@ class SessionBtn(QAbstractButton):
         self.index = index
         self.obj = obj
 
-        if self.index == self.obj.activeSession:
+        if self.label == self.obj.activeSession:
             self.color = QColor(color2)
         else:
             self.color = QColor(color1)
@@ -210,7 +212,7 @@ class SessionBtn(QAbstractButton):
             self.obj.switchSession(self.index)
         elif QMouseEvent.button() == Qt.RightButton:
             session = self.obj.sessions[self.index]
-            self.obj.deleteSession(session)
+            self.obj.deleteSession(session, self.index)
 
     def paintEvent(self, event):
         """Paint Event."""

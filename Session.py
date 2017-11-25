@@ -45,15 +45,26 @@ class MultiSession(QWidget):
         self.activeSession = self.sessions.index(session)
         self.switchSession(self.activeSession)
 
-    def deleteSession(self, session):
+    def deleteSession(self, session, index):
         """Delete a session."""
-        index = self.sessions.index(session)
+        x = True
+        for i in self.sessions:
+            if i.getID() == self.activeSession:
+                x = False
+        if not x:
+            if index > 0:
+                self.activeSession = self.sessions[index - 1].getID()
+            else:
+                try:
+                    self.activeSession = self.sessions[index + 1].getID()
+                except IndexError:
+                    pass
         self.sessions.remove(session)
         self.UpdateUi()
 
     def switchSession(self, index):
         """Switch session."""
-        self.activeSession = index
+        self.activeSession = self.sessions[index].getID()
         self.UpdateUi()
         self.sessionsLayout.setCurrentIndex(index)
 
@@ -75,15 +86,16 @@ class MultiSession(QWidget):
             """
 
         for session in self.sessions:
-            indxN = self.sessions.index(session)
+            indexN = self.sessions.index(session)
             sessionN = session.getID()
 
             btn = Buttons.SessionBtn(width, height, roundness, color1, color2,
                                      sessionN, style, parent=self, obj=self,
-                                     index=indxN)
+                                     index=indexN)
 
             self.sessionsLayout.addWidget(session)
             self.btnLayout.addWidget(btn)
+
         NewSessionBtn = Buttons.NewSessionBtn(width, height, roundness, color1,
                                               style, parent=self, obj=self)
 
