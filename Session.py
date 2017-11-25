@@ -58,6 +58,10 @@ class MultiSession(QWidget):
                     pass
         self.sessions.remove(session)
         self.UpdateUi()
+        for session in self.sessions:
+            if self.activeSession == session.getID():
+                self.switchSession(self.sessions.index(session))
+                break
 
     def switchSession(self, index):
         """Switch session."""
