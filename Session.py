@@ -23,6 +23,8 @@ class MultiSession(QWidget):
         self.sessionsLayout = QStackedLayout()
         self.btnLayout = QHBoxLayout()
 
+        self.activeSession = 0
+
         self.createSession()
 
         self.initUi()
@@ -40,8 +42,8 @@ class MultiSession(QWidget):
         session = Session(self)
         self.sessions.append(session)
         self.UpdateUi()
-        index = self.sessions.index(session)
-        self.switchSession(index)
+        self.activeSession = self.sessions.index(session)
+        self.switchSession(self.activeSession)
 
     def deleteSession(self, session):
         """Delete a session."""
@@ -51,6 +53,8 @@ class MultiSession(QWidget):
 
     def switchSession(self, index):
         """Switch session."""
+        self.activeSession = index
+        self.UpdateUi()
         self.sessionsLayout.setCurrentIndex(index)
 
     def addEverything(self):
@@ -59,7 +63,8 @@ class MultiSession(QWidget):
         width = 90
         height = 90
         roundness = 10
-        color = qRgb(101,60,240)
+        color1 = qRgb(101,60,240)
+        color2 = qRgb(18,157,226)
         style = """
             QLabel {
                 color: black;
@@ -73,12 +78,13 @@ class MultiSession(QWidget):
             indxN = self.sessions.index(session)
             sessionN = session.getID()
 
-            btn = Buttons.SessionBtn(width, height, roundness, color, sessionN,
-                                     style, parent=self, obj=self, index=indxN)
+            btn = Buttons.SessionBtn(width, height, roundness, color1, color2,
+                                     sessionN, style, parent=self, obj=self,
+                                     index=indxN)
 
             self.sessionsLayout.addWidget(session)
             self.btnLayout.addWidget(btn)
-        NewSessionBtn = Buttons.NewSessionBtn(width, height, roundness, color,
+        NewSessionBtn = Buttons.NewSessionBtn(width, height, roundness, color1,
                                               style, parent=self, obj=self)
 
         if len(self.sessions) < 13:

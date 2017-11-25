@@ -173,7 +173,7 @@ class SessionBtn(QAbstractButton):
     style is a stylesheet as 'QLabel { color : color;'
     """
 
-    def __init__(self, width, height, rounded, color, label, style,
+    def __init__(self, width, height, rounded, color1, color2, label, style,
                  parent, index=None, obj=None):
         """Init."""
         super().__init__(parent)
@@ -181,16 +181,18 @@ class SessionBtn(QAbstractButton):
         self.widths = width
         self.heights = height
         self.rounded = rounded
-        self.color = QColor(color)
         self.label = label
         self.text = style
         self.index = index
         self.obj = obj
 
+        if self.index == self.obj.activeSession:
+            self.color = QColor(color2)
+        else:
+            self.color = QColor(color1)
+
         # If this is activated the buttons will grow with the screen
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
-
-        self.clicked.connect(lambda: self.obj.switchSession(self.index))
 
         label = QLabel(str(self.label))
         label.setStyleSheet(style)
