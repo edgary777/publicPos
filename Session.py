@@ -8,6 +8,7 @@ import Buttons
 import random
 import math
 
+
 class MultiSession(QWidget):
     """Object meant to hold sessions.
 
@@ -47,11 +48,7 @@ class MultiSession(QWidget):
 
     def deleteSession(self, session, index):
         """Delete a session."""
-        x = True
-        for i in self.sessions:
-            if i.getID() == self.activeSession:
-                x = False
-        if not x:
+        if session.getID() == self.activeSession:
             if index > 0:
                 self.activeSession = self.sessions[index - 1].getID()
             else:
@@ -74,8 +71,8 @@ class MultiSession(QWidget):
         width = 90
         height = 90
         roundness = 10
-        color1 = qRgb(101,60,240)
-        color2 = qRgb(18,157,226)
+        color1 = qRgb(101, 60, 240)
+        color2 = qRgb(18, 157, 226)
         style = """
             QLabel {
                 color: black;
