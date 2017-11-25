@@ -13,7 +13,7 @@ class MenuBtn(QAbstractButton):
     """
 
     def __init__(self, width, height, rounded, color, label, style,
-                 parent, product=None, holder=None):
+                 parent, holder, product=None):
         """Init.
 
         product is meant to be the product ID and it is to be emmited
@@ -35,13 +35,10 @@ class MenuBtn(QAbstractButton):
 
         """The text passed as label is later transformed into a QLabel object
         so this is a copy to be able to use it afterwards"""
-        labelText = label
+        self.labelText = label
 
         # self.clicked.connect(lambda: print(labelText))
-        order = self.holder.getOrder()
-        li = [labelText, 1, 50]
-        if self.holder:
-            self.clicked.connect(lambda: order.addItem(li))
+        self.clicked.connect(lambda: order.addItem(li))
 
         label = QLabel(self.label)
         label.setStyleSheet(style)
@@ -52,6 +49,15 @@ class MenuBtn(QAbstractButton):
         self.setLayout(layout)
 
         # self.setFixedSize(self.width, self.height)
+
+    def mousePressEvent(self, QMouseEvent):
+        """Reimplement mouse events."""
+        if QMouseEvent.button() == Qt.LeftButton:
+            li = [self.labelText, 1, 50]
+            order = self.holder.getOrder()
+            order.addItem(li)
+        elif QMouseEvent.button() == Qt.RightButton:
+            pass
 
     def paintEvent(self, event):
         """Paint Event."""

@@ -5,6 +5,7 @@ import Menu
 import TextInput
 import Holder
 import Buttons
+import OrderTotal
 import random
 import math
 
@@ -140,7 +141,9 @@ class Session(QWidget):
 
     def initUi(self):
         """Ui is created here."""
-        holder = Holder.Holder(parent=self)
+        self.holder = Holder.Holder(parent=self)
+
+        self.orderTotal = OrderTotal.OrderTotal(0, self)
 
         lonches = """Jamón,Carnes Frias,Choriqueso,Campirana,Pechuga,Bistec,
                      Cubana,Pierna,Pibil,Adobada,Arrachera,Torréon,
@@ -150,8 +153,8 @@ class Session(QWidget):
                      Agua,Naranjada,Limonada,ValleFrut,N Durazno,
                      N Guayaba,N Manzana,N Mango,J Manzana"""
 
-        menuLonches = Menu.Menu(lonches, parent=self, hold=holder)
-        menuBebidas = Menu.Menu(bebidas, parent=self, hold=holder)
+        menuLonches = Menu.Menu(lonches, parent=self, hold=self.holder)
+        menuBebidas = Menu.Menu(bebidas, parent=self, hold=self.holder)
 
         itemsLayout = QStackedLayout()
         itemsLayout.addWidget(menuLonches)
@@ -165,7 +168,8 @@ class Session(QWidget):
         inputField = TextInput.TextInput(parent=self)
 
         layoutC1 = QVBoxLayout()
-        layoutC1.addWidget(holder)
+        layoutC1.addWidget(self.orderTotal)
+        layoutC1.addWidget(self.holder)
 
         layoutC2 = QVBoxLayout()
         layoutC2.addLayout(tabsLayout)

@@ -8,6 +8,7 @@ class Holder(QWidget):
         """Init."""
         super().__init__(parent)
 
+        self.parent = parent
         self.initUI()
         self.addOrder(Order(parent=self))
 
@@ -40,6 +41,10 @@ class Holder(QWidget):
         """Add order to data base."""
         pass
 
+    def getParent(self):
+        """Return holder's parent."""
+        return self.parent
+
 
 class Order(QWidget):
     """This holds and shows all the selected items for the order."""
@@ -48,6 +53,7 @@ class Order(QWidget):
         """Init."""
         super().__init__(parent)
 
+        self.parent = parent
         self.items = []
 
         self.initUi()
@@ -158,6 +164,17 @@ class Order(QWidget):
 
         # Then if any left add them back.
         self.addEverything()
+
+        holderParent = self.parent.getParent()
+        print(self.getTotal())
+        holderParent.orderTotal.updateTotal(self.getTotal())
+
+    def getTotal(self):
+        """Update the UI to show changes."""
+        total = 0
+        for item in self.items:
+            total += item.getTotal()
+        return total
 
 
 class ItemUI(QWidget):
