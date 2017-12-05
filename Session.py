@@ -108,9 +108,11 @@ class MultiSession(QWidget):
         """Remove all Sessions from the layout."""
         for i in reversed(range(self.sessionsLayout.count())):
             self.sessionsLayout.takeAt(i).widget().setParent(None)
+            # self.sessionsLayout.takeAt(i).widget().deleteLater()
 
         for i in reversed(range(self.btnLayout.count())):
-            self.btnLayout.takeAt(i).widget().setParent(None)
+            # self.btnLayout.takeAt(i).widget().setParent(None)
+            self.btnLayout.takeAt(i).widget().deleteLater()
 
     def UpdateUi(self):
         """Update the Ui."""
