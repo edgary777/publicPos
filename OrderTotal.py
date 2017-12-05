@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+import math
 
 
 class OrderTotal(QWidget):
@@ -20,19 +21,36 @@ class OrderTotal(QWidget):
 
         self.color = QColor(Qt.black)
         self.rounded = 20
+        self.setMaximumHeight(70)
 
         self.initUi()
 
     def initUi(self):
         """Init."""
+        style = """
+            QLabel {
+                color: black;
+                font-weight: bold;
+                font-size: 25pt;
+                font-family: Asap;
+            };
+            """
+
         self.totalLabel = QLabel(str(self.total))
+        self.totalLabel.setAlignment(Qt.AlignRight)
+        self.totalLabel.setStyleSheet(style)
+
+        totalLayout = QVBoxLayout()
+        totalLayout.addStretch()
+        totalLayout.addWidget(self.totalLabel)
+        totalLayout.addStretch()
 
         extrasLayout = self.extraData()
 
         layout = QHBoxLayout()
         layout.addLayout(extrasLayout)
         layout.addStretch()
-        layout.addWidget(self.totalLabel)
+        layout.addLayout(totalLayout)
 
         self.setLayout(layout)
 
@@ -59,7 +77,7 @@ class OrderTotal(QWidget):
         if self.invoice:
             self.subtotal = self.total if self.total > 0 else 0
             self.vat = self.subtotal * 0.16 if self.subtotal > 0 else 0
-            self.total = self.total * 1.16
+            self.total = round(self.total * 1.16, 2)
         else:
             self.subtotal = 0
             self.vat = 0
@@ -71,15 +89,54 @@ class OrderTotal(QWidget):
 
     def extraData(self):
         """Extra data labels generator."""
-        extraData = ["subtotal", "vat", "dcto"]
-        layout = QVBoxLayout()
-        layout.setSpacing(0)
-        layout.setContentsMargins(0, 0, 0, 0)
+        extraData = {"subtotal": "SUBTOTAL", "vat": "IVA", "dcto": "DESCUENTO"}
+        layout = QGridLayout()
+        layout.setVerticalSpacing(0)
+        layout.setHorizontalSpacing(10)
+        layout.setContentsMargins(10, 1, 1, 1)
 
-        for item in extraData:
-            setattr(self, item + "Label", QLabel(str(getattr(self, item))))
-            layout.addWidget(getattr(self, item + "Label"))
-        return layout
+        styleLabel = """
+            QLabel {
+                color: black;
+                font-size: 10pt;
+                font-family: Asap;
+            };
+            """
+
+        styleNum = """
+            QLabel {
+                color: black;
+                font-weight: bold;
+                font-size: 12pt;
+                font-family: Asap;
+            };
+            """
+        x = 0
+        for key, value in extraData.items():
+            setattr(self, key + "Layout1", QVBoxLayout())
+            setattr(self, key + "Layout2", QVBoxLayout())
+
+            setattr(self, key + "Label", QLabel(str(getattr(self, key))))
+            getattr(self, key + "Label").setAlignment(Qt.AlignLeft)
+            getattr(self, key + "Label").setStyleSheet(styleNum)
+
+            setattr(self, key + "Caption", QLabel(value))
+            getattr(self, key + "Caption").setAlignment(Qt.AlignLeft)
+            getattr(self, key + "Caption").setStyleSheet(styleLabel)
+
+            # getattr(self, key + "Layout1").addWidget(getattr(self, key +
+            #                                         "Caption"))
+            # getattr(self, key + "Layout2").addWidget(getattr(self, key +
+            #                                         "Label"))
+
+            layout.addWidget(getattr(self, key + "Caption"), x, 0)
+            layout.addWidget(getattr(self, key + "Label"), x, 1)
+            x += 1
+        extraLayout = QVBoxLayout()
+        extraLayout.addStretch()
+        extraLayout.addLayout(layout)
+        extraLayout.addStretch()
+        return extraLayout
 
     def paintEvent(self, event):
         """Paint Event."""
