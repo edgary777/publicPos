@@ -12,6 +12,11 @@ class OrderTotal(QWidget):
 
         self.parent = parent
         self.total = total
+        self.subtotal = 0
+        self.vat = 0
+        self.dcto = 0
+
+        self.invoice = True  # Boolean option to activate invoice options
 
         self.color = QColor(Qt.black)
         self.rounded = 20
@@ -22,15 +27,19 @@ class OrderTotal(QWidget):
         """Init."""
         self.totalLabel = QLabel(str(self.total))
 
-        layout = QHBoxLayout()
+        extrasLayout = self.extraData()
 
+        layout = QHBoxLayout()
+        layout.addLayout(extrasLayout)
+        layout.addStretch()
         layout.addWidget(self.totalLabel)
 
         self.setLayout(layout)
 
-    def updateTotal(self, total):
+    def updateTotal(self, total, invoice=None):
         """Update the total shown."""
         self.total = total
+        self.invoice = True
         self.updateUi()
 
     def updateDcto(self, dcto):
@@ -47,8 +56,30 @@ class OrderTotal(QWidget):
 
     def updateUi(self):
         """Update the Ui."""
+        if self.invoice:
+            self.subtotal = self.total if self.total > 0 else 0
+            self.vat = self.subtotal * 0.16 if self.subtotal > 0 else 0
+            self.total = self.total * 1.16
+        else:
+            self.subtotal = 0
+            self.vat = 0
         self.totalLabel.setText(str(self.total))
+        self.subtotalLabel.setText(str(self.subtotal))
+        self.vatLabel.setText(str(self.vat))
+
         # self.update()
+
+    def extraData(self):
+        """Extra data labels generator."""
+        extraData = ["subtotal", "vat", "dcto"]
+        layout = QVBoxLayout()
+        layout.setSpacing(0)
+        layout.setContentsMargins(0, 0, 0, 0)
+
+        for item in extraData:
+            setattr(self, item + "Label", QLabel(str(getattr(self, item))))
+            layout.addWidget(getattr(self, item + "Label"))
+        return layout
 
     def paintEvent(self, event):
         """Paint Event."""
