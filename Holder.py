@@ -141,7 +141,10 @@ class Order(QWidget):
             if i > 0:
                 it = self.orderLayout.itemAt(i)
                 try:
-                    self.orderLayout.takeAt(i).widget().setParent(None)
+                    ob = self.orderLayout.takeAt(i).widget()
+                    ob.setParent(None)
+                    ob.deleteLater()
+                    # self.orderLayout.takeAt(i).widget().deleteLater()
                 except AttributeError:
                     for i in reversed(range(it.count())):
                         it.takeAt(i).widget().setParent(None)
