@@ -11,7 +11,10 @@ class Menu(QWidget):
         """Init."""
         super().__init__(parent)
 
-        self.hold = hold
+        self.hold = hold  # This is the holder object that contains this menu
+
+        # Items are passed as a list for now, but they should be passed as a
+        # dict in which the key is the name and the value is the price.
         self.items = items
         self.initUi()
 

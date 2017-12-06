@@ -25,6 +25,7 @@ class MultiSession(QWidget):
         self.sessionsLayout = QStackedLayout()
         self.btnLayout = QHBoxLayout()
 
+        # We always start with the session 0 from the array
         self.activeSession = 0
 
         self.createSession()
@@ -51,14 +52,24 @@ class MultiSession(QWidget):
         """Delete a session."""
         if session.getID() == self.activeSession:
             if index > 0:
+                # If the activeSession is not 0 then the previous one in the
+                # index is the one that is selected.
                 self.activeSession = self.sessions[index - 1].getID()
             else:
+                # I used try in here because I couldn't think of any other
+                # way to not crash the program when the activeSession is 0
+                # and there are no other sessions.
                 try:
                     self.activeSession = self.sessions[index + 1].getID()
                 except IndexError:
-                    pass
+                    pass  # nothing to be done here, just avoiding a crash
         self.sessions.remove(session)
         self.UpdateUi()
+
+        # If the active session is the same than the session being deleted,
+        # then the activeSession is switched to the one that has the index
+        # the one being deleted had, this is to make deleting sessions less
+        # confusing
         for session in self.sessions:
             if self.activeSession == session.getID():
                 self.switchSession(self.sessions.index(session))
@@ -87,20 +98,28 @@ class MultiSession(QWidget):
             };
             """
 
+        # We loop through all session objects in the self.sessions list and
+        # create some UI buttons for each of them
         for session in self.sessions:
-            indexN = self.sessions.index(session)
-            sessionN = session.getID()
+            indexN = self.sessions.index(session)  # Get the session index
+            sessionN = session.getID()  # Get the session ID (Folio)
 
+            # The button object is created
             btn = Buttons.SessionBtn(width, height, roundness, color1, color2,
                                      sessionN, style, parent=self, obj=self,
                                      index=indexN)
 
+            # the button object is added to the layout
             self.sessionsLayout.addWidget(session)
             self.btnLayout.addWidget(btn)
 
+        # This is the button that creates new sessions.
         NewSessionBtn = Buttons.NewSessionBtn(width, height, roundness, color1,
                                               style, parent=self, obj=self)
 
+        # The button that creates new sessions is only added when there are
+        # less than 13 sessions on the screen because otherwise they overflow
+        # the screen.
         if len(self.sessions) < 13:
             self.btnLayout.addWidget(NewSessionBtn)
 
@@ -112,6 +131,10 @@ class MultiSession(QWidget):
 
         for i in reversed(range(self.btnLayout.count())):
             # self.btnLayout.takeAt(i).widget().setParent(None)
+            # The comment above this comment was the original way to delete the
+            # buttons from the buttons layout, and while it worked fine in
+            # windows it crashed on linux, so it was changed and it now works
+            # on both.
             self.btnLayout.takeAt(i).widget().deleteLater()
 
     def UpdateUi(self):
@@ -120,6 +143,7 @@ class MultiSession(QWidget):
 
         self.addEverything()
 
+        # if all sessions are deleted then a new one is created
         if not self.sessions:
             self.createSession()
 

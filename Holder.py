@@ -89,12 +89,17 @@ class Order(QWidget):
 
     def addItem(self, item):
         """Add an item."""
-        itemIn = Item(item, parent=self)
+        # the passed variable itme is a list of 3 things, name, ammount and
+        # price, in that order
+        itemObj = Item(item, parent=self)
+
+        # We search the list of items already in the order, if the item is
+        # already in the order then it is added 1.
         search = self.searchItem(item[0])
         if search:
             self.editItem(search, search.getQuant() + 1)
         else:
-            self.items.append(itemIn)
+            self.items.append(itemObj)
             self.update()
 
     def searchItem(self, item):

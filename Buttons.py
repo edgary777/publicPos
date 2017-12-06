@@ -38,7 +38,7 @@ class MenuBtn(QAbstractButton):
         self.labelText = label
 
         # self.clicked.connect(lambda: print(labelText))
-        self.clicked.connect(lambda: order.addItem(li))
+        # self.clicked.connect(lambda: order.addItem(li))
 
         label = QLabel(self.label)
         label.setStyleSheet(style)
