@@ -1,21 +1,19 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-import math
 
 
 class OrderTotal(QWidget):
     """Object to show the total of the order in a session."""
 
-    def __init__(self, total, parent, dcto=None):
+    def __init__(self, total, parent):
         """Init."""
         super().__init__(parent)
 
-        self.parent = parent
         self.total = total
         self.subtotal = 0
-        self.vat = 0
-        self.dcto = 0
+        self.vat = 0  # Value Added Tax
+        self.dcto = 0  # discount
 
         self.invoice = False  # Boolean option to activate invoice options
 
@@ -116,11 +114,6 @@ class OrderTotal(QWidget):
             getattr(self, key + "Caption").setAlignment(Qt.AlignLeft)
             getattr(self, key + "Caption").setStyleSheet(styleLabel)
 
-            # getattr(self, key + "Layout1").addWidget(getattr(self, key +
-            #                                         "Caption"))
-            # getattr(self, key + "Layout2").addWidget(getattr(self, key +
-            #                                         "Label"))
-
             layout.addWidget(getattr(self, key + "Caption"), x, 0)
             layout.addWidget(getattr(self, key + "Label"), x, 1)
             x += 1
@@ -152,8 +145,8 @@ class OrderTotal(QWidget):
         # Create the path for the small figure
         path2 = QPainterPath()
         path2.addRoundedRect(QRectF(x, y, self.width() * ratioX,
-                             self.height() * ratioY), self.rounded * ratioY,
-                             self.rounded * ratioY)
+                             self.height() * ratioY), self.rounded - 5
+                             * ratioY, self.rounded - 5 * ratioY)
 
         # Fill the paths with color
         painter.fillPath(path, self.color)
