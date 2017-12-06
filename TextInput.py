@@ -31,7 +31,7 @@ class TextInput(QWidget):
 
     def minimumSizeHint(self):
         """Minimum size hint."""
-        return QSize(20, 20)
+        return QSize(150, 150)
 
 
 class TextInputSmall(QWidget):
@@ -63,4 +63,4 @@ class TextInputSmall(QWidget):
 
     def minimumSizeHint(self):
         """Minimum size hint."""
-        return QSize(20, 20)
+        return QSize(200, 70)
