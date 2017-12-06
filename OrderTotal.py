@@ -17,7 +17,7 @@ class OrderTotal(QWidget):
         self.vat = 0
         self.dcto = 0
 
-        self.invoice = True  # Boolean option to activate invoice options
+        self.invoice = False  # Boolean option to activate invoice options
 
         self.color = QColor(Qt.black)
         self.rounded = 20
@@ -54,23 +54,17 @@ class OrderTotal(QWidget):
 
         self.setLayout(layout)
 
-    def updateTotal(self, total, invoice=None):
+    def updateTotal(self, total, dcto=None):
         """Update the total shown."""
+        if dcto and dcto > 0:
+            total = total * dcto
         self.total = total
-        self.invoice = True
         self.updateUi()
 
-    def updateDcto(self, dcto):
-        """Update the discount."""
-        self.dcto = dcto
-
-    def showTax(self):
-        """Update view to show tax."""
-        pass
-
-    def hideTax(self):
-        """Update view to hide tax."""
-        pass
+    def toggleTax(self):
+        """Toggle whether tax is calculated or not."""
+        self.invoice = not self.invoice
+        self.updateUi()
 
     def updateUi(self):
         """Update the Ui."""
@@ -84,8 +78,6 @@ class OrderTotal(QWidget):
         self.totalLabel.setText(str(self.total))
         self.subtotalLabel.setText(str(self.subtotal))
         self.vatLabel.setText(str(self.vat))
-
-        # self.update()
 
     def extraData(self):
         """Extra data labels generator."""

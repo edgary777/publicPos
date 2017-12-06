@@ -169,7 +169,6 @@ class Order(QWidget):
         self.addEverything()
 
         holderParent = self.parent.getParent()
-        print(self.getTotal())
         holderParent.orderTotal.updateTotal(self.getTotal())
 
     def getTotal(self):
