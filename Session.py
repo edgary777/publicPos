@@ -192,9 +192,15 @@ class Session(QWidget):
         tabsLayout.addWidget(tabsWidget)
 
         inputField = TextInput.TextInput(parent=self)
+        nameField = TextInput.TextInputSmall(parent=self)
+        nameField.setFixedHeight(55)
+
+        orderTopLayout = QHBoxLayout()
+        orderTopLayout.addWidget(nameField)
+        orderTopLayout.addWidget(self.orderTotal)
 
         layoutC1 = QVBoxLayout()
-        layoutC1.addWidget(self.orderTotal)
+        layoutC1.addLayout(orderTopLayout)
         layoutC1.addWidget(self.holder)
 
         layoutC2 = QVBoxLayout()
