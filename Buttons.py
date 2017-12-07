@@ -329,3 +329,40 @@ class NewSessionBtn(QAbstractButton):
     def minimumSizeHint(self):
         """Set the minimum size hint."""
         return QSize(self.widths, self.heights)
+
+
+class PicButton(QAbstractButton):
+    """Creates an image button with static, hovered, and clicked states.
+
+    Functionality is mostly the same as QPushButton.
+    """
+
+    def __init__(self, pixmap, pixmap_hover, pixmap_pressed, parent):
+        """Init."""
+        super().__init__(parent)
+        self.pixmap = pixmap
+        self.pixmap_hover = pixmap_hover
+        self.pixmap_pressed = pixmap_pressed
+
+        self.pressed.connect(self.update)
+        self.released.connect(self.update)
+
+    def paintEvent(self, event):
+        """Paint Event."""
+        pix = self.pixmap_hover if self.underMouse() else self.pixmap
+        if self.isDown():
+            pix = self.pixmap_pressed
+        painter = QPainter(self)
+        painter.drawPixmap(event.rect(), pix)
+
+    def enterEvent(self, event):
+        """Enter event."""
+        self.update()
+
+    def leaveEvent(self, event):
+        """Leave event."""
+        self.update()
+
+    def sizeHint(self):
+        """Size hint."""
+        return self.pixmap.size()
