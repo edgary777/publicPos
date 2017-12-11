@@ -340,9 +340,9 @@ class PicButton(QAbstractButton):
     def __init__(self, pixmap, pixmap_hover, pixmap_pressed, parent):
         """Init."""
         super().__init__(parent)
-        self.pixmap = pixmap
-        self.pixmap_hover = pixmap_hover
-        self.pixmap_pressed = pixmap_pressed
+        self.pixmap = QPixmap(pixmap)
+        self.pixmap_hover = QPixmap(pixmap_hover)
+        self.pixmap_pressed = QPixmap(pixmap_pressed)
 
         self.pressed.connect(self.update)
         self.released.connect(self.update)

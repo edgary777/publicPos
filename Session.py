@@ -203,16 +203,35 @@ class Session(QWidget):
         layoutC1.addLayout(orderTopLayout)
         layoutC1.addWidget(self.holder)
 
+        layoutH1C1 = QHBoxLayout()
+        layoutH1C1.addLayout(self.imgBtns())
+        layoutH1C1.addLayout(layoutC1)
+
         layoutC2 = QVBoxLayout()
         layoutC2.addLayout(tabsLayout)
         layoutC2.addLayout(itemsLayout)
         layoutC2.addWidget(inputField)
 
         layout = QHBoxLayout()
-        layout.addLayout(layoutC1)
+        layout.addLayout(layoutH1C1)
         layout.addLayout(layoutC2)
 
         self.setLayout(layout)
+
+    def imgBtns(self):
+        """Image buttons generator and layout creator."""
+        names = ["separate", "print", "dcto", "iva", "close"]
+        layout = QVBoxLayout()
+        for name in names:
+            setattr(self, "picBtn" + name, Buttons.PicButton("resources/s-" + name,
+                    "resources/h-" + name, "resources/c-" + name, self))
+            layout.addWidget(getattr(self, "picBtn" + name))
+        layout.addStretch()
+        self.picBtngear = Buttons.PicButton("resources/s-gear", "resources/h-gear", "resources/c-gear",
+                                            self)
+        layout.addWidget(self.picBtngear)
+
+        return layout
 
     def setID(self):
         """Set an id for the session."""
