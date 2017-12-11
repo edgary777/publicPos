@@ -8,6 +8,7 @@ import Buttons
 import OrderTotal
 import random
 import math
+import Dialogs
 
 
 class MultiSession(QWidget):
@@ -241,13 +242,18 @@ class Session(QWidget):
 
         # self.picBtnprint.clicked.connect()
 
-        # self.picBtndcto.clicked.connect()
+        self.picBtndcto.clicked.connect(self.setDcto)
 
         self.picBtniva.clicked.connect(lambda: self.orderTotal.toggleTax())
 
         # self.picBtnclose.clicked.connect()
 
         return layout
+
+    def setDcto(self):
+        """Toggle and update discount."""
+        dialog = Dialogs.DctDialog(self.orderTotal.getTotal(), self)
+        dialog.show()
 
     def setID(self):
         """Set an id for the session."""

@@ -23,7 +23,7 @@ class DctDialog(QDialog):
 
     def initUi(self):
         """UI setup."""
-        self.newTotalLabel = QLabel(self.total)
+        self.newTotalLabel = QLabel(str(self.total))
         btnOk = QPushButton("Aceptar")
         btnCancel = QPushButton("Cancelar")
 
@@ -48,9 +48,18 @@ class DctDialog(QDialog):
                                                             "Input"))
             layout.addLayout(getattr(self, key + "Layout"))
 
+        self.percentageInput.textChanged.connect(lambda:
+                                                 self.setPercentageDcto(
+                                                 self.percentageInput.text()
+                                                 ))
+        self.amountInput.textChanged.connect(lambda:
+                                                 self.setAmountDcto(
+                                                 self.amountInput.text()
+                                                 ))
+
         layout.addStretch()
         layout.addWidget(self.newTotalLabel)
-        layout.addWidget(btnLayout)
+        layout.addLayout(btnLayout)
 
         self.setLayout(layout)
 
@@ -59,19 +68,29 @@ class DctDialog(QDialog):
 
     def setAmountDcto(self, dcto):
         """Set discount amount."""
-        if dcto and dcto > 0:
-            self.amount = dcto
-        else:
+        try:
+            dcto = float(dcto)
+            if dcto and dcto > 0:
+                self.amount = dcto
+            else:
+                self.amount = None
+            self.newTotalUpdate()
+        except ValueError:
             self.amount = None
-        self.newTotalUpdate()
+            self.newTotalUpdate()
 
     def setPercentageDcto(self, dcto):
         """Set discount percentage."""
-        if dcto and dcto > 0:
-            self.percentage = dcto
-        else:
+        try:
+            dcto = float(dcto)
+            if dcto and dcto > 0:
+                self.percentage = dcto
+            else:
+                self.percentage = None
+            self.newTotalUpdate()
+        except ValueError:
             self.percentage = None
-        self.newTotalUpdate()
+            self.newTotalUpdate()
 
     def setCodeDcto(self, code):
         """Search and apply a code discount.
@@ -83,12 +102,14 @@ class DctDialog(QDialog):
 
     def newTotalUpdate(self):
         """Update total with new discounts."""
+        self.newTotal = self.total
         if self.percentage or self.amount:
             if self.amount:
                 self.newTotal = self.newTotal - self.amount
 
             if self.percentage:
-                self.newTotal = self.newTotal * (self.percentage / 100)
+                self.newTotal = self.newTotal - (self.newTotal *
+                                                 (self.percentage / 100))
         else:
             self.newTotal = self.total
 

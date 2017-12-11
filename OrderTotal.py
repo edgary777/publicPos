@@ -64,15 +64,22 @@ class OrderTotal(QWidget):
         self.invoice = not self.invoice
         self.updateUi()
 
+    def updateDcto(self, dcto):
+        """Toggle whether tax is calculated or not."""
+        self.dcto = dcto
+        self.updateUi()
+
+    def getTotal(self):
+        """Return the order total before taxes."""
+        return self.total
+
     def updateUi(self):
         """Update the Ui."""
         if self.invoice:
             self.subtotal = self.total if self.total > 0 else 0
             self.vat = self.subtotal * 0.16 if self.subtotal > 0 else 0
-            self.subtotalLabel.setText(str(self.total
-                                       if self.total > 0 else 0))
-            self.vatLabel.setText(str(self.subtotal * 0.16
-                                  if self.subtotal > 0 else 0))
+            self.subtotalLabel.setText(str(self.subtotal))
+            self.vatLabel.setText(str(self.vat))
             self.totalLabel.setText("$" + str(round(self.total * 1.16, 2)))
         else:
             self.subtotal = 0
