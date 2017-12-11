@@ -11,8 +11,6 @@ class OrderTotal(QWidget):
         super().__init__(parent)
 
         self.total = total
-        self.subtotal = 0
-        self.vat = 0  # Value Added Tax
         self.dcto = 0  # discount
 
         self.invoice = False  # Boolean option to activate invoice options
@@ -67,15 +65,15 @@ class OrderTotal(QWidget):
     def updateUi(self):
         """Update the Ui."""
         if self.invoice:
-            self.subtotal = self.total if self.total > 0 else 0
-            self.vat = self.subtotal * 0.16 if self.subtotal > 0 else 0
-            self.total = round(self.total * 1.16, 2)
+            self.subtotalLabel.setText(str(self.total
+                                       if self.total > 0 else 0))
+            self.vatLabel.setText(str(self.subtotal * 0.16
+                                  if self.subtotal > 0 else 0))
+            self.totalLabel.setText("$" + str(round(self.total * 1.16, 2)))
         else:
-            self.subtotal = 0
-            self.vat = 0
-        self.totalLabel.setText(str(self.total))
-        self.subtotalLabel.setText(str(self.subtotal))
-        self.vatLabel.setText(str(self.vat))
+            self.totalLabel.setText("$" + str(self.total))
+            self.subtotalLabel.setText(str(self.subtotal))
+            self.vatLabel.setText(str(self.vat))
 
     def extraData(self):
         """Extra data labels generator."""

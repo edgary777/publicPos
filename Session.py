@@ -223,13 +223,29 @@ class Session(QWidget):
         names = ["separate", "print", "dcto", "iva", "close"]
         layout = QVBoxLayout()
         for name in names:
-            setattr(self, "picBtn" + name, Buttons.PicButton("resources/s-" + name,
-                    "resources/h-" + name, "resources/c-" + name, self))
+            setattr(self, "picBtn" + name,
+                    Buttons.PicButton("resources/s-" + name,
+                                      "resources/h-" + name,
+                                      "resources/c-" + name, self))
             layout.addWidget(getattr(self, "picBtn" + name))
         layout.addStretch()
-        self.picBtngear = Buttons.PicButton("resources/s-gear", "resources/h-gear", "resources/c-gear",
+        self.picBtngear = Buttons.PicButton("resources/s-gear",
+                                            "resources/h-gear",
+                                            "resources/c-gear",
                                             self)
         layout.addWidget(self.picBtngear)
+
+        # No idea how to do this action yet, it is meant to pop items from an
+        # order and create a new order with them.
+        # self.picBtnseparate.clicked.connect()
+
+        # self.picBtnprint.clicked.connect()
+
+        # self.picBtndcto.clicked.connect()
+
+        self.picBtniva.clicked.connect(lambda: self.orderTotal.toggleTax())
+
+        # self.picBtnclose.clicked.connect()
 
         return layout
 
