@@ -8,7 +8,8 @@ class DctDialog(QDialog):
 
     def __init__(self, total, parent, percentage=None, amount=None, code=None):
         """Init."""
-        super().__init__(parent)
+        super().__init__(parent, Qt.FramelessWindowHint |
+                         Qt.WindowSystemMenuHint)
 
         self.parent = parent
         self.total = total
@@ -25,7 +26,9 @@ class DctDialog(QDialog):
         """UI setup."""
         self.newTotalLabel = QLabel(str(self.total))
         btnOk = QPushButton("Aceptar")
+        btnOk.clicked.connect(self.returnDcto)
         btnCancel = QPushButton("Cancelar")
+        btnCancel.clicked.connect(self.reject)
 
         btnLayout = QHBoxLayout()
         btnLayout.addWidget(btnOk)
@@ -39,7 +42,7 @@ class DctDialog(QDialog):
         for key, value in items.items():
             setattr(self, key + "Layout", QHBoxLayout())
             setattr(self, key + "Input", QLineEdit())
-            getattr(self, key + "Input").setPlaceholderText(getattr(self, key))
+            getattr(self, key + "Input").setPlaceholderText(str(getattr(self, key)))
             setattr(self, key + "Label", QLabel(value))
             getattr(self, key + "Label").setAlignment(Qt.AlignRight)
             getattr(self, key + "Layout").addWidget(getattr(self, key +
@@ -118,7 +121,12 @@ class DctDialog(QDialog):
     def returnDcto(self):
         """Update the order with the discount."""
         if self.newTotal != self.total:
-            dcto = 1 - (self.newTotal / self.total)
+            dcto = [None, None, None, None]
+            dcto[0] = 1 - (self.newTotal / self.total)
+            dcto[1] = self.percentage
+            dcto[2] = self.amount
+            dcto[3] = self.code
         else:
-            dcto = None
+            dcto = [None, None, None, None]
         self.parent.orderTotal.updateDcto(dcto)
+        self.accept()
