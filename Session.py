@@ -252,12 +252,13 @@ class Session(QWidget):
 
     def setDcto(self):
         """Toggle and update discount."""
-        dcto = self.orderTotal.getDcto()
-        dialog = Dialogs.DctDialog(self.orderTotal.getTotal(), parent=self,
-                                   percentage=dcto[1], amount=dcto[2],
-                                   code=dcto[3])
-        if dialog.exec_():
-            pass
+        if self.orderTotal.getTotal() > 0:
+            dcto = self.orderTotal.getDcto()
+            dialog = Dialogs.DctDialog(self.orderTotal.getTotal(), parent=self,
+                                       percentage=dcto[1], amount=dcto[2],
+                                       code=dcto[3])
+            if dialog.exec_():
+                pass
 
     def setID(self):
         """Set an id for the session."""

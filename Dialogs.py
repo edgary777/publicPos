@@ -55,6 +55,12 @@ class DctDialog(QDialog):
                                                  self.setPercentageDcto(
                                                  self.percentageInput.text()
                                                  ))
+
+        validator = QIntValidator(0, 100, self)
+        validator2 = QIntValidator(0, int(self.total), self)
+        self.percentageInput.setValidator(validator)
+        self.amountInput.setValidator(validator2)
+
         self.amountInput.textChanged.connect(lambda:
                                                  self.setAmountDcto(
                                                  self.amountInput.text()
@@ -110,7 +116,7 @@ class DctDialog(QDialog):
             if self.amount:
                 self.newTotal = self.newTotal - self.amount
 
-            if self.percentage:
+            if self.percentage and self.percentage > 0:
                 self.newTotal = self.newTotal - (self.newTotal *
                                                  (self.percentage / 100))
         else:
@@ -127,6 +133,6 @@ class DctDialog(QDialog):
             dcto[2] = self.amount
             dcto[3] = self.code
         else:
-            dcto = [None, None, None, None]
+            dcto = [0, None, None, None]
         self.parent.orderTotal.updateDcto(dcto)
         self.accept()
