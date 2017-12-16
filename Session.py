@@ -246,7 +246,7 @@ class Session(QWidget):
 
         self.picBtniva.clicked.connect(lambda: self.orderTotal.toggleTax())
 
-        # self.picBtnclose.clicked.connect()
+        self.picBtnclose.clicked.connect(lambda: self.holder.getOrder().clean())
 
         return layout
 
