@@ -102,6 +102,20 @@ class Order(QWidget):
             self.items.append(itemObj)
             self.update()
 
+    def decreaseItem(self, item, amount):
+        """Add an item."""
+        # the passed variable itme is a list of 3 things, name, ammount and
+        # price, in that order
+
+        # We search the list of items already in the order, if the item is
+        # already in the order then it is added 1.
+        search = self.searchItem(item[0])
+        if search:
+            if search.getQuant() - amount > 0:
+                self.editItem(search, search.getQuant() - amount)
+            else:
+                self.removeItem(search)
+
     def searchItem(self, item):
         """Pass a name as a string and returns the item with that name."""
         result = None
@@ -182,6 +196,14 @@ class Order(QWidget):
         for item in self.items:
             total += item.getTotal()
         return total
+
+    def getItems(self):
+        """Update the UI to show changes."""
+        return self.items
+
+    def getParent(self):
+        """Return the order parent."""
+        return self.parent
 
 
 class ItemUI(QWidget):
