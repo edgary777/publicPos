@@ -42,7 +42,8 @@ class DctDialog(QDialog):
         for key, value in items.items():
             setattr(self, key + "Layout", QHBoxLayout())
             setattr(self, key + "Input", QLineEdit())
-            getattr(self, key + "Input").setPlaceholderText(str(getattr(self, key)))
+            if getattr(self, key):
+                getattr(self, key + "Input").setText(str(getattr(self, key)))
             setattr(self, key + "Label", QLabel(value))
             getattr(self, key + "Label").setAlignment(Qt.AlignRight)
             getattr(self, key + "Layout").addWidget(getattr(self, key +
@@ -121,6 +122,8 @@ class DctDialog(QDialog):
                                                  (self.percentage / 100))
         else:
             self.newTotal = self.total
+
+        self.newTotal = round(self.newTotal, 2)
 
         self.newTotalLabel.setText(str(self.newTotal))
 
