@@ -162,11 +162,12 @@ class PopOrderDialog(QDialog):
 
         area = QScrollArea()
         area.setWidgetResizable(True)
-
         area.setWidget(self.pop)
 
         btnOk = QPushButton("OK")
+        btnOk.clicked.connect(self.aceptar)
         btnCancel = QPushButton("Cancelar")
+        btnCancel.clicked.connect(self.reject)
 
         btnLayout = QHBoxLayout()
         btnLayout.addWidget(btnOk)
@@ -180,6 +181,43 @@ class PopOrderDialog(QDialog):
     def getParent(self):
         """Return parent."""
         return self.parent
+
+    def aceptar(self):
+        """Ok button signal."""
+        items = []  # List of items to be added to a new order
+        removeItems = []
+        editItems = []
+        for x in range(len(self.pop.items)):
+            quant = getattr(self.pop, "quant" + str(x)).value()
+            if quant > 0:  # if the user selected 1 or more items to be popped
+                # We get the order that holds them
+                order = self.parent.holder.getOrder()
+                # We get the item from our pop widget list.
+                item = self.pop.items[x]
+                if (item.getQuant() - quant) == 0:
+                    # When an item is popped and it results in there being 0
+                    # of it in the original order, we first get a copy of its
+                    # attributes and append it to the list of items to be Added
+                    # to the new order, and then we delete it.
+                    items.append([item.getName(), quant, item.getPrice()])
+                    removeItems.append(item)
+                else:
+                    # If the item being popped does not result in it being 0
+                    # in the original order, then we must modify the original
+                    # order item and create a new object with the user selection
+                    # in the new order
+                    items.append([item.getName(), quant, item.getPrice()])
+                    editItems.append([item, item.getQuant() - quant])
+        if items:
+            session = self.parent.getParent().createSession()
+            order = session.holder.getOrder()
+            order.multiAdd(items)
+        order = self.parent.holder.getOrder()
+        if removeItems:
+            order.multiRemove(removeItems)
+        if editItems:
+            order.multiEdit(editItems)
+        self.accept()
 
 
 class PopOrderWidget(QWidget):

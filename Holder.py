@@ -104,6 +104,13 @@ class Order(QWidget):
             self.items.append(itemObj)
             self.update()
 
+    def multiAdd(self, items):
+        """Add many items at once."""
+        for item in items:
+            itemObj = Item(item, parent=self)
+            self.items.append(itemObj)
+        self.update()
+
     def decreaseItem(self, item, amount):
         """Decrease item by amount."""
         # the passed variable item is a list of 3 things, name, ammount and
@@ -138,6 +145,15 @@ class Order(QWidget):
         except ValueError:
             print("There was an error removing the item.")
 
+    def multiRemove(self, items):
+        """Remove multiple items at once."""
+        try:
+            for item in items:
+                self.items.remove(item)
+            self.update()
+        except ValueError:
+            print("There was an error removing the item.")
+
     def clean(self):
         """Remove all items."""
         self.items = []
@@ -155,6 +171,12 @@ class Order(QWidget):
     def editItem(self, item, edit):
         """Edit an item."""
         item.editQuant(edit)
+        self.update()
+
+    def multiEdit(self, edits):
+        """Edit many items at once."""
+        for item, edit in edits:
+            item.editQuant(edit)
         self.update()
 
     def removeEverything(self):
