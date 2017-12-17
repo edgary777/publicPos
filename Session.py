@@ -48,6 +48,7 @@ class MultiSession(QWidget):
         self.UpdateUi()
         self.activeSession = self.sessions.index(session)
         self.switchSession(self.activeSession)
+        return session
 
     def deleteSession(self, session, index):
         """Delete a session."""
@@ -161,6 +162,8 @@ class Session(QWidget):
         """Init."""
         super().__init__(parent)
 
+        self.parent = parent
+
         self.ID = None
         self.setID()
 
@@ -238,7 +241,7 @@ class Session(QWidget):
 
         # No idea how to do this action yet, it is meant to pop items from an
         # order and create a new order with them.
-        # self.picBtnseparate.clicked.connect()
+        self.picBtnseparate.clicked.connect(self.separateItems)
 
         # self.picBtnprint.clicked.connect()
 
@@ -246,9 +249,18 @@ class Session(QWidget):
 
         self.picBtniva.clicked.connect(lambda: self.orderTotal.toggleTax())
 
-        self.picBtnclose.clicked.connect(lambda: self.holder.getOrder().clean())
+        self.picBtnclose.clicked.connect(lambda:
+                                         self.holder.getOrder().clean())
 
         return layout
+
+    def separateItems(self):
+        """Toggle and update discount."""
+        if self.orderTotal.getTotal() > 0:
+            dialog = Dialogs.PopOrderDialog(self)
+
+            if dialog.exec_():
+                pass
 
     def setDcto(self):
         """Toggle and update discount."""
@@ -267,3 +279,7 @@ class Session(QWidget):
     def getID(self):
         """Return an id for the session."""
         return self.ID
+
+    def getParent(self):
+        """Return the order parent."""
+        return self.parent

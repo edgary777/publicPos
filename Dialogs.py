@@ -63,9 +63,8 @@ class DctDialog(QDialog):
         self.amountInput.setValidator(validator2)
 
         self.amountInput.textChanged.connect(lambda:
-                                                 self.setAmountDcto(
-                                                 self.amountInput.text()
-                                                 ))
+                                             self.setAmountDcto(
+                                             self.amountInput.text()))
 
         layout.addStretch()
         layout.addWidget(self.newTotalLabel)
@@ -139,3 +138,79 @@ class DctDialog(QDialog):
             dcto = [0, None, None, None]
         self.parent.orderTotal.updateDcto(dcto)
         self.accept()
+
+
+class PopOrderDialog(QDialog):
+    """Dialog to hold PopOrderWidget."""
+
+    def __init__(self, parent):
+        """Init."""
+        super().__init__(parent, Qt.FramelessWindowHint |
+                         Qt.WindowSystemMenuHint)
+
+        self.parent = parent
+
+        self.setFixedSize(300, 300)
+
+        self.initUi()
+
+    def initUi(self):
+        """Ui is created here."""
+        self.pop = PopOrderWidget(self)
+
+        layout = QVBoxLayout()
+
+        area = QScrollArea()
+        area.setWidgetResizable(True)
+
+        area.setWidget(self.pop)
+
+        btnOk = QPushButton("OK")
+        btnCancel = QPushButton("Cancelar")
+
+        btnLayout = QHBoxLayout()
+        btnLayout.addWidget(btnOk)
+        btnLayout.addWidget(btnCancel)
+
+        layout.addWidget(area)
+        layout.addLayout(btnLayout)
+
+        self.setLayout(layout)
+
+    def getParent(self):
+        """Return parent."""
+        return self.parent
+
+
+class PopOrderWidget(QWidget):
+    """Widget to select items to pop from one order to another one."""
+
+    def __init__(self, parent):
+        """Init."""
+        super().__init__(parent)
+
+        self.parent = parent
+        self.order = self.parent.getParent().holder.getOrder()
+        self.items = self.order.getItems()
+
+        self.initUi()
+
+    def initUi(self):
+        """UI setup."""
+        layout = QVBoxLayout()
+        x = 0
+        for item in self.items:
+            name = item.getName()
+            x1 = str(x)
+            setattr(self, "layout" + x1, QHBoxLayout())
+            setattr(self, "quant" + x1, QSpinBox())
+            getattr(self, "quant" + x1).setRange(0, item.getQuant())
+            setattr(self, "label" + x1, QLabel(name))
+            getattr(self, "layout" + x1).addWidget(getattr(self, "quant" + x1))
+            getattr(self, "layout" + x1).addWidget(getattr(self, "label" + x1))
+            layout.addLayout(getattr(self, "layout" + x1))
+            x += 1
+
+        layout.addStretch()
+
+        self.setLayout(layout)

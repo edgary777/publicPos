@@ -1,6 +1,8 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+
+
 class Holder(QWidget):
     """This holds and shows and manipulates all orders."""
 
@@ -89,7 +91,7 @@ class Order(QWidget):
 
     def addItem(self, item):
         """Add an item."""
-        # the passed variable itme is a list of 3 things, name, ammount and
+        # the passed variable item is a list of 3 things, name, ammount and
         # price, in that order
         itemObj = Item(item, parent=self)
 
@@ -103,12 +105,13 @@ class Order(QWidget):
             self.update()
 
     def decreaseItem(self, item, amount):
-        """Add an item."""
-        # the passed variable itme is a list of 3 things, name, ammount and
+        """Decrease item by amount."""
+        # the passed variable item is a list of 3 things, name, ammount and
         # price, in that order
 
         # We search the list of items already in the order, if the item is
-        # already in the order then it is added 1.
+        # already in the order then it is decreased by 'amount', if the
+        # operation results is 0 or less than 0 then the item is removed.
         search = self.searchItem(item[0])
         if search:
             if search.getQuant() - amount > 0:
