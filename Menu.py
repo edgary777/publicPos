@@ -31,7 +31,7 @@ class Menu(QWidget):
         color = qRgb(240, 216, 60)
         style = """
             QLabel {
-                color: white;
+                color: black;
                 font-weight: bold;
                 font-size: 17pt;
                 font-family: Asap;

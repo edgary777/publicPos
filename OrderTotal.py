@@ -84,14 +84,14 @@ class OrderTotal(QWidget):
                 self.subtotal = (self.total * (1 - self.dcto[0])) if self.total > 0 else 0
                 self.vat = self.subtotal * 0.16 if self.subtotal > 0 else 0
                 self.subtotalLabel.setText(str(self.subtotal))
-                self.dctoLabel.setText(str(self.total * self.dcto[0]))
+                self.dctoLabel.setText(str(round(self.total * self.dcto[0], 2)))
                 self.vatLabel.setText(str(self.vat))
                 self.totalLabel.setText("$" + str(round((self.total * (1 - self.dcto[0])) * 1.16, 2)))
             else:
                 self.subtotal = 0
                 self.vat = 0
                 self.totalLabel.setText("$" + str(self.total * (1 - self.dcto[0])))
-                self.dctoLabel.setText(str(self.total * self.dcto[0]))
+                self.dctoLabel.setText(str(round(self.total * self.dcto[0], 2)))
                 self.subtotalLabel.setText(str(self.subtotal))
                 self.vatLabel.setText(str(self.vat))
         else:

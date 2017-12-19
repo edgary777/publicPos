@@ -22,9 +22,27 @@ class DctDialog(QDialog):
 
         self.newTotalUpdate()
 
+        self.setFixedSize(320, 250)
+
     def initUi(self):
         """UI setup."""
-        self.newTotalLabel = QLabel(str(self.total))
+        styleInputs = """QLineEdit {
+                     border-radius: 20%;
+                     padding-left: 10px;
+                     font-family: Asap;
+                     font-weight: bold;
+                     font-size: 25pt;
+                     }"""
+
+        styleLabels = """QLabel {
+                     font-family: Asap;
+                     font-weight: bold;
+                     font-size: 25pt;
+                     }"""
+
+        self.newTotalLabel = QLabel("$" + str(self.total))
+        self.newTotalLabel.setAlignment(Qt.AlignCenter)
+        self.newTotalLabel.setStyleSheet(styleLabels)
         btnOk = QPushButton("Aceptar")
         btnOk.clicked.connect(self.returnDcto)
         btnCancel = QPushButton("Cancelar")
@@ -38,20 +56,22 @@ class DctDialog(QDialog):
         layout.addStretch()
 
         items = {"percentage": "%:", "amount": "Cantidad:", "code": "Cupón:"}
-
+        x = 0
+        inputsLayout = QGridLayout()
         for key, value in items.items():
-            setattr(self, key + "Layout", QHBoxLayout())
             setattr(self, key + "Input", QLineEdit())
+            # getattr(self, key + "Input").setFixedWidth(150)
+            getattr(self, key + "Input").setStyleSheet(styleInputs)
             if getattr(self, key):
                 getattr(self, key + "Input").setText(str(getattr(self, key)))
             setattr(self, key + "Label", QLabel(value))
+            getattr(self, key + "Label").setStyleSheet(styleLabels)
             getattr(self, key + "Label").setAlignment(Qt.AlignRight)
-            getattr(self, key + "Layout").addWidget(getattr(self, key +
-                                                            "Label"))
-            getattr(self, key + "Layout").addWidget(getattr(self, key +
-                                                            "Input"))
-            layout.addLayout(getattr(self, key + "Layout"))
+            inputsLayout.addWidget(getattr(self, key + "Label"), x, 0)
+            inputsLayout.addWidget(getattr(self, key + "Input"), x, 1)
+            x += 1
 
+        layout.addLayout(inputsLayout)
         self.percentageInput.textChanged.connect(lambda:
                                                  self.setPercentageDcto(
                                                  self.percentageInput.text()
@@ -72,13 +92,10 @@ class DctDialog(QDialog):
 
         self.setLayout(layout)
 
-        # self.setFixedWidth(300)
-        # self.setFixedHeight(300)
-
     def setAmountDcto(self, dcto):
         """Set discount amount."""
         try:
-            dcto = float(dcto)
+            dcto = int(dcto)
             if dcto and dcto > 0:
                 self.amount = dcto
             else:
@@ -91,7 +108,7 @@ class DctDialog(QDialog):
     def setPercentageDcto(self, dcto):
         """Set discount percentage."""
         try:
-            dcto = float(dcto)
+            dcto = int(dcto)
             if dcto and dcto > 0:
                 self.percentage = dcto
             else:
@@ -124,7 +141,7 @@ class DctDialog(QDialog):
 
         self.newTotal = round(self.newTotal, 2)
 
-        self.newTotalLabel.setText(str(self.newTotal))
+        self.newTotalLabel.setText("$" + str(self.newTotal))
 
     def returnDcto(self):
         """Update the order with the discount."""
@@ -150,7 +167,8 @@ class PopOrderDialog(QDialog):
 
         self.parent = parent
 
-        self.setFixedSize(300, 300)
+        self.setMaximumHeight(800)
+        self.setFixedWidth(350)
 
         self.initUi()
 
@@ -235,6 +253,17 @@ class PopOrderWidget(QWidget):
 
     def initUi(self):
         """UI setup."""
+        style = """QLabel {
+                     font-family: Asap;
+                     font-weight: bold;
+                     font-size: 25pt;
+                     }
+                     QSpinBox {
+                     font-family: Asap;
+                     font-weight: bold;
+                     font-size: 25pt;
+                     }"""
+
         layout = QVBoxLayout()
         x = 0
         for item in self.items:
@@ -242,10 +271,15 @@ class PopOrderWidget(QWidget):
             x1 = str(x)
             setattr(self, "layout" + x1, QHBoxLayout())
             setattr(self, "quant" + x1, QSpinBox())
+            getattr(self, "quant" + x1).setFixedWidth(80)
+            getattr(self, "quant" + x1).setStyleSheet(style)
             getattr(self, "quant" + x1).setRange(0, item.getQuant())
             setattr(self, "label" + x1, QLabel(name))
+            getattr(self, "label" + x1).setStyleSheet(style)
             getattr(self, "layout" + x1).addWidget(getattr(self, "quant" + x1))
             getattr(self, "layout" + x1).addWidget(getattr(self, "label" + x1))
+            getattr(self, "layout" + x1).setStretchFactor(getattr(self, "quant" + x1), 1)
+            getattr(self, "layout" + x1).setStretchFactor(getattr(self, "label" + x1), 5)
             layout.addLayout(getattr(self, "layout" + x1))
             x += 1
 
