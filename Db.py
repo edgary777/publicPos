@@ -57,12 +57,13 @@ class Db(object):
 
     def getProducts(self, cat):
         """Return products list with metadata from the category passed."""
-        cat = self.getCategories()
         connection = sqlite3.connect(self.database)
 
         cursor = connection.cursor()
 
-        query = "SELECT * FROM categorias WHERE categoria = {}".format(cat)
+        cat = "'" + cat + "'"  # formatting category for sql query
+
+        query = "SELECT * FROM productos WHERE categoria = {}".format(cat)
         cursor.execute(query)
         products = cursor.fetchall()
 
@@ -87,7 +88,7 @@ class Db(object):
         return category
 
     def initializer(self):
-        """Si las tablas no existen este metodo las crea."""
+        """If table not exists create it."""
         connection = sqlite3.connect(self.database)
         cursor = connection.cursor()
 
@@ -98,11 +99,11 @@ class Db(object):
                     hora TIME, cancelado INT);"""
         cursor.execute(query)
 
-        query = """CREATE TABLE IF NOT EXISTS pticket(folio INTEGER PRIMARY KEY,
+        query = """CREATE TABLE IF NOT EXISTS ticketProducts(folio INTEGER PRIMARY KEY,
          producto TEXT, precio FLOAT, cantidad INT);"""
         cursor.execute(query)
 
-        query = """CREATE TABLE IF NOT EXISTS productos(ID INT PRIMARY KEY AUTOINCREMENT,
+        query = """CREATE TABLE IF NOT EXISTS productos(ID INTEGER PRIMARY KEY AUTOINCREMENT,
                     producto TEXT, precio FLOAT, categoria TEXT);"""
         cursor.execute(query)
 
@@ -119,5 +120,3 @@ class Db(object):
 
 
 db = Db()
-
-print(db.getCategories())
