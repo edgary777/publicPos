@@ -12,7 +12,7 @@ class MenuBtn(QAbstractButton):
     style is a stylesheet as 'QLabel { color : color;'
     """
 
-    def __init__(self, width, height, rounded, color, label, style,
+    def __init__(self, width, height, rounded, color, data, style,
                  parent, holder, product=None):
         """Init.
 
@@ -26,19 +26,12 @@ class MenuBtn(QAbstractButton):
         self.heights = height
         self.rounded = rounded
         self.color = QColor(color)
-        self.label = label
+        self.data = data
         self.text = style
         self.holder = holder
 
         # If this is activated the buttons will grow with the screen
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-
-        """The text passed as label is later transformed into a QLabel object
-        so this is a copy to be able to use it afterwards"""
-        self.labelText = label
-
-        # self.clicked.connect(lambda: print(labelText))
-        # self.clicked.connect(lambda: order.addItem(li))
 
         label = QLabel(self.label)
         label.setStyleSheet(style)
@@ -53,7 +46,7 @@ class MenuBtn(QAbstractButton):
     def mousePressEvent(self, QMouseEvent):
         """Reimplement mouse events."""
         if QMouseEvent.button() == Qt.LeftButton:
-            li = [self.labelText, 1, 100]
+            li = [self.data[0], self.data[1], self.data[2]]
             order = self.holder.getOrder()
             order.addItem(li)
         elif QMouseEvent.button() == Qt.RightButton:
