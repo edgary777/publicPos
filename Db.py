@@ -9,15 +9,6 @@ class Db(object):
         self.database = "database.db"
         # self.initializer()
 
-    def sConn(self):
-        """Start connection."""
-        return sqlite3.connect(self.database)
-
-    def eConn(self, connection):
-        """End connection."""
-        connection.commit()
-        connection.close()
-
     def recordTicket(self, data):
         """Add order to database."""
         connection = sqlite3.connect(self.database)
@@ -132,7 +123,7 @@ class Db(object):
         connection.close()
 
     def filler(self):
-        """I."""
+        """Fill the db with data for testing."""
         connection = sqlite3.connect(self.database)
         cursor = connection.cursor()
 
