@@ -52,7 +52,6 @@ class Db(object):
 
         connection.commit()
         connection.close()
-
         return product
 
     def getProducts(self, cat):

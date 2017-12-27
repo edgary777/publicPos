@@ -97,7 +97,8 @@ class Order(QWidget):
 
         # We search the list of items already in the order, if the item is
         # already in the order then it is added 1.
-        search = self.searchItem(item[1])
+        print(item, "thiks")
+        search = self.searchItem(item[0])
         if search:
             self.editItem(search, search.getQuant() + 1)
         else:
@@ -119,7 +120,7 @@ class Order(QWidget):
         # We search the list of items already in the order, if the item is
         # already in the order then it is decreased by 'amount', if the
         # operation results is 0 or less than 0 then the item is removed.
-        search = self.searchItem(item[0])
+        search = self.searchItem(item[1])
         if search:
             if search.getQuant() - amount > 0:
                 self.editItem(search, search.getQuant() - amount)
@@ -130,6 +131,7 @@ class Order(QWidget):
         """Pass a name as a string and returns the item with that name."""
         result = None
         for x in self.items:
+            print(item, "ITEM")
             if x.getName() == item:
                 result = x
         if result:
@@ -277,8 +279,8 @@ class Item(QWidget):
         """Init."""
         super().__init__(parent)
 
-        self.quant = data[0]
-        self.name = data[1]
+        self.name = data[0]
+        self.quant = data[1]
         self.price = data[2]
         self.total = float(self.quant) * float(self.price)
 
