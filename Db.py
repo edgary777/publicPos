@@ -7,7 +7,7 @@ class Db(object):
     def __init__(self):
         """Init."""
         self.database = "database.db"
-        self.initializer()
+        # self.initializer()
 
     def sConn(self):
         """Start connection."""
@@ -107,6 +107,15 @@ class Db(object):
                     producto TEXT, precio FLOAT, categoria TEXT);"""
         cursor.execute(query)
 
+        query = """INSERT INTO productos('producto', 'precio', 'categoria') VALUES('ADOBADA', '70', 'LONCHES');"""
+        cursor.execute(query)
+
+        query = """INSERT INTO productos('producto', 'precio', 'categoria') VALUES('PIERNA', '48', 'LONCHES');"""
+        cursor.execute(query)
+
+        query = """INSERT INTO productos('producto', 'precio', 'categoria') VALUES('COCA-COLA', '14', 'BEBIDAS');"""
+        cursor.execute(query)
+
         query = """CREATE TABLE IF NOT EXISTS cupones(codigo TEXT PRIMARY KEY,
                     tipo int, descuento float, usos int, caducidad date);"""
         cursor.execute(query)
@@ -115,8 +124,13 @@ class Db(object):
                     color VARCHAR);"""
         cursor.execute(query)
 
+        query = """INSERT INTO categorias VALUES('LONCHES', '255, 0, 0');"""
+        cursor.execute(query)
+        query = """INSERT INTO categorias VALUES('BEBIDAS', '0, 255, 0');"""
+        cursor.execute(query)
+
         connection.commit()
         connection.close()
 
 
-db = Db()
+# db = Db()

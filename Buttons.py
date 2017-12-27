@@ -25,7 +25,8 @@ class MenuBtn(QAbstractButton):
         self.widths = width
         self.heights = height
         self.rounded = rounded
-        self.color = QColor(color)
+        col = [int(color.strip()) for color in color.split(',')]
+        self.color = QColor(qRgb(col[0], col[1], col[2]))
         self.data = data
         self.text = style
         self.holder = holder
@@ -33,7 +34,7 @@ class MenuBtn(QAbstractButton):
         # If this is activated the buttons will grow with the screen
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
-        label = QLabel(self.label)
+        label = QLabel(self.data[1])
         label.setStyleSheet(style)
         label.setAlignment(Qt.AlignCenter)
 
@@ -103,10 +104,6 @@ class StrokeBtn(QAbstractButton):
 
         # If this is activated the buttons will grow with the screen
         # self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-
-        """The text passed as label is later transformed into a QLabel object
-        so this is a copy to be able to use it afterwards"""
-        labelText = label
 
         self.clicked.connect(lambda: self.obj.setCurrentIndex(self.index))
 

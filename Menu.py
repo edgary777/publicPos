@@ -7,28 +7,25 @@ import Buttons
 class Menu(QWidget):
     """Food Menu widget."""
 
-    def __init__(self, items, parent, hold=None):
+    def __init__(self, items, color, parent, hold=None):
         """Init."""
         super().__init__(parent)
 
         self.hold = hold  # This is the holder object that contains this menu
 
-        # Items are passed as a list for now, but they should be passed as a
-        # dict in which the key is the name and the value is the price.
+        self.color = color
         self.items = items
         self.initUi()
 
     def initUi(self):
         """Ui Setup."""
         # List setup
-        items = self.items
-        items = [item.strip() for item in items.split(',')]
+        layout = QGridLayout()
 
-        # Buttons configuration
+        # Common style settings for the buttons
         width = 150
         height = 60
         roundness = 20
-        color = qRgb(240, 216, 60)
         style = """
             QLabel {
                 color: black;
@@ -38,18 +35,22 @@ class Menu(QWidget):
             };
             """
 
-        # Buttons creator
-        layout = QGridLayout()
+        # Starting QGridLayout coords for the buttons
         x = 0
         y = 0
-        for item in items:
-            setattr(self, item, Buttons.MenuBtn(width, height, roundness,
+
+        for item in self.items:
+            # Buttons color
+            color = self.color
+
+            # Buttons creator
+            setattr(self, "btn" + item[1], Buttons.MenuBtn(width, height, roundness,
                                                 color, item, style,
                                                 parent=self, holder=self.hold))
             if y == 4:
                 x += 1
                 y = 0
-            layout.addWidget(getattr(self, item), x, y)
+            layout.addWidget(getattr(self, "btn" + item[1]), x, y)
             y += 1
         self.setLayout(layout)
 

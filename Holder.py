@@ -97,7 +97,7 @@ class Order(QWidget):
 
         # We search the list of items already in the order, if the item is
         # already in the order then it is added 1.
-        search = self.searchItem(item[0])
+        search = self.searchItem(item[1])
         if search:
             self.editItem(search, search.getQuant() + 1)
         else:
@@ -277,10 +277,10 @@ class Item(QWidget):
         """Init."""
         super().__init__(parent)
 
-        self.name = data[0]
-        self.quant = data[1]
+        self.quant = data[0]
+        self.name = data[1]
         self.price = data[2]
-        self.total = self.quant * self.price
+        self.total = float(self.quant) * float(self.price)
 
     def editQuant(self, new):
         """Edits the quantity of products and updates the total."""

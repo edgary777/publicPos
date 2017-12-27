@@ -9,6 +9,7 @@ import OrderTotal
 import random
 import math
 import Dialogs
+from Db import Db
 
 
 class MultiSession(QWidget):
@@ -175,25 +176,32 @@ class Session(QWidget):
 
         self.orderTotal = OrderTotal.OrderTotal(0, self)
 
-        lonches = """Jamón,Carnes Frias,Choriqueso,Campirana,Pechuga,Bistec,
-                     Cubana,Pierna,Pibil,Adobada,Arrachera,Torréon,
-                     Vegetariana"""
+        dBa = Db()
 
-        bebidas = """Coca,Coca Light,Sprite,Fanta,Fanta Fresa,Fresca,Manzanita,
-                     Agua,Naranjada,Limonada,ValleFrut,N Durazno,
-                     N Guayaba,N Manzana,N Mango,J Manzana"""
-
-        menuLonches = Menu.Menu(lonches, parent=self, hold=self.holder)
-        menuBebidas = Menu.Menu(bebidas, parent=self, hold=self.holder)
-
+        categories = dBa.getCategories()
         itemsLayout = QStackedLayout()
-        itemsLayout.addWidget(menuLonches)
-        itemsLayout.addWidget(menuBebidas)
+        tabs = {}
+        x = 0
 
-        tabs = {"Lonches": (0, itemsLayout), "Bebidas": (1, itemsLayout)}
+        for category in categories:
+            products = dBa.getProducts(category[0])
+            setattr(self, "menu" + category[0], Menu.Menu(products,
+                    category[1], self, hold=self.holder))
+            itemsLayout.addWidget(getattr(self, "menu" + category[0]))
+            tabs[category[0]] = (x, itemsLayout)
+            x += 1
         tabsWidget = Menu.Tabs(tabs, parent=self)
         tabsLayout = QHBoxLayout()
         tabsLayout.addWidget(tabsWidget)
+
+        # lonches = """Jamón,Carnes Frias,Choriqueso,Campirana,Pechuga,Bistec,
+        #              Cubana,Pierna,Pibil,Adobada,Arrachera,Torréon,
+        #              Vegetariana"""
+        #
+        # bebidas = """Coca,Coca Light,Sprite,Fanta,Fanta Fresa,Fresca,Manzanita,
+        #              Agua,Naranjada,Limonada,ValleFrut,N Durazno,
+        #              N Guayaba,N Manzana,N Mango,J Manzana"""
+
 
         inputField = TextInput.TextInput(parent=self)
         nameField = TextInput.TextInputSmall(parent=self)
@@ -283,3 +291,24 @@ class Session(QWidget):
     def getParent(self):
         """Return the order parent."""
         return self.parent
+
+    def collector(self):
+        """Collect and return all data to be recorded on the database."""
+        folio = None
+        nombre = None
+        llevar = None
+        sexo = None
+        edad = None
+        notas = None
+        factura = None
+        subtotal = None
+        iva = None
+        descuentoa = None
+        descuentop = None
+        cupon = None
+        total = None
+        fecha = None
+        hora = None
+        cancelado = None
+
+        productos = []
