@@ -47,7 +47,6 @@ class MenuBtn(QAbstractButton):
     def mousePressEvent(self, QMouseEvent):
         """Reimplement mouse events."""
         if QMouseEvent.button() == Qt.LeftButton:
-            print(self.data)
             li = [self.data[1], 1, self.data[2]]
             order = self.holder.getOrder()
             order.addItem(li)

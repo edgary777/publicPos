@@ -97,7 +97,6 @@ class Order(QWidget):
 
         # We search the list of items already in the order, if the item is
         # already in the order then it is added 1.
-        print(item, "thiks")
         search = self.searchItem(item[0])
         if search:
             self.editItem(search, search.getQuant() + 1)
@@ -131,7 +130,6 @@ class Order(QWidget):
         """Pass a name as a string and returns the item with that name."""
         result = None
         for x in self.items:
-            print(item, "ITEM")
             if x.getName() == item:
                 result = x
         if result:

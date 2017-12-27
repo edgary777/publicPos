@@ -131,5 +131,17 @@ class Db(object):
         connection.commit()
         connection.close()
 
+    def filler(self):
+        """I."""
+        connection = sqlite3.connect(self.database)
+        cursor = connection.cursor()
+
+        query = """INSERT INTO productos('producto', 'precio', 'categoria') VALUES('FANTA', '14', 'BEBIDAS');"""
+        cursor.execute(query)
+
+        connection.commit()
+        connection.close()
+
 
 # db = Db()
+# db.filler()
