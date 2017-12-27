@@ -97,15 +97,6 @@ class Db(object):
                     producto TEXT, precio FLOAT, categoria TEXT);"""
         cursor.execute(query)
 
-        query = """INSERT INTO productos('producto', 'precio', 'categoria') VALUES('ADOBADA', '70', 'LONCHES');"""
-        cursor.execute(query)
-
-        query = """INSERT INTO productos('producto', 'precio', 'categoria') VALUES('PIERNA', '48', 'LONCHES');"""
-        cursor.execute(query)
-
-        query = """INSERT INTO productos('producto', 'precio', 'categoria') VALUES('COCA-COLA', '14', 'BEBIDAS');"""
-        cursor.execute(query)
-
         query = """CREATE TABLE IF NOT EXISTS cupones(codigo TEXT PRIMARY KEY,
                     tipo int, descuento float, usos int, caducidad date);"""
         cursor.execute(query)
@@ -114,10 +105,6 @@ class Db(object):
                     color VARCHAR);"""
         cursor.execute(query)
 
-        query = """INSERT INTO categorias VALUES('LONCHES', '255, 0, 0');"""
-        cursor.execute(query)
-        query = """INSERT INTO categorias VALUES('BEBIDAS', '0, 255, 0');"""
-        cursor.execute(query)
 
         connection.commit()
         connection.close()
@@ -127,12 +114,51 @@ class Db(object):
         connection = sqlite3.connect(self.database)
         cursor = connection.cursor()
 
-        query = """INSERT INTO productos('producto', 'precio', 'categoria') VALUES('FANTA', '14', 'BEBIDAS');"""
+        query = """INSERT INTO categorias VALUES('LONCHES', '29, 235, 130');"""
         cursor.execute(query)
+        query = """INSERT INTO categorias VALUES('BEBIDAS', '194, 29, 235');"""
+        cursor.execute(query)
+        products = [("JAMÓN", "30", "LONCHES"),
+                    ("CARNES FRIAS", "42", "LONCHES"),
+                    ("CAMPIRANA", "46", "LONCHES"),
+                    ("CHORIQUESO", "46", "LONCHES"),
+                    ("CUBANA", "53", "LONCHES"),
+                    ("BISTEC", "52", "LONCHES"),
+                    ("PIBIL", "52", "LONCHES"),
+                    ("PIERNA", "48", "LONCHES"),
+                    ("PECHUGA", "50", "LONCHES"),
+                    ("ADOBADA", "70", "LONCHES"),
+                    ("TORREÓN", "80", "LONCHES"),
+                    ("ARRACHERA", "70", "LONCHES"),
+                    ("VEGETARIANA", "70", "LONCHES"),
+                    ("COCA-COLA", "14", "BEBIDAS"),
+                    ("COCA-LIGHT", "14", "BEBIDAS"),
+                    ("FANTAF", "14", "BEBIDAS"),
+                    ("FANTA", "14", "BEBIDAS"),
+                    ("SPRITE", "14", "BEBIDAS"),
+                    ("FRESCA", "14", "BEBIDAS"),
+                    ("TOPOCHICO", "14", "BEBIDAS"),
+                    ("MANZANITA", "14", "BEBIDAS"),
+                    ("COCA-COLA", "14", "BEBIDAS"),
+                    ("AGUA", "10", "BEBIDAS"),
+                    ("NARANJADA", "16", "BEBIDAS"),
+                    ("LIMONADA", "16", "BEBIDAS"),
+                    ("VALLEFRUT", "14", "BEBIDAS"),
+                    ("NDURAZNO", "14", "BEBIDAS"),
+                    ("NGUAYABA", "14", "BEBIDAS"),
+                    ("NMANZANA", "14", "BEBIDAS"),
+                    ("NMANGO", "14", "BEBIDAS"),
+                    ("JMANZANA", "14", "BEBIDAS"),
+                    ]
+
+        for product in products:
+            query = "INSERT INTO productos('producto', 'precio', 'categoria')VALUES({}, {}, {});".format("'" + product[0] + "'", product[1], "'" + product[2] + "'")
+            cursor.execute(query)
 
         connection.commit()
         connection.close()
 
 
 # db = Db()
+# db.initializer()
 # db.filler()
