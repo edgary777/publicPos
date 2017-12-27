@@ -82,7 +82,9 @@ class OrderTotal(QWidget):
         if self.dcto:
             if self.invoice:
                 self.subtotal = (self.total * (1 - self.dcto[0])) if self.total > 0 else 0
+                self.subtotal = round(self.subtotal, 2)
                 self.vat = self.subtotal * 0.16 if self.subtotal > 0 else 0
+                self.vat = round(self.vat, 2)
                 self.subtotalLabel.setText(str(self.subtotal))
                 self.dctoLabel.setText(str(round(self.total * self.dcto[0], 2)))
                 self.vatLabel.setText(str(self.vat))
@@ -98,7 +100,9 @@ class OrderTotal(QWidget):
             self.dcto = 0
             if self.invoice:
                 self.subtotal = self.total if self.total > 0 else 0
+                self.subtotal = round(self.subtotal, 2)
                 self.vat = self.subtotal * 0.16 if self.subtotal > 0 else 0
+                self.vat = round(self.vat, 2)
                 self.subtotalLabel.setText(str(self.subtotal))
                 self.vatLabel.setText(str(self.vat))
                 self.totalLabel.setText("$" + str(round(self.total * 1.16, 2)))

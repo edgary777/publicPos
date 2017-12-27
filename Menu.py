@@ -24,7 +24,7 @@ class Menu(QWidget):
 
         # Common style settings for the buttons
         width = 150
-        height = 60
+        height = 50
         roundness = 20
         style = """
             QLabel {
