@@ -14,7 +14,7 @@ class Ticket(QWidget):
 
         self.parseData(data)
 
-        self.setFixedWidth(200)
+        self.setFixedWidth(250)
 
         if simplified:
             self.simplifiedTicket()
@@ -28,7 +28,7 @@ class Ticket(QWidget):
             label = QLabel()
             image = QPixmap(self.image)
 
-            label.setPixmap(image.scaledToWidth(180, Qt.FastTransformation))
+            label.setPixmap(image.scaledToWidth(self.width() - 20, Qt.FastTransformation))
             label.setMargin(0)
             label.setAlignment(Qt.AlignCenter)
 
@@ -37,13 +37,18 @@ class Ticket(QWidget):
         else:
             label = QLabel(self.title)
             label.setAlignment(Qt.AlignCenter)
-            label.setFixedWidth(180)
+            label.setFixedWidth(self.width() - 20)
             label.setMargin(0)
 
             topData.setSpacing(0)
             topData.addWidget(label)
 
-        topData.addWidget(QLabel(self.address))
+        topData.addWidget(self.address)
+        topData.addWidget(self.regimenFiscal)
+        topData.addWidget(self.RFC)
+        topData.addWidget(self.name)
+        topData.addWidget(self.tel)
+        topData.addStretch()
         self.setLayout(topData)
 
     def simplifiedTicket(self):
@@ -52,17 +57,31 @@ class Ticket(QWidget):
 
     def parseData(self, data):
         """Parse and organize the data for the ticket."""
-        self.image = """Resources/s-print.png"""
+        self.image = """Resources/s-close.png"""
         self.title = """SUPER LONCHES DE TORREON"""
 
-        self.address = None
-        self.regimenFiscal = None
-        self.RFC = None
-        self.name = None
-        self.tel = None
+        self.address = QLabel("""CUAUHTEMOC 217A SUR, ZONA CENTRO, CP 34000, DURANGO, DURANGO, MEXICO""")
+        self.address.setWordWrap(True)
+        self.address.setAlignment(Qt.AlignCenter)
+
+        self.regimenFiscal = QLabel("""REGIMEN DE INCORPORACIÓN FISCAL""")
+        self.regimenFiscal.setWordWrap(True)
+        self.regimenFiscal.setAlignment(Qt.AlignCenter)
+
+        self.RFC = QLabel("""VICM640515DD3""")
+        self.RFC.setWordWrap(True)
+        self.RFC.setAlignment(Qt.AlignCenter)
+
+        self.name = QLabel("""MARICELA VIZCARRA CAMPOS""")
+        self.name.setWordWrap(True)
+        self.name.setAlignment(Qt.AlignCenter)
+
+        self.tel = QLabel("""(618) 829-62-18""")
+        self.tel.setWordWrap(True)
+        self.tel.setAlignment(Qt.AlignCenter)
 
         self.folio = None
-        self.date = None
+        # self.date = time.str
         self.hour = None
 
         self.products = None
@@ -82,6 +101,7 @@ class Ticket(QWidget):
 
     def Print(self):
         """Print the widget."""
+        print(self.height() * 1.40)
         printer = QPrinter(QPrinter.HighResolution)
         # pageSize = QPageSize(QSizeF(80, 80),
         # QPageSize.Millimeter, name="test2", matchPolicy=QPageSize.ExactMatch)
@@ -96,12 +116,8 @@ class Ticket(QWidget):
         yscale = printer.pageRect().height() / self.height()
         scale = min(xscale, yscale)
 
-        # Apparently this sets the page size, so the second size in translate
-        # is the one that changes the page length. to change it dinamically I
-        # have to get the size of the widget and set it to it.
-
-        painter.translate(printer.paperRect().x() + printer.pageRect().width()/2,
-                          300)
+        painter.translate(printer.paperRect().x() + printer.pageRect().width() / 2,
+                          self.height() * 1.39)  # dont know why but 1.39 works
 
         painter.scale(scale, scale)
 
