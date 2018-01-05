@@ -1,4 +1,5 @@
 import sys
+import datetime
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -23,7 +24,23 @@ class Ticket(QWidget):
 
     def ticket(self):
         """Ticket visualization is created here."""
-        topData = QVBoxLayout()
+        layout = QVBoxLayout()
+
+        header = self.ticketHeader()
+        content = self.ticketContent()
+        footer = self.ticketFooter()
+
+        layout.addLayout(header)
+        layout.addLayout(content)
+
+        if footer:
+            layout.addLayout(footer)
+
+        self.setLayout(layout)
+
+    def ticketHeader(self):
+        """Ticket header is created here."""
+        header = QVBoxLayout()
         if self.image:
             label = QLabel()
             image = QPixmap(self.image)
@@ -32,24 +49,46 @@ class Ticket(QWidget):
             label.setMargin(0)
             label.setAlignment(Qt.AlignCenter)
 
-            topData.setSpacing(0)
-            topData.addWidget(label)
+            header.setSpacing(0)
+            header.addWidget(label)
         else:
             label = QLabel(self.title)
             label.setAlignment(Qt.AlignCenter)
             label.setFixedWidth(self.width() - 20)
             label.setMargin(0)
 
-            topData.setSpacing(0)
-            topData.addWidget(label)
+            header.setSpacing(0)
+            header.addWidget(label)
 
-        topData.addWidget(self.address)
-        topData.addWidget(self.regimenFiscal)
-        topData.addWidget(self.RFC)
-        topData.addWidget(self.name)
-        topData.addWidget(self.tel)
-        topData.addStretch()
-        self.setLayout(topData)
+        header.addWidget(self.address)
+        header.addWidget(self.regimenFiscal)
+        header.addWidget(self.RFC)
+        header.addWidget(self.name)
+        header.addWidget(self.tel)
+        header.addStretch()
+
+        return header
+
+    def ticketContent(self):
+        """Ticket content is created here."""
+        content = QGridLayout()
+
+        titles = {"cant": "Cant.", "desc": "Descripción", "price": "P. Unit.",
+                  "total": "Total"}
+
+        x = 0
+        for key, value in titles.items():
+            setattr(self, key, QLabel(value))
+            item = getattr(self, key)
+            item.setAlignment(Qt.AlignCenter)
+            content.addWidget(item, 0, x)
+            x += 1
+
+        return content
+
+    def ticketFooter(self):
+        """Ticket footer is created here."""
+        return None
 
     def simplifiedTicket(self):
         """Order visualization is created here."""
@@ -81,8 +120,8 @@ class Ticket(QWidget):
         self.tel.setAlignment(Qt.AlignCenter)
 
         self.folio = None
-        # self.date = time.str
-        self.hour = None
+        self.date = datetime.date.today()
+        self.hour = datetime.datetime.now().time().strftime("%H:%M")
 
         self.products = None
 
@@ -101,7 +140,6 @@ class Ticket(QWidget):
 
     def Print(self):
         """Print the widget."""
-        print(self.height() * 1.40)
         printer = QPrinter(QPrinter.HighResolution)
         # pageSize = QPageSize(QSizeF(80, 80),
         # QPageSize.Millimeter, name="test2", matchPolicy=QPageSize.ExactMatch)
@@ -136,6 +174,5 @@ class Ticket(QWidget):
 app = QApplication(sys.argv)
 window = Ticket()
 window.show()
-# window.showMaximized()
-window.Print()
+# window.Print()
 sys.exit(app.exec_())
