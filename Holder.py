@@ -223,7 +223,7 @@ class Order(QWidget):
         return total
 
     def getItems(self):
-        """Update the UI to show changes."""
+        """Return the order products."""
         return self.items
 
     def getParent(self):
