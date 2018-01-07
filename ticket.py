@@ -184,13 +184,18 @@ class Ticket(QDialog):
 
     def Print(self):
         """Print the widget."""
-        printer = QPrinter(QPrinter.HighResolution)
         # pageSize = QPageSize(QSizeF(80, 80),
         # QPageSize.Millimeter, name="test2", matchPolicy=QPageSize.ExactMatch)
         # printer.setPageSize(pageSize)
-        dialog = QPrintDialog(printer,self)
-        if (dialog.exec_() != QDialog.Accepted):
-            return
+        printer = QPrinter(QPrinter.HighResolution)
+        # printer.setOutputFileName("print.pdf")
+        if self.simplified:
+            printer.setDocName("COMANDA")
+        else:
+            printer.setDocName("TICKET")
+        # dialog = QPrintDialog(printer,self)
+        # if (dialog.exec_() != QDialog.Accepted):
+        #     return
         painter = QPainter()
         painter.begin(printer)
 
