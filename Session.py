@@ -9,6 +9,7 @@ import OrderTotal
 import random
 import math
 import Dialogs
+import Ticket
 from Db import Db
 
 
@@ -194,21 +195,12 @@ class Session(QWidget):
         tabsLayout = QHBoxLayout()
         tabsLayout.addWidget(tabsWidget)
 
-        # lonches = """Jamón,Carnes Frias,Choriqueso,Campirana,Pechuga,Bistec,
-        #              Cubana,Pierna,Pibil,Adobada,Arrachera,Torréon,
-        #              Vegetariana"""
-        #
-        # bebidas = """Coca,Coca Light,Sprite,Fanta,Fanta Fresa,Fresca,Manzanita,
-        #              Agua,Naranjada,Limonada,ValleFrut,N Durazno,
-        #              N Guayaba,N Manzana,N Mango,J Manzana"""
-
-
-        inputField = TextInput.TextInput(parent=self)
-        nameField = TextInput.TextInputSmall(parent=self)
-        nameField.setFixedHeight(55)
+        self.inputField = TextInput.TextInput(parent=self)
+        self.nameField = TextInput.TextInputSmall(parent=self)
+        self.nameField.setFixedHeight(55)
 
         orderTopLayout = QHBoxLayout()
-        orderTopLayout.addWidget(nameField)
+        orderTopLayout.addWidget(self.nameField)
         orderTopLayout.addWidget(self.orderTotal)
 
         layoutC1 = QVBoxLayout()
@@ -222,7 +214,7 @@ class Session(QWidget):
         layoutC2 = QVBoxLayout()
         layoutC2.addLayout(tabsLayout)
         layoutC2.addLayout(itemsLayout)
-        layoutC2.addWidget(inputField)
+        layoutC2.addWidget(self.inputField)
 
         layout = QHBoxLayout()
         layout.addLayout(layoutH1C1)
@@ -251,7 +243,7 @@ class Session(QWidget):
         # order and create a new order with them.
         self.picBtnseparate.clicked.connect(self.separateItems)
 
-        # self.picBtnprint.clicked.connect()
+        self.picBtnprint.clicked.connect(self.printTicket)
 
         self.picBtndcto.clicked.connect(self.setDcto)
 
@@ -261,6 +253,13 @@ class Session(QWidget):
                                          self.holder.getOrder().clean())
 
         return layout
+
+    def printTicket(self):
+        """Simplified ticket printer."""
+        ticket = Ticket.Ticket(self.collector(), self)
+        if ticket.exec_():
+            pass
+        # ticket.Print()
 
     def separateItems(self):
         """Toggle and update discount."""
@@ -294,21 +293,23 @@ class Session(QWidget):
 
     def collector(self):
         """Collect and return all data to be recorded on the database."""
-        folio = None
-        nombre = None
-        llevar = None
-        sexo = None
-        edad = None
-        notas = None
-        factura = None
-        subtotal = None
-        iva = None
-        descuentoa = None
-        descuentop = None
-        cupon = None
-        total = None
-        fecha = None
-        hora = None
-        cancelado = None
-
-        productos = []
+        data = {
+            "folio": self.getID(),
+            "nombre": self.nameField.getText(),
+            "llevar": None,
+            "pagado": None,
+            "sexo": None,
+            "edad": None,
+            "notas": self.inputField.getText(),
+            "factura": self.orderTotal.getInvoice(),
+            "total": self.orderTotal.getTotal(),
+            "subtotal": self.orderTotal.getSubtotal(),
+            "iva": self.orderTotal.getVat(),
+            "descuento": self.orderTotal.getDcto()[0],
+            "descuentoa": self.orderTotal.getDcto()[1],
+            "descuentop": self.orderTotal.getDcto()[2],
+            "cupon": self.orderTotal.getDcto()[3],
+            "cancelado": None,
+            "productos": self.holder.getOrder().getItems()
+        }
+        return data
