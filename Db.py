@@ -105,6 +105,9 @@ class Db(object):
                     color VARCHAR);"""
         cursor.execute(query)
 
+        query = """CREATE TABLE IF NOT EXISTS configuraciones(descripcion TEXT,
+                    valor VARCHAR, tipo INT, grupo INT, categoria TEXT);"""
+        cursor.execute(query)
 
         connection.commit()
         connection.close()
