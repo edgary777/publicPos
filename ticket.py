@@ -13,11 +13,13 @@ class Ticket(QDialog):
         """Init."""
         super().__init__(parent)
 
+        self.simplified = simplified
+
         self.parseData(data)
 
         self.setFixedWidth(250)
 
-        if simplified:
+        if self.simplified:
             self.simplifiedTicket()
         else:
             self.ticket()
@@ -69,20 +71,39 @@ class Ticket(QDialog):
 
         dateID = QGridLayout()
 
+        styleBig = """
+            QLabel {
+                color: black;
+                font-weight: bold;
+                font-size: 25pt;
+                font-family: Asap;
+            };"""
+        styleSmall = """
+            QLabel {
+                color: black;
+                font-weight: bold;
+                font-size: 15pt;
+                font-family: Asap;
+            };"""
+
         folioLabel = QLabel("FOLIO")
         folioLabel.setAlignment(Qt.AlignCenter)
+        folioLabel.setStyleSheet(styleBig)
         dateID.addWidget(folioLabel, 0, 0)
 
         folio = QLabel(str(self.folio))
         folio.setAlignment(Qt.AlignCenter)
+        folio.setStyleSheet(styleBig)
         dateID.addWidget(folio, 0, 1)
 
         date = QLabel(str(self.date))
         date.setAlignment(Qt.AlignCenter)
+        date.setStyleSheet(styleSmall)
         dateID.addWidget(date, 1, 0)
 
         hour = QLabel(str(self.hour))
         hour.setAlignment(Qt.AlignCenter)
+        hour.setStyleSheet(styleSmall)
         dateID.addWidget(hour, 1, 1)
 
         header.addLayout(dateID)
@@ -143,7 +164,7 @@ class Ticket(QDialog):
 
     def parseData(self, data):
         """Parse and organize the data for the ticket."""
-        self.image = """Resources/s-close.png"""
+        self.image = """Resources/logo.png"""
         self.title = """SUPER LONCHES DE TORREON"""
 
         self.address = QLabel("""CUAUHTEMOC 217A SUR, ZONA CENTRO, CP 34000, DURANGO, DURANGO""")
@@ -197,6 +218,9 @@ class Ticket(QDialog):
         # if (dialog.exec_() != QDialog.Accepted):
         #     return
         painter = QPainter()
+        p = self.palette()
+        p.setColor(self.backgroundRole(), Qt.white)
+        self.setPalette(p)
         painter.begin(printer)
 
         xscale = printer.pageRect().width() / self.width()
