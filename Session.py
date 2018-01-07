@@ -11,6 +11,7 @@ import math
 import Dialogs
 import Ticket
 import Printer
+import datetime
 from Db import Db
 
 
@@ -28,6 +29,9 @@ class MultiSession(QWidget):
 
         self.sessionsLayout = QStackedLayout()
         self.btnLayout = QHBoxLayout()
+
+        self.date = None
+        self.hour = None
 
         # We always start with the session 0 from the array
         self.activeSession = 0
@@ -166,6 +170,7 @@ class Session(QWidget):
         super().__init__(parent)
 
         self.parent = parent
+        self.ticket = None
 
         self.ID = None
         self.setID()
@@ -240,8 +245,6 @@ class Session(QWidget):
                                             self)
         layout.addWidget(self.picBtngear)
 
-        # No idea how to do this action yet, it is meant to pop items from an
-        # order and create a new order with them.
         self.picBtnseparate.clicked.connect(self.separateItems)
 
         self.picBtnprint.clicked.connect(self.printTicket)
@@ -257,12 +260,18 @@ class Session(QWidget):
 
     def printTicket(self):
         """Simplified ticket printer."""
+        if not self.date:
+            self.date = datetime.date.today(),
+        if not self.hour:
+            self.hour = datetime.datetime.now().time().strftime("%H:%M")
         ticket = Ticket.Ticket(self.collector(), self)
         # if ticket.exec_():
         #     pass
         printer = Printer.Print()
         printer.Print(ticket)
         printer = None
+        ticket.setParent(None)
+        ticket = None
 
     def separateItems(self):
         """Toggle and update discount."""
@@ -313,6 +322,8 @@ class Session(QWidget):
             "descuentop": self.orderTotal.getDcto()[2],
             "cupon": self.orderTotal.getDcto()[3],
             "cancelado": None,
-            "productos": self.holder.getOrder().getItems()
+            "productos": self.holder.getOrder().getItems(),
+            "fecha": self.date,
+            "hora": self.hour
         }
         return data
