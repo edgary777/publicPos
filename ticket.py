@@ -39,6 +39,23 @@ class Ticket(QDialog):
 
         self.setLayout(layout)
 
+    def simplifiedTicket(self):
+        """Simplified visualization is created here."""
+        layout = QVBoxLayout()
+
+        header = self.simplifiedHeader()
+        content = self.simplifiedContent()
+        footer = self.simplifiedFooter()
+
+        if header:
+            layout.addLayout(header)
+        else:
+            layout.addSpacing(100)
+        layout.addLayout(content)
+        layout.addLayout(footer)
+
+        self.setLayout(layout)
+
     def ticketHeader(self):
         """Ticket header is created here."""
         header = QVBoxLayout()
@@ -129,6 +146,8 @@ class Ticket(QDialog):
             x = 0
             for key, value in titles.items():
                 val = getattr(product, "get" + key)()
+                if isinstance(val, float):
+                    val = "$" + str(val)
                 setattr(self, key, QLabel(str(val)))
                 if x == 0:
                     getattr(self, key).setAlignment(Qt.AlignLeft)
@@ -138,18 +157,36 @@ class Ticket(QDialog):
                 x += 1
             y += 1
 
-        print(self.total)
-
         if self.factura:
-            content.addWidget(QLabel("SUBTOTAL"), y + 1, 2)
-            content.addWidget(QLabel(str(self.subtotal)), y + 1, 3)
-            content.addWidget(QLabel("IVA"), y + 2, 2)
-            content.addWidget(QLabel(str(self.iva)), y + 2, 3)
-            content.addWidget(QLabel("TOTAL"), y + 3, 2)
-            content.addWidget(QLabel(str(round(self.total * 1.16, 2))), y + 3, 3)
+            z = 1
+            if self.dcto:
+                total = round((self.total * (1 - self.dcto)) * 1.16, 2)
+                dcto = round(self.total * self.dcto, 2)
+                content.addWidget(QLabel("DCTO"), y + z, 2)
+                content.addWidget(QLabel("$" + str(dcto)), y + z, 3)
+                z += 1
+            else:
+                total = round(self.total * 1.16, 2)
+            content.addWidget(QLabel("SUBTOTAL"), y + z, 2)
+            content.addWidget(QLabel("$" + str(self.subtotal)), y + z, 3)
+            z += 1
+            content.addWidget(QLabel("IVA"), y + z, 2)
+            content.addWidget(QLabel("$" + str(self.iva)), y + z, 3)
+            z += 1
+            content.addWidget(QLabel("TOTAL"), y + z, 2)
+            content.addWidget(QLabel("$" + str(total)), y + z, 3)
         else:
-            content.addWidget(QLabel("TOTAL"), y + 1, 2)
-            content.addWidget(QLabel(str(self.total)), y + 1, 3)
+            z = 1
+            if self.dcto:
+                total = self.total * (1 - self.dcto)
+                dcto = round(self.total * self.dcto, 2)
+                content.addWidget(QLabel("DCTO"), y + z, 2)
+                content.addWidget(QLabel("$" + str(dcto)), y + z, 3)
+                z += 1
+            else:
+                total = self.total
+            content.addWidget(QLabel("TOTAL"), y + z, 2)
+            content.addWidget(QLabel("$" + str(total)), y + z, 3)
 
         return content
 
@@ -157,9 +194,138 @@ class Ticket(QDialog):
         """Ticket footer is created here."""
         return None
 
-    def simplifiedTicket(self):
-        """Simplified visualization is created here."""
-        pass
+    def simplifiedHeader(self):
+        """Simplified header is created here."""
+        header = QVBoxLayout()
+
+        style = """
+        QLabel {
+            color: black;
+            font-weight: bold;
+            font-size: 20pt;
+            font-family: Asap;
+        };"""
+
+        if self.nombre:
+            nombre = QLabel(str(self.nombre))
+            nombre.setWordWrap(True)
+            nombre.setAlignment(Qt.AlignCenter)
+            nombre.setStyleSheet(style)
+            header.addWidget(nombre)
+
+        if self.nombre and self.notes:
+            line = QLabel("______________")
+            line.setAlignment(Qt.AlignCenter)
+            line.setStyleSheet(style)
+            header.addWidget(line)
+
+        if self.notes:
+            notas = QLabel(str(self.notes))
+            notas.setWordWrap(True)
+            notas.setAlignment(Qt.AlignCenter)
+            notas.setStyleSheet(style)
+            header.addWidget(notas)
+
+        if self.nombre or self.notes:
+            return header
+        else:
+            return None
+
+    def simplifiedContent(self):
+        """Simplified ticket content is created here."""
+        content = QGridLayout()
+
+        titles = {"Quant": "Cant.", "Name": "Descripción"}
+
+        styleProducts = """
+        QLabel {
+            color: black;
+            font-weight: bold;
+            font-size: 18pt;
+            font-family: Asap;
+        };"""
+
+        styleTotal = """
+        QLabel {
+            color: black;
+            font-weight: bold;
+            font-size: 18pt;
+            font-family: Asap;
+            text-decoration: underline;
+        };"""
+
+        styleHour = """
+        QLabel {
+            color: black;
+            font-weight: bold;
+            font-size: 18pt;
+            font-family: Asap;
+        };"""
+
+        y = 1
+        for product in self.products:
+            x = 0
+            for key, value in titles.items():
+                val = getattr(product, "get" + key)()
+                setattr(self, key, QLabel(str(val)))
+                getattr(self, key).setStyleSheet(styleProducts)
+                if x == 0:
+                    getattr(self, key).setAlignment(Qt.AlignCenter)
+                else:
+                    getattr(self, key).setAlignment(Qt.AlignLeft)
+                content.addWidget(getattr(self, key), y, x)
+                x += 1
+            y += 1
+
+        if self.factura:
+            if self.dcto:
+                total = round((self.total * (1 - self.dcto)) * 1.16, 2)
+            else:
+                total = round(self.total * 1.16, 2)
+            total = QLabel("$" + str(total))
+            total.setAlignment(Qt.AlignCenter)
+            total.setStyleSheet(styleTotal)
+            content.addWidget(total, y + 1, 1)
+        else:
+            if self.dcto:
+                total = self.total * (1 - self.dcto)
+            else:
+                total = self.total
+            total = QLabel("$" + str(total))
+            total.setAlignment(Qt.AlignCenter)
+            total.setStyleSheet(styleTotal)
+            content.addWidget(total, y + 1, 1)
+
+        hour = QLabel(str(self.hour))
+
+        hour.setStyleSheet(styleHour)
+        hour.setAlignment(Qt.AlignCenter)
+
+        content.addWidget(hour, y + 1, 0)
+
+        return content
+
+    def simplifiedFooter(self):
+        """Simplified footer is created here."""
+        footer = QVBoxLayout()
+
+        style = """
+        QLabel {
+            color: black;
+            font-weight: bold;
+            font-size: 35pt;
+            font-family: Asap;
+        };"""
+
+        print(self.folio)
+
+        folio = QLabel(str(self.folio))
+        folio.setAlignment(Qt.AlignCenter)
+        folio.setStyleSheet(style)
+
+        footer.addWidget(folio)
+
+        return footer
 
     def parseData(self, data):
         """Parse and organize the data for the ticket."""
@@ -186,8 +352,8 @@ class Ticket(QDialog):
         self.tel.setWordWrap(True)
         self.tel.setAlignment(Qt.AlignCenter)
 
-        self.date = datetime.date.today()
-        self.hour = datetime.datetime.now().time().strftime("%H:%M")
+        self.date = data["fecha"]
+        self.hour = data["hora"]
 
         self.folio = data["folio"]
         self.nombre = data["nombre"]

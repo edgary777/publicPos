@@ -12,6 +12,7 @@ import Dialogs
 import Ticket
 import Printer
 import datetime
+import time
 from Db import Db
 
 
@@ -172,6 +173,9 @@ class Session(QWidget):
         self.parent = parent
         self.ticket = None
 
+        self.date = None
+        self.hour = None
+
         self.ID = None
         self.setID()
 
@@ -247,7 +251,7 @@ class Session(QWidget):
 
         self.picBtnseparate.clicked.connect(self.separateItems)
 
-        self.picBtnprint.clicked.connect(self.printTicket)
+        self.picBtnprint.clicked.connect(self.printSimplified)
 
         self.picBtndcto.clicked.connect(self.setDcto)
 
@@ -258,20 +262,38 @@ class Session(QWidget):
 
         return layout
 
+    def printBoth(self):
+        """Print simple and complete tickes."""
+        self.printSimplified()
+        self.printTicket()
+
     def printTicket(self):
         """Simplified ticket printer."""
         if not self.date:
-            self.date = datetime.date.today(),
+            self.date = datetime.date.today()
         if not self.hour:
             self.hour = datetime.datetime.now().time().strftime("%H:%M")
         ticket = Ticket.Ticket(self.collector(), self)
-        # if ticket.exec_():
-        #     pass
-        printer = Printer.Print()
-        printer.Print(ticket)
-        printer = None
-        ticket.setParent(None)
-        ticket = None
+        if ticket.exec_():
+            pass
+        # printer = Printer.Print()
+        # printer.Print(ticket)
+        # printer = None
+        # ticket.setParent(None)
+
+    def printSimplified(self):
+        """Simplified ticket printer."""
+        if not self.date:
+            self.date = datetime.date.today()
+        if not self.hour:
+            self.hour = datetime.datetime.now().time().strftime("%H:%M")
+        ticket = Ticket.Ticket(self.collector(), self, simplified=True)
+        if ticket.exec_():
+            pass
+        # printer = Printer.Print()
+        # printer.Print(ticket, simplified=True)
+        # printer = None
+        # ticket.setParent(None)
 
     def separateItems(self):
         """Toggle and update discount."""
