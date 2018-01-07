@@ -13,7 +13,9 @@ class OrderTotal(QWidget):
         self.total = total
         self.subtotal = 0
         self.vat = 0  # Value Added Tax
-        self.dcto = [0, None, None, None]  # discount
+
+        # discount [total discount, amount, percentage, code]
+        self.dcto = [0, None, None, None]
 
         self.invoice = False  # Boolean option to activate invoice options
 
@@ -69,6 +71,10 @@ class OrderTotal(QWidget):
         self.dcto = dcto
         self.updateUi()
 
+    def getInvoice(self):
+        """Return the invoice status."""
+        return self.invoice
+
     def getDcto(self):
         """Return the discount if exists."""
         return self.dcto
@@ -76,6 +82,14 @@ class OrderTotal(QWidget):
     def getTotal(self):
         """Return the order total before taxes."""
         return self.total
+
+    def getSubtotal(self):
+        """Return the order total before taxes."""
+        return self.subtotal
+
+    def getVat(self):
+        """Return the order VAT."""
+        return self.vat
 
     def updateUi(self):
         """Update the Ui."""
@@ -112,7 +126,6 @@ class OrderTotal(QWidget):
                 self.totalLabel.setText("$" + str(self.total))
                 self.subtotalLabel.setText(str(self.subtotal))
                 self.vatLabel.setText(str(self.vat))
-
 
     def extraData(self):
         """Extra data labels generator."""
