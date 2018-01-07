@@ -10,6 +10,7 @@ import random
 import math
 import Dialogs
 import Ticket
+import Printer
 from Db import Db
 
 
@@ -257,9 +258,11 @@ class Session(QWidget):
     def printTicket(self):
         """Simplified ticket printer."""
         ticket = Ticket.Ticket(self.collector(), self)
-        if ticket.exec_():
-            pass
-        # ticket.Print()
+        # if ticket.exec_():
+        #     pass
+        printer = Printer.Print()
+        printer.Print(ticket)
+        printer = None
 
     def separateItems(self):
         """Toggle and update discount."""

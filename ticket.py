@@ -203,39 +203,6 @@ class Ticket(QDialog):
         self.cancelado = data["cancelado"]
         self.products = data["productos"]
 
-    def Print(self):
-        """Print the widget."""
-        # pageSize = QPageSize(QSizeF(80, 80),
-        # QPageSize.Millimeter, name="test2", matchPolicy=QPageSize.ExactMatch)
-        # printer.setPageSize(pageSize)
-        printer = QPrinter(QPrinter.HighResolution)
-        # printer.setOutputFileName("print.pdf")
-        if self.simplified:
-            printer.setDocName("COMANDA")
-        else:
-            printer.setDocName("TICKET")
-        # dialog = QPrintDialog(printer,self)
-        # if (dialog.exec_() != QDialog.Accepted):
-        #     return
-        painter = QPainter()
-        p = self.palette()
-        p.setColor(self.backgroundRole(), Qt.white)
-        self.setPalette(p)
-        painter.begin(printer)
-
-        xscale = printer.pageRect().width() / self.width()
-        yscale = printer.pageRect().height() / self.height()
-        scale = min(xscale, yscale)
-
-        painter.translate(printer.paperRect().x() + printer.pageRect().width() / 2,
-                          self.height() * 1.39)  # dont know why but 1.39 works
-
-        painter.scale(scale, scale)
-
-        painter.translate(-1 * self.width() / 2, -1 * self.height() / 2)
-        self.render(painter)
-        painter.end()
-
     def paintEvent(self, event):
         """Set window background color."""
         self.setAutoFillBackground(True)
