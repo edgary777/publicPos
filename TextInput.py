@@ -25,7 +25,7 @@ class TextInput(QWidget):
                               font-size: 15pt;
                               font-family: Asap;""")
 
-    def returnText(self):
+    def getText(self):
         """Return the text in the field."""
         return self.field.toPlainText()
 
@@ -57,7 +57,7 @@ class TextInputSmall(QWidget):
                               font-size: 15pt;
                               font-family: Asap;""")
 
-    def returnText(self):
+    def getText(self):
         """Return the text in the field."""
         return self.field.toPlainText()
 

@@ -6,10 +6,10 @@ from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
 
 
-class Ticket(QWidget):
+class Ticket(QDialog):
     """Ticket widget."""
 
-    def __init__(self, data=None, parent=None, simplified=None):
+    def __init__(self, data, parent, simplified=None):
         """Init."""
         super().__init__(parent)
 
@@ -67,14 +67,34 @@ class Ticket(QWidget):
         header.addWidget(self.tel)
         header.addStretch()
 
+        dateID = QGridLayout()
+
+        folioLabel = QLabel("FOLIO")
+        folioLabel.setAlignment(Qt.AlignCenter)
+        dateID.addWidget(folioLabel, 0, 0)
+
+        folio = QLabel(str(self.folio))
+        folio.setAlignment(Qt.AlignCenter)
+        dateID.addWidget(folio, 0, 1)
+
+        date = QLabel(str(self.date))
+        date.setAlignment(Qt.AlignCenter)
+        dateID.addWidget(date, 1, 0)
+
+        hour = QLabel(str(self.hour))
+        hour.setAlignment(Qt.AlignCenter)
+        dateID.addWidget(hour, 1, 1)
+
+        header.addLayout(dateID)
+
         return header
 
     def ticketContent(self):
         """Ticket content is created here."""
         content = QGridLayout()
 
-        titles = {"cant": "Cant.", "desc": "Descripción", "price": "P. Unit.",
-                  "total": "Total"}
+        titles = {"Name": "Descripción", "Price": "P. Unit.", "Quant": "Cant.",
+                  "Total": "Total"}
 
         x = 0
         for key, value in titles.items():
@@ -84,6 +104,33 @@ class Ticket(QWidget):
             content.addWidget(item, 0, x)
             x += 1
 
+        y = 1
+        for product in self.products:
+            x = 0
+            for key, value in titles.items():
+                val = getattr(product, "get" + key)()
+                setattr(self, key, QLabel(str(val)))
+                if x == 0:
+                    getattr(self, key).setAlignment(Qt.AlignLeft)
+                else:
+                    getattr(self, key).setAlignment(Qt.AlignCenter)
+                content.addWidget(getattr(self, key), y, x)
+                x += 1
+            y += 1
+
+        print(self.total)
+
+        if self.factura:
+            content.addWidget(QLabel("SUBTOTAL"), y + 1, 2)
+            content.addWidget(QLabel(str(self.subtotal)), y + 1, 3)
+            content.addWidget(QLabel("IVA"), y + 2, 2)
+            content.addWidget(QLabel(str(self.iva)), y + 2, 3)
+            content.addWidget(QLabel("TOTAL"), y + 3, 2)
+            content.addWidget(QLabel(str(round(self.total * 1.16, 2))), y + 3, 3)
+        else:
+            content.addWidget(QLabel("TOTAL"), y + 1, 2)
+            content.addWidget(QLabel(str(self.total)), y + 1, 3)
+
         return content
 
     def ticketFooter(self):
@@ -91,7 +138,7 @@ class Ticket(QWidget):
         return None
 
     def simplifiedTicket(self):
-        """Order visualization is created here."""
+        """Simplified visualization is created here."""
         pass
 
     def parseData(self, data):
@@ -99,7 +146,7 @@ class Ticket(QWidget):
         self.image = """Resources/s-close.png"""
         self.title = """SUPER LONCHES DE TORREON"""
 
-        self.address = QLabel("""CUAUHTEMOC 217A SUR, ZONA CENTRO, CP 34000, DURANGO, DURANGO, MEXICO""")
+        self.address = QLabel("""CUAUHTEMOC 217A SUR, ZONA CENTRO, CP 34000, DURANGO, DURANGO""")
         self.address.setWordWrap(True)
         self.address.setAlignment(Qt.AlignCenter)
 
@@ -107,7 +154,7 @@ class Ticket(QWidget):
         self.regimenFiscal.setWordWrap(True)
         self.regimenFiscal.setAlignment(Qt.AlignCenter)
 
-        self.RFC = QLabel("""VICM640515DD3""")
+        self.RFC = QLabel("""VICM6405157F1""")
         self.RFC.setWordWrap(True)
         self.RFC.setAlignment(Qt.AlignCenter)
 
@@ -119,24 +166,21 @@ class Ticket(QWidget):
         self.tel.setWordWrap(True)
         self.tel.setAlignment(Qt.AlignCenter)
 
-        self.folio = None
         self.date = datetime.date.today()
         self.hour = datetime.datetime.now().time().strftime("%H:%M")
 
-        self.products = None
-
-        self.factura = None
-
-        self.total = None
-        self.subtotal = None
-        self.dcto = None
-        self.iva = None
-
-        self.notes = None
-
-        self.status = None  # PAG / LLEVA
-
-        self.takeOut = None  # AQUÍ / LLEVAR
+        self.folio = data["folio"]
+        self.nombre = data["nombre"]
+        self.takeOut = data["llevar"]  # AQUÍ[FALSE] / LLEVAR[TRUE]
+        self.status = data["pagado"]  # PAG[TRUE] / LLEVA[FALSE]
+        self.notes = data["notas"]
+        self.factura = data["factura"]
+        self.total = data["total"]
+        self.subtotal = data["subtotal"]
+        self.iva = data["iva"]
+        self.dcto = data["descuento"]
+        self.cancelado = data["cancelado"]
+        self.products = data["productos"]
 
     def Print(self):
         """Print the widget."""
@@ -171,8 +215,8 @@ class Ticket(QWidget):
         self.setPalette(p)
 
 
-app = QApplication(sys.argv)
-window = Ticket()
-window.show()
+# app = QApplication(sys.argv)
+# window = Ticket()
+# window.show()
 # window.Print()
-sys.exit(app.exec_())
+# sys.exit(app.exec_())
