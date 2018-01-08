@@ -29,14 +29,16 @@ class Db(object):
         descuentop = 0  # data["descuentop"]
         cupon = "'" + str(data["cupon"]) + "'"
         cancelado = 0  # data["cancelado"]
-        fecha = data["fecha"]
-        hora = data["hora"]
+        fecha = "'" + str(data["fecha"]) + "'" 
+        hora = "'" + str(data["hora"]) + "'"
 
         productos = data["productos"]
 
+        print(hora)
+
         query = """INSERT INTO tickets VALUES({}, {}, {}, {}, {}, {}, {},
                 {}, {}, {}, {}, {}, {}, {}, {}, {},
-                {});""".format(folio, nombre, llevar, pagado, sexo, edad,
+                {}, {});""".format(folio, nombre, llevar, pagado, sexo, edad,
                                notas, factura, total, subtotal, iva, descuento,
                                descuentoa, descuentop, cupon, cancelado, fecha,
                                hora)
@@ -80,7 +82,10 @@ class Db(object):
         connection.commit()
         connection.close()
 
-        return folio[0]
+        if folio[0] is None:
+            return 0
+        else:
+            return folio[0]
 
     def getProduct(self, product):
         """Return the product data."""
@@ -165,7 +170,7 @@ class Db(object):
                     nombre TEXT, llevar INT, pagado INT, sexo INT, edad INT,
                     notas TEXT, factura INT, total FLOAT, subtotal FLOAT,
                     iva FLOAT, descuento FLOAT, descuentoa FLOAT,
-                    descuentop FLOAT, cupon TEXT, cancelado INT fecha DATE,
+                    descuentop FLOAT, cupon TEXT, cancelado INT, fecha DATE,
                     hora TIME);"""
         cursor.execute(query)
 

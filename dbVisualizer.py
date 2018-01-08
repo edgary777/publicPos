@@ -75,9 +75,13 @@ class Visualizer(QWidget):
         layout.addLayout(btnLayout, 3, 0, 1, 3)
         # layout.setColumnStretch(0, 2)
         # layout.setColumnStretch(2, 1)
+        layout.setRowStretch(0, 3)
+        layout.setRowStretch(1, 1)
+        layout.setRowStretch(2, 1)
+        layout.setRowStretch(3, 1)
         self.setLayout(layout)
         self.updateTables()
-        # self.updateTables()
+        self.updateTables()
 
     def updateTables(self):
         """Update tables."""
