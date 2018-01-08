@@ -6,13 +6,10 @@ import TextInput
 import Holder
 import Buttons
 import OrderTotal
-import random
-import math
 import Dialogs
 import Ticket
 import Printer
 import datetime
-import time
 from Db import Db
 
 
@@ -147,6 +144,10 @@ class MultiSession(QWidget):
             # on both.
             self.btnLayout.takeAt(i).widget().deleteLater()
 
+    def sessionIndex(self, session):
+        """Return session index."""
+        return self.sessions.index(session)
+
     def UpdateUi(self):
         """Update the Ui."""
         self.removeEverything()
@@ -262,44 +263,45 @@ class Session(QWidget):
 
         return layout
 
-    def printBoth(self):
-        """Print simple and complete tickes."""
+    def setTime(self):
+        """Fix order time to current."""
         if not self.date:
             self.date = datetime.date.today()
         if not self.hour:
             self.hour = datetime.datetime.now().time().strftime("%H:%M")
-        db = Db()
-        db.recordTicket(self.collector())
+
+    def printBoth(self):
+        """Print simple and complete tickes."""
         self.printSimplified()
+        self.setTime()
         self.printTicket()
 
     def printTicket(self):
         """Simplified ticket printer."""
-        if not self.date:
-            self.date = datetime.date.today()
-        if not self.hour:
-            self.hour = datetime.datetime.now().time().strftime("%H:%M")
-        ticket = Ticket.Ticket(self.collector(), self)
-        if ticket.exec_():
-            pass
-        # printer = Printer.Print()
-        # printer.Print(ticket)
-        # printer = None
-        # ticket.setParent(None)
+        if self.orderTotal.getTotal() > 0:
+            self.setTime()
+            ticket = Ticket.Ticket(self.collector(), self)
+            if ticket.exec_():
+                pass
+            # printer = Printer.Print()
+            # printer.Print(ticket)
+            # printer = None
+            # ticket.setParent(None)
+            db = Db()
+            db.recordTicket(self.collector())
+            self.parent.deleteSession(self, self.parent.sessionIndex(self))
 
     def printSimplified(self):
         """Simplified ticket printer."""
-        if not self.date:
-            self.date = datetime.date.today()
-        if not self.hour:
-            self.hour = datetime.datetime.now().time().strftime("%H:%M")
-        ticket = Ticket.Ticket(self.collector(), self, simplified=True)
-        if ticket.exec_():
-            pass
-        # printer = Printer.Print()
-        # printer.Print(ticket, simplified=True)
-        # printer = None
-        # ticket.setParent(None)
+        if self.orderTotal.getTotal() > 0:
+            self.setTime()
+            ticket = Ticket.Ticket(self.collector(), self, simplified=True)
+            if ticket.exec_():
+                pass
+            # printer = Printer.Print()
+            # printer.Print(ticket, simplified=True)
+            # printer = None
+            # ticket.setParent(None)
 
     def separateItems(self):
         """Toggle and update discount."""
