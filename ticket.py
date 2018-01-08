@@ -160,13 +160,13 @@ class Ticket(QDialog):
         if self.factura:
             z = 1
             if self.dcto:
-                total = round((self.total * (1 - self.dcto)) * 1.16, 2)
-                dcto = round(self.total * self.dcto, 2)
+                total = self.total
+                dcto = round(self.subtotal * self.dcto, 2)
                 content.addWidget(QLabel("DCTO"), y + z, 2)
                 content.addWidget(QLabel("$" + str(dcto)), y + z, 3)
                 z += 1
             else:
-                total = round(self.total * 1.16, 2)
+                total = self.total
             content.addWidget(QLabel("SUBTOTAL"), y + z, 2)
             content.addWidget(QLabel("$" + str(self.subtotal)), y + z, 3)
             z += 1
@@ -178,8 +178,8 @@ class Ticket(QDialog):
         else:
             z = 1
             if self.dcto:
-                total = self.total * (1 - self.dcto)
-                dcto = round(self.total * self.dcto, 2)
+                total = self.total
+                dcto = round(self.subtotal * self.dcto, 2)
                 content.addWidget(QLabel("DCTO"), y + z, 2)
                 content.addWidget(QLabel("$" + str(dcto)), y + z, 3)
                 z += 1
@@ -278,20 +278,12 @@ class Ticket(QDialog):
             y += 1
 
         if self.factura:
-            if self.dcto:
-                total = round((self.total * (1 - self.dcto)) * 1.16, 2)
-            else:
-                total = round(self.total * 1.16, 2)
-            total = QLabel("$" + str(total))
+            total = QLabel("$" + str(self.total))
             total.setAlignment(Qt.AlignCenter)
             total.setStyleSheet(styleTotal)
             content.addWidget(total, y + 1, 1)
         else:
-            if self.dcto:
-                total = self.total * (1 - self.dcto)
-            else:
-                total = self.total
-            total = QLabel("$" + str(total))
+            total = QLabel("$" + str(self.total))
             total.setAlignment(Qt.AlignCenter)
             total.setStyleSheet(styleTotal)
             content.addWidget(total, y + 1, 1)

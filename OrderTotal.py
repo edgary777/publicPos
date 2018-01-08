@@ -81,7 +81,17 @@ class OrderTotal(QWidget):
 
     def getTotal(self):
         """Return the order total before taxes."""
-        return self.total
+        if self.dcto:
+            if self.invoice:
+                total = round((self.total * (1 - self.dcto[0])) * 1.16, 2)
+            else:
+                total = self.total * (1 - self.dcto[0])
+        else:
+            if self.invoice:
+                total = round(self.total * 1.16, 2)
+            else:
+                total = self.total
+        return total
 
     def getSubtotal(self):
         """Return the order total before taxes."""
@@ -104,7 +114,7 @@ class OrderTotal(QWidget):
                 self.vatLabel.setText(str(self.vat))
                 self.totalLabel.setText("$" + str(round((self.total * (1 - self.dcto[0])) * 1.16, 2)))
             else:
-                self.subtotal = 0
+                self.subtotal = self.total
                 self.vat = 0
                 self.totalLabel.setText("$" + str(self.total * (1 - self.dcto[0])))
                 self.dctoLabel.setText(str(round(self.total * self.dcto[0], 2)))

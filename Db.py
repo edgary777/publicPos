@@ -20,16 +20,16 @@ class Db(object):
         sexo = data["sexo"]
         edad = data["edad"]
         notas = "'" + str(data["notas"]) + "'"
-        factura = 0  # data["factura"]
+        factura = data["factura"]
         total = data["total"]
         subtotal = data["subtotal"]
         iva = data["iva"]
-        descuento = 0  # data["descuento"]
-        descuentoa = 0  # data["descuentoa"]
-        descuentop = 0  # data["descuentop"]
+        descuento = data["descuento"]
+        descuentoa = data["descuentoa"]
+        descuentop = data["descuentop"]
         cupon = "'" + str(data["cupon"]) + "'"
-        cancelado = 0  # data["cancelado"]
-        fecha = "'" + str(data["fecha"]) + "'" 
+        cancelado = data["cancelado"]
+        fecha = "'" + str(data["fecha"]) + "'"
         hora = "'" + str(data["hora"]) + "'"
 
         productos = data["productos"]
@@ -39,9 +39,9 @@ class Db(object):
         query = """INSERT INTO tickets VALUES({}, {}, {}, {}, {}, {}, {},
                 {}, {}, {}, {}, {}, {}, {}, {}, {},
                 {}, {});""".format(folio, nombre, llevar, pagado, sexo, edad,
-                               notas, factura, total, subtotal, iva, descuento,
-                               descuentoa, descuentop, cupon, cancelado, fecha,
-                               hora)
+                                   notas, factura, total, subtotal, iva,
+                                   descuento, descuentop, descuentoa, cupon,
+                                   cancelado, fecha, hora)
         cursor.execute(query)
 
         for product in productos:

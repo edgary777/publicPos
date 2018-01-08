@@ -251,7 +251,7 @@ class Session(QWidget):
 
         self.picBtnseparate.clicked.connect(self.separateItems)
 
-        self.picBtnprint.clicked.connect(self.printSimplified)
+        self.picBtnprint.clicked.connect(self.printBoth)
 
         self.picBtndcto.clicked.connect(self.setDcto)
 
@@ -264,6 +264,12 @@ class Session(QWidget):
 
     def printBoth(self):
         """Print simple and complete tickes."""
+        if not self.date:
+            self.date = datetime.date.today()
+        if not self.hour:
+            self.hour = datetime.datetime.now().time().strftime("%H:%M")
+        db = Db()
+        db.recordTicket(self.collector())
         self.printSimplified()
         self.printTicket()
 
@@ -315,7 +321,12 @@ class Session(QWidget):
 
     def setID(self):
         """Set an id for the session."""
-        self.ID = math.floor((random.random()) * 1000)
+        sessions = self.parent.sessions
+        db = Db()
+        if not sessions:
+            self.ID = db.getFolio() + 1
+        else:
+            self.ID = sessions[len(sessions) - 1].getID() + 1
 
     def getID(self):
         """Return an id for the session."""
@@ -327,23 +338,36 @@ class Session(QWidget):
 
     def collector(self):
         """Collect and return all data to be recorded on the database."""
+        items = {"factura": self.orderTotal.getInvoice(),
+                 "descuento": self.orderTotal.getDcto()[0],
+                 "descuentoa": self.orderTotal.getDcto()[1],
+                 "descuentop": self.orderTotal.getDcto()[2]}
+
+        for key, value in items.items():
+            if not value or value is False:
+                setattr(self, key, 0)
+            else:
+                if value is True:
+                    value = 1
+                setattr(self, key, value)
+
         data = {
             "folio": self.getID(),
             "nombre": self.nameField.getText(),
-            "llevar": None,
-            "pagado": None,
-            "sexo": None,
-            "edad": None,
+            "llevar": 0,
+            "pagado": 0,
+            "sexo": 0,
+            "edad": 0,
             "notas": self.inputField.getText(),
-            "factura": self.orderTotal.getInvoice(),
+            "factura": self.factura,
             "total": self.orderTotal.getTotal(),
             "subtotal": self.orderTotal.getSubtotal(),
             "iva": self.orderTotal.getVat(),
-            "descuento": self.orderTotal.getDcto()[0],
-            "descuentoa": self.orderTotal.getDcto()[1],
-            "descuentop": self.orderTotal.getDcto()[2],
+            "descuento": self.descuento,
+            "descuentoa": self.descuentoa,
+            "descuentop": self.descuentop,
             "cupon": self.orderTotal.getDcto()[3],
-            "cancelado": None,
+            "cancelado": 0,
             "productos": self.holder.getOrder().getItems(),
             "fecha": self.date,
             "hora": self.hour
