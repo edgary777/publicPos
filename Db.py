@@ -7,11 +7,49 @@ class Db(object):
     def __init__(self):
         """Init."""
         self.database = "database.db"
-        # self.initializer()
 
     def recordTicket(self, data):
         """Add order to database."""
         connection = sqlite3.connect(self.database)
+        cursor = connection.cursor()
+
+        folio = data["folio"]
+        nombre = "'" + str(data["nombre"]) + "'"
+        llevar = data["llevar"]
+        pagado = data["pagado"]
+        sexo = data["sexo"]
+        edad = data["edad"]
+        notas = "'" + str(data["notas"]) + "'"
+        factura = data["factura"]
+        total = data["total"]
+        subtotal = data["subtotal"]
+        iva = data["iva"]
+        descuento = data["descuento"]
+        descuentoa = data["descuentoa"]
+        descuentop = data["descuentop"]
+        cupon = "'" + str(data["cupon"]) + "'"
+        cancelado = data["cancelado"]
+        fecha = data["fecha"]
+        hora = data["hora"]
+
+        productos = data["productos"]
+
+        query = """INSERT INTO tickets VALUES({}, {}, {}, {}, {}, {}, {},
+                {}, {}, {}, {}, {}, {}, {}, {}, {},
+                {});""".format(folio, nombre, llevar, pagado, sexo, edad,
+                               notas, factura, total, subtotal, iva, descuento,
+                               descuentoa, descuentop, cupon, cancelado, fecha,
+                               hora)
+
+        for product in productos:
+            tNombre = product.getName()
+            tPrecio = product.getPrice()
+            tCantidad = product.getQuant()
+            tTotal = product.getTotal()
+
+            query = """INSERT INTO ticketProducts VALUES({}, {}, {}, {},
+            {});""".format(folio, tNombre, tPrecio, tCantidad, tTotal)
+            cursor.execute(query)
 
         connection.commit()
         connection.close()
@@ -83,14 +121,15 @@ class Db(object):
         cursor = connection.cursor()
 
         query = """CREATE TABLE IF NOT EXISTS tickets(folio INTEGER PRIMARY KEY,
-                    nombre TEXT, llevar INT, sexo INT, edad INT, notas TEXT,
-                    factura INT, subtotal FLOAT, iva FLOAT, descuentoa INT,
-                    descuentop INT, cupon TEXT, total FLOAT, fecha DATE
-                    hora TIME, cancelado INT);"""
+                    nombre TEXT, llevar INT, pagado INT, sexo INT, edad INT,
+                    notas TEXT, factura INT, total FLOAT, subtotal FLOAT,
+                    iva FLOAT, descuento FLOAT, descuentoa FLOAT,
+                    descuentop FLOAT, cupon TEXT, cancelado INT fecha DATE,
+                    hora TIME);"""
         cursor.execute(query)
 
         query = """CREATE TABLE IF NOT EXISTS ticketProducts(folio INTEGER PRIMARY KEY,
-         producto TEXT, precio FLOAT, cantidad INT);"""
+         producto TEXT, precio FLOAT, cantidad INT, total INT);"""
         cursor.execute(query)
 
         query = """CREATE TABLE IF NOT EXISTS productos(ID INTEGER PRIMARY KEY AUTOINCREMENT,
