@@ -20,15 +20,15 @@ class Db(object):
         sexo = data["sexo"]
         edad = data["edad"]
         notas = "'" + str(data["notas"]) + "'"
-        factura = data["factura"]
+        factura = 0  # data["factura"]
         total = data["total"]
         subtotal = data["subtotal"]
         iva = data["iva"]
-        descuento = data["descuento"]
-        descuentoa = data["descuentoa"]
-        descuentop = data["descuentop"]
+        descuento = 0  # data["descuento"]
+        descuentoa = 0  # data["descuentoa"]
+        descuentop = 0  # data["descuentop"]
         cupon = "'" + str(data["cupon"]) + "'"
-        cancelado = data["cancelado"]
+        cancelado = 0  # data["cancelado"]
         fecha = data["fecha"]
         hora = data["hora"]
 
@@ -40,9 +40,10 @@ class Db(object):
                                notas, factura, total, subtotal, iva, descuento,
                                descuentoa, descuentop, cupon, cancelado, fecha,
                                hora)
+        cursor.execute(query)
 
         for product in productos:
-            tNombre = product.getName()
+            tNombre = "'" + str(product.getName()) + "'"
             tPrecio = product.getPrice()
             tCantidad = product.getQuant()
             tTotal = product.getTotal()
@@ -53,6 +54,18 @@ class Db(object):
 
         connection.commit()
         connection.close()
+
+        connection = sqlite3.connect(self.database)
+        cursor = connection.cursor()
+
+        query = """SELECT * FROM ticketProducts"""
+        cursor.execute(query)
+        data2 = cursor.fetchall()
+
+        connection.commit()
+        connection.close()
+
+        print(data2)
 
     def getFolio(self):
         """Return the next ticket number."""
@@ -115,6 +128,34 @@ class Db(object):
 
         return category
 
+    def getTableItems(self, table):
+        """Return all items from table."""
+        connection = sqlite3.connect(self.database)
+        cursor = connection.cursor()
+
+        query = """SELECT * FROM {}""".format(table)
+        cursor.execute(query)
+        items = cursor.fetchall()
+
+        connection.commit()
+        connection.close()
+
+        return items
+
+    def getTableMeta(self, table):
+        """Return table columnt titles."""
+        connection = sqlite3.connect(self.database)
+        cursor = connection.cursor()
+
+        query = """PRAGMA table_info({});""".format(table)
+        cursor.execute(query)
+        items = cursor.fetchall()
+
+        connection.commit()
+        connection.close()
+
+        return items
+
     def initializer(self):
         """If table not exists create it."""
         connection = sqlite3.connect(self.database)
@@ -128,7 +169,7 @@ class Db(object):
                     hora TIME);"""
         cursor.execute(query)
 
-        query = """CREATE TABLE IF NOT EXISTS ticketProducts(folio INTEGER PRIMARY KEY,
+        query = """CREATE TABLE IF NOT EXISTS ticketProducts(folio INTEGER,
          producto TEXT, precio FLOAT, cantidad INT, total INT);"""
         cursor.execute(query)
 
