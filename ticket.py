@@ -309,8 +309,6 @@ class Ticket(QDialog):
             font-family: Asap;
         };"""
 
-        print(self.folio)
-
         folio = QLabel(str(self.folio))
         folio.setAlignment(Qt.AlignCenter)
         folio.setStyleSheet(style)

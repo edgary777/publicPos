@@ -34,8 +34,6 @@ class Db(object):
 
         productos = data["productos"]
 
-        print(hora)
-
         query = """INSERT INTO tickets VALUES({}, {}, {}, {}, {}, {}, {},
                 {}, {}, {}, {}, {}, {}, {}, {}, {},
                 {}, {});""".format(folio, nombre, llevar, pagado, sexo, edad,
@@ -56,18 +54,6 @@ class Db(object):
 
         connection.commit()
         connection.close()
-
-        connection = sqlite3.connect(self.database)
-        cursor = connection.cursor()
-
-        query = """SELECT * FROM ticketProducts"""
-        cursor.execute(query)
-        data2 = cursor.fetchall()
-
-        connection.commit()
-        connection.close()
-
-        print(data2)
 
     def getFolio(self):
         """Return the next ticket number."""
