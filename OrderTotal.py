@@ -21,7 +21,7 @@ class OrderTotal(QWidget):
 
         self.color = QColor(Qt.black)
         self.rounded = 20
-        self.setMaximumHeight(70)
+        self.setMaximumHeight(75)
 
         self.initUi()
 
