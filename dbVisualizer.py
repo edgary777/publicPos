@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import Db
 
+
 class Visualizer(QWidget):
     """Database visualizer."""
 
