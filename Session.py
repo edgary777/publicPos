@@ -434,6 +434,10 @@ class Session(QWidget):
             "cancelado": 0,
             "productos": self.holder.getOrder().getItems(),
             "fecha": self.date,
-            "hora": self.hour
+            "hora": self.hour,
+            "rfc": "SOVE920621",
+            "telefono": "8717823328",
+            "email": "edgar21dejunio@gmail.com",
+            "nombre2": "EDGAR SOLIS VIZCARRA"
         }
         return data

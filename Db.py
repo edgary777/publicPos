@@ -33,7 +33,7 @@ class Db(object):
         cancelado = data["cancelado"]
         fecha = "'" + str(data["fecha"]) + "'"
         hora = "'" + str(data["hora"]) + "'"
-        rfc = "'" + str(data["rfc"]) + "'"
+        rfc = "'" + data["rfc"] + "'"
         telefono = "'" + str(data["telefono"]) + "'"
         email = "'" + str(data["email"]) + "'"
         nombref = "'" + str(data["nombre2"]) + "'"
@@ -41,7 +41,7 @@ class Db(object):
         productos = data["productos"]
 
         query = """INSERT INTO tickets VALUES({}, {}, {}, {}, {}, {}, {},
-                {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
+                {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
                 {}, {}, {}, {});""".format(folio, nombre, llevar, pagado, sexo,
                                            edad, notas, factura, total,
                                            subtotal, iva, descuento,
