@@ -10,7 +10,7 @@ class Visualizer(QWidget):
         """Init."""
         super().__init__()
 
-        self.tableTicket = QTableWidget(100, 18)
+        self.tableTicket = QTableWidget(100, 24)
         self.tableTicketProducts = QTableWidget(100, 5)
         self.tableProductos = QTableWidget(100, 4)
         self.tableCupones = QTableWidget(100, 5)
