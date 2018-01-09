@@ -31,6 +31,9 @@ class MultiSession(QWidget):
         self.date = None
         self.hour = None
 
+        self.paga = None
+        self.cambio = None
+
         # We always start with the session 0 from the array
         self.activeSession = 0
 
@@ -177,6 +180,8 @@ class Session(QWidget):
         self.date = None
         self.hour = None
 
+        self.llevar = None
+
         self.ID = None
         self.setID()
 
@@ -194,6 +199,34 @@ class Session(QWidget):
         itemsLayout = QStackedLayout()
         tabs = {}
         x = 0
+
+        payStyle = """
+            QLabel {
+                color: black;
+                font-weight: bold;
+                font-size: 25pt;
+                font-family: Asap;
+            };
+            """
+
+        llevaStyle = """
+            QLabel {
+                color: Black;
+                font-weight: bold;
+                font-size: 15pt;
+                font-family: Asap;
+            };
+            """
+
+        self.payBtn = Buttons.StrokeBtn2(100, 80, 15, qRgb(226,224,33),
+                                         "PAGAR", payStyle, self, sWidth=20,
+                                         hExpand=True)
+        self.payBtn.clicked.connect(self.pay)
+
+        self.llevaBtn = Buttons.StrokeBtn2(100, 100, 15, qRgb(33,46,226),
+                                           "?", llevaStyle, self, sWidth=10)
+
+        self.llevaBtn.clicked.connect(self.toggleLleva)
 
         for category in categories:
             products = dBa.getProducts(category[0])
@@ -214,9 +247,14 @@ class Session(QWidget):
         orderTopLayout.addWidget(self.nameField)
         orderTopLayout.addWidget(self.orderTotal)
 
+        layoutC11 = QHBoxLayout()
+        layoutC11.addWidget(self.llevaBtn)
+        layoutC11.addWidget(self.payBtn)
+
         layoutC1 = QVBoxLayout()
         layoutC1.addLayout(orderTopLayout)
         layoutC1.addWidget(self.holder)
+        layoutC1.addLayout(layoutC11)
 
         layoutH1C1 = QHBoxLayout()
         layoutH1C1.addLayout(self.imgBtns())
@@ -263,6 +301,26 @@ class Session(QWidget):
 
         return layout
 
+    def pay(self):
+        """Print, record, and delete order."""
+        if self.llevar is not None:
+            dialog = Dialogs.PayDialog(self, self.orderTotal.getTotal())
+
+            if dialog.exec_():
+                pass
+
+    def toggleLleva(self):
+        """Print, record, and delete order."""
+        if self.llevar is False or self.llevar is True:
+            self.llevar = not self.llevar
+        else:
+            self.llevar = False
+
+        if self.llevar is False:
+            self.llevaBtn.setText("AQUI")
+        else:
+            self.llevaBtn.setText("LLEVAR")
+
     def setTime(self):
         """Fix order time to current."""
         if not self.date:
@@ -270,10 +328,12 @@ class Session(QWidget):
         if not self.hour:
             self.hour = datetime.datetime.now().time().strftime("%H:%M")
 
-    def printBoth(self):
+    def printBoth(self, forceBoth=False):
         """Print simple and complete tickes."""
-        self.printSimplified()
-        self.setTime()
+        # If the session has no set date the order hasn't been printed
+        # before, so we print both, otherwise we just print the ticket.
+        if not self.date or forceBoth is True:
+            self.printSimplified()
         self.printTicket()
 
     def printTicket(self):
@@ -369,6 +429,8 @@ class Session(QWidget):
             "descuentoa": self.descuentoa,
             "descuentop": self.descuentop,
             "cupon": self.orderTotal.getDcto()[3],
+            "paga": self.paga,
+            "cambio": self.cambio,
             "cancelado": 0,
             "productos": self.holder.getOrder().getItems(),
             "fecha": self.date,
