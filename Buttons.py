@@ -28,7 +28,6 @@ class MenuBtn(QAbstractButton):
         col = [int(color.strip()) for color in color.split(',')]
         self.color = QColor(qRgb(col[0], col[1], col[2]))
         self.data = data
-        self.text = style
         self.holder = holder
 
         # If this is activated the buttons will grow with the screen
@@ -98,7 +97,6 @@ class StrokeBtn(QAbstractButton):
         self.rounded = rounded
         self.color = QColor(color)
         self.label = label
-        self.text = style
         self.index = index
         self.obj = obj
 
@@ -180,7 +178,6 @@ class SessionBtn(QAbstractButton):
         self.heights = height
         self.rounded = rounded
         self.label = label
-        self.text = style
         self.index = index
         self.obj = obj
 
@@ -276,7 +273,6 @@ class NewSessionBtn(QAbstractButton):
         self.heights = height
         self.rounded = rounded
         self.color = QColor(color)
-        self.text = style
         self.obj = obj
         self.label = "+"
 
@@ -356,3 +352,83 @@ class PicButton(QAbstractButton):
     def sizeHint(self):
         """Size hint."""
         return self.pixmap.size()
+
+
+class StrokeBtn2(QAbstractButton):
+    """
+    Stroke Button.
+
+    Multi-Purpose, it doesn't have any signal set.
+
+    Color can be any qcolor argument (e.g. Qt.red, qRgb(), etc...)
+
+    style is a stylesheet as 'QLabel { color : color;'
+    """
+
+    def __init__(self, width, height, rounded, color, label, style,
+                 parent):
+        """Init."""
+        super().__init__(parent)
+
+        self.widths = width
+        self.heights = height
+        self.rounded = rounded
+        self.color = QColor(color)
+        self.label = label
+
+        # If this is activated the buttons will grow with the screen
+        self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+
+        self.label = QLabel(self.label)
+        self.label.setStyleSheet(style)
+        self.label.setAlignment(Qt.AlignCenter)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.label)
+        self.setLayout(layout)
+
+        # self.setFixedSize(self.width, self.height)
+
+    def setText(self, text):
+        """Change btn text."""
+        self.label.setText(text)
+
+    def paintEvent(self, event):
+        """Paint Event."""
+        # If the mouse is over the button make the color lighter
+        color = self.color.lighter(130) if self.underMouse() else self.color
+
+        # If the button is being pressed then make it darker
+        if self.isDown():
+            color = self.color.darker(110)
+
+        # Set up the painter
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.Antialiasing)
+
+        # Create the path for the big figure
+        path = QPainterPath()
+        path.addRoundedRect(QRectF(0.0, 0.0, self.width(), self.height()),
+                            self.rounded, self.rounded)
+
+        # Calculate the percentage ratio to get a 10 px margin
+        ratioX = (1 - ((10 / self.width()) * 2))
+        ratioY = (1 - ((10 / self.height()) * 2))
+
+        # calculate the distance the shape has to be moved to be centered
+        x = (self.width() - (self.width() * ratioX)) / 2
+        y = (self.height() - (self.height() * ratioY)) / 2
+
+        # Create the path for the small figure
+        path2 = QPainterPath()
+        path2.addRoundedRect(QRectF(x, y, self.width() * ratioX,
+                             self.height() * ratioY), self.rounded * ratioY,
+                             self.rounded * ratioY)
+
+        # Fill the paths with color
+        painter.fillPath(path, color)
+        painter.fillPath(path2, Qt.white)
+
+    def minimumSizeHint(self):
+        """Set the minimum size hint."""
+        return QSize(self.widths, self.heights)
