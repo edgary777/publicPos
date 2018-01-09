@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QTextEdit, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QTextEdit, QVBoxLayout, QWidget, QSizePolicy
 from PyQt5.QtCore import QSize
 
 
@@ -16,6 +16,8 @@ class TextInput(QWidget):
 
         layout = QVBoxLayout()
         layout.addWidget(self.field)
+
+        self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
 
         self.setLayout(layout)
         self.setStyleSheet("""border: 2px solid;
