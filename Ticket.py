@@ -157,36 +157,46 @@ class Ticket(QDialog):
                 x += 1
             y += 1
 
+        paga = QLabel("$ " + str(self.paga))
+        pagaLabel = QLabel("PAGA CON")
+        content.addWidget(pagaLabel, y + 1, 2)
+        content.addWidget(paga, y + 1, 3)
+
+        cambio = QLabel("$ " + str(self.cambio))
+        cambioLabel = QLabel("CAMBIO")
+        content.addWidget(cambioLabel, y + 2, 2)
+        content.addWidget(cambio, y + 2, 3)
+
         if self.factura:
             z = 1
             if self.dcto:
                 total = self.total
                 dcto = round(self.subtotal * self.dcto, 2)
-                content.addWidget(QLabel("DCTO"), y + z, 2)
-                content.addWidget(QLabel("$" + str(dcto)), y + z, 3)
+                content.addWidget(QLabel("DCTO"), y + z, 0)
+                content.addWidget(QLabel("$" + str(dcto)), y + z, 1)
                 z += 1
             else:
                 total = self.total
-            content.addWidget(QLabel("SUBTOTAL"), y + z, 2)
-            content.addWidget(QLabel("$" + str(self.subtotal)), y + z, 3)
+            content.addWidget(QLabel("SUBTOTAL"), y + z, 0)
+            content.addWidget(QLabel("$" + str(self.subtotal)), y + z, 1)
             z += 1
-            content.addWidget(QLabel("IVA"), y + z, 2)
-            content.addWidget(QLabel("$" + str(self.iva)), y + z, 3)
+            content.addWidget(QLabel("IVA"), y + z, 0)
+            content.addWidget(QLabel("$" + str(self.iva)), y + z, 1)
             z += 1
-            content.addWidget(QLabel("TOTAL"), y + z, 2)
-            content.addWidget(QLabel("$" + str(total)), y + z, 3)
+            content.addWidget(QLabel("TOTAL"), y + z, 0)
+            content.addWidget(QLabel("$" + str(total)), y + z, 1)
         else:
             z = 1
             if self.dcto:
                 total = self.total
                 dcto = round(self.subtotal * self.dcto, 2)
-                content.addWidget(QLabel("DCTO"), y + z, 2)
-                content.addWidget(QLabel("$" + str(dcto)), y + z, 3)
+                content.addWidget(QLabel("DCTO"), y + z, 0)
+                content.addWidget(QLabel("$" + str(dcto)), y + z, 1)
                 z += 1
             else:
                 total = self.total
-            content.addWidget(QLabel("TOTAL"), y + z, 2)
-            content.addWidget(QLabel("$" + str(total)), y + z, 3)
+            content.addWidget(QLabel("TOTAL"), y + z, 0)
+            content.addWidget(QLabel("$" + str(total)), y + z, 1)
 
         return content
 
@@ -355,6 +365,8 @@ class Ticket(QDialog):
         self.subtotal = data["subtotal"]
         self.iva = data["iva"]
         self.dcto = data["descuento"]
+        self.paga = data["paga"]
+        self.cambio = data["cambio"]
         self.cancelado = data["cancelado"]
         self.products = data["productos"]
 
