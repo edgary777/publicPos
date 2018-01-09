@@ -309,7 +309,7 @@ class Ticket(QDialog):
 
     def simplifiedFooter(self):
         """Simplified footer is created here."""
-        footer = QVBoxLayout()
+        footer = QHBoxLayout()
 
         style = """
         QLabel {
@@ -318,12 +318,35 @@ class Ticket(QDialog):
             font-size: 35pt;
             font-family: Asap;
         };"""
+        style2 = """
+        QLabel {
+            color: black;
+            font-weight: bold;
+            font-size: 25pt;
+            font-family: Asap;
+        };"""
 
         folio = QLabel(str(self.folio))
         folio.setAlignment(Qt.AlignCenter)
         folio.setStyleSheet(style)
 
+        if self.status is True:
+            np = QLabel("P")
+        else:
+            np = QLabel("NP")
+        np.setAlignment(Qt.AlignCenter)
+        np.setStyleSheet(style2)
+
+        if self.status is True:
+            lleva = QLabel("LL")
+        else:
+            lleva = QLabel("AQ")
+        lleva.setAlignment(Qt.AlignCenter)
+        lleva.setStyleSheet(style2)
+
         footer.addWidget(folio)
+        footer.addWidget(np)
+        footer.addWidget(lleva)
 
         return footer
 
@@ -358,7 +381,7 @@ class Ticket(QDialog):
         self.folio = data["folio"]
         self.nombre = data["nombre"]
         self.takeOut = data["llevar"]  # AQUÍ[FALSE] / LLEVAR[TRUE]
-        self.status = data["pagado"]  # PAG[TRUE] / LLEVA[FALSE]
+        self.status = data["pagado"]  # PAG[TRUE] / NP[FALSE]
         self.notes = data["notas"]
         self.factura = data["factura"]
         self.total = data["total"]
