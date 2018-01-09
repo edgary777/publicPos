@@ -366,7 +366,7 @@ class PayDialog(QDialog):
                 self.change.setText("ERROR")
             else:
                 self.ok = True
-                self.change.setText(str(float(self.payment.text()) - self.total))
+                self.change.setText(str(round(float(self.payment.text()) - self.total)), 2)
         else:
             self.ok = False
             self.change.setText("ERROR")
@@ -375,7 +375,7 @@ class PayDialog(QDialog):
         """Accept."""
         if self.ok is True:
             payment = float(self.payment.text())
-            self.parent.paga = payment
-            self.parent.cambio = payment - self.total
+            self.parent.paga = round(payment, 2)
+            self.parent.cambio = round(payment - self.total, 2)
             self.parent.printBoth()
             self.accept()
