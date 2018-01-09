@@ -286,3 +286,96 @@ class PopOrderWidget(QWidget):
         layout.addStretch()
 
         self.setLayout(layout)
+
+
+class PayDialog(QDialog):
+    """Dialog to accept payment for an order."""
+
+    def __init__(self, parent, total):
+        """Init."""
+        super().__init__(parent, Qt.FramelessWindowHint |
+                         Qt.WindowSystemMenuHint)
+
+        self.parent = parent
+        self.total = total
+
+        self.ok = False
+
+        self.initUi()
+
+    def initUi(self):
+        """Ui setup."""
+        styleInputs = """QLineEdit {
+                     border-radius: 20%;
+                     padding-left: 10px;
+                     font-family: Asap;
+                     font-weight: bold;
+                     font-size: 25pt;
+                     }"""
+
+        styleLabels = """QLabel {
+                     font-family: Asap;
+                     font-weight: bold;
+                     font-size: 25pt;
+                     }"""
+
+        btnOk = QPushButton("Aceptar")
+        btnOk.clicked.connect(self.acceptMe)
+        btnCancel = QPushButton("Cancelar")
+        btnCancel.clicked.connect(self.reject)
+
+        total = QLabel(str(self.total))
+        total.setStyleSheet(styleLabels)
+        totalLabel = QLabel("Total:")
+        totalLabel.setStyleSheet(styleLabels)
+
+        self.payment = QLineEdit()
+        self.payment.setStyleSheet(styleInputs)
+        payLabel = QLabel("Paga con:")
+        payLabel.setStyleSheet(styleLabels)
+
+        self.payment.textChanged.connect(lambda: self.setChange(self.payment))
+
+        self.change = QLabel("ERROR")
+        self.change.setStyleSheet(styleLabels)
+        changeLabel = QLabel("Cambio:")
+        changeLabel.setStyleSheet(styleLabels)
+
+        layout = QGridLayout()
+
+        layout.addWidget(totalLabel, 0, 0)
+        layout.addWidget(total, 0, 1)
+        layout.addWidget(payLabel, 1, 0)
+        layout.addWidget(self.payment, 1, 1)
+        layout.addWidget(changeLabel, 2, 0)
+        layout.addWidget(self.change, 2, 1)
+        layout.addWidget(btnOk, 3, 0)
+        layout.addWidget(btnCancel, 3, 1)
+
+        layout.setColumnStretch(0, 1)
+        layout.setColumnStretch(1, 1)
+
+        self.setLayout(layout)
+
+    def setChange(self, payment):
+        """Update the change total."""
+        if len(payment.text()) > 0:
+            payment = float(payment.text())
+            if payment - self.total < 0:
+                self.ok = False
+                self.change.setText("ERROR")
+            else:
+                self.ok = True
+                self.change.setText(str(float(self.payment.text()) - self.total))
+        else:
+            self.ok = False
+            self.change.setText("ERROR")
+
+    def acceptMe(self):
+        """Accept."""
+        if self.ok is True:
+            payment = float(self.payment.text())
+            self.parent.paga = payment
+            self.parent.cambio = payment - self.total
+            self.parent.printBoth()
+            self.accept()
