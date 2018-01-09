@@ -28,12 +28,6 @@ class MultiSession(QWidget):
         self.sessionsLayout = QStackedLayout()
         self.btnLayout = QHBoxLayout()
 
-        self.date = None
-        self.hour = None
-
-        self.paga = None
-        self.cambio = None
-
         # We always start with the session 0 from the array
         self.activeSession = 0
 
@@ -180,8 +174,13 @@ class Session(QWidget):
         self.date = None
         self.hour = None
 
+        self.paga = None
+        self.cambio = None
+
         self.llevar = None
         self.np = None
+
+        self.cancelado = 0
 
         self.ID = None
         self.setID()
@@ -189,7 +188,10 @@ class Session(QWidget):
         self.initUi()
 
     def initUi(self):
-        """Ui is created here."""
+        """Ui is created here.
+
+        DO NOT USE 'x' AS A VARIABLE HERE AGAIN, IT WILL BREAK THE CODE
+        """
         self.holder = Holder.Holder(parent=self)
 
         self.orderTotal = OrderTotal.OrderTotal(0, self)
@@ -199,7 +201,7 @@ class Session(QWidget):
         categories = dBa.getCategories()
         itemsLayout = QStackedLayout()
         tabs = {}
-        x = 0
+        x = 0  # this is he only x that can be used in init
 
         payStyle = """
             QLabel {
@@ -219,6 +221,15 @@ class Session(QWidget):
             };
             """
 
+        tinyStyle = """
+            QRadioButton {
+                color: Black;
+                font-weight: bold;
+                font-family: Asap;
+                font-size: 15pt;
+            };
+            """
+
         self.payBtn = Buttons.StrokeBtn2(100, 60, 15, qRgb(226,224,33),
                                          "PAGAR", payStyle, self, sWidth=10,
                                          hExpand=True)
@@ -232,29 +243,35 @@ class Session(QWidget):
                                            "P?", llevaStyle, self, sWidth=10)
         self.npBtn.clicked.connect(self.toggleNp)
 
+        sexAgeLayout = QHBoxLayout()
+
+        sexAgeLayout.addStretch()
         sexM = QRadioButton("M")
         sexH = QRadioButton("H")
-        sexo = QButtonGroup(self)
+        self.sexo = QButtonGroup(self)
         self.sexBtns = [sexM, sexH]
-        sexLayout = QHBoxLayout()
-        sexLayout.addStretch()
+        z = 0
         for btn in self.sexBtns:
-            sexo.addButton(btn)
-            sexLayout.addWidget(btn)
-        sexLayout.addStretch()
+            btn.setStyleSheet(tinyStyle)
+            self.sexo.addButton(btn, x)
+            sexAgeLayout.addWidget(btn)
+            z += 1
+
+        sexAgeLayout.addSpacing(20)
 
         age1 = QRadioButton("1")
         age2 = QRadioButton("2")
         age3 = QRadioButton("3")
         age4 = QRadioButton("4")
-        edad = QButtonGroup(self)
+        self.edad = QButtonGroup(self)
         self.ageBtns = [age1, age2, age3, age4]
-        ageLayout = QHBoxLayout()
-        ageLayout.addStretch()
+        z = 1
         for btn in self.ageBtns:
-            edad.addButton(btn)
-            ageLayout.addWidget(btn)
-        ageLayout.addStretch()
+            btn.setStyleSheet(tinyStyle)
+            self.edad.addButton(btn, x)
+            sexAgeLayout.addWidget(btn)
+            z += 1
+        sexAgeLayout.addStretch()
 
         for category in categories:
             products = dBa.getProducts(category[0])
@@ -274,8 +291,7 @@ class Session(QWidget):
         nameLayout = QVBoxLayout()
         nameLayout.setSpacing(0)
         nameLayout.addWidget(self.nameField)
-        nameLayout.addLayout(sexLayout)
-        nameLayout.addLayout(ageLayout)
+        nameLayout.addLayout(sexAgeLayout)
 
         orderTopLayout = QHBoxLayout()
         orderTopLayout.addLayout(nameLayout)
@@ -373,31 +389,11 @@ class Session(QWidget):
 
         0 is Mujer -- 1 is Hombre
         """
-        x = 0
-        value = None
-        for item in self.sexBtns:
-            if item.isChecked():
-                value = x
-            x += 1
-
-        if value:
-            return value
-        else:
-            return None
+        return self.sexo.checkedId()
 
     def getAge(self):
         """Return customer age."""
-        x = 1
-        value = None
-        for item in self.ageBtns:
-            if item.isChecked():
-                value = x
-            x += 1
-
-        if value:
-            return value
-        else:
-            return None
+        return self.edad.checkedId()
 
     def setTime(self):
         """Fix order time to current."""
@@ -511,7 +507,7 @@ class Session(QWidget):
             "cupon": self.orderTotal.getDcto()[3],
             "paga": self.paga,
             "cambio": self.cambio,
-            "cancelado": 0,
+            "cancelado": self.cancelado,
             "productos": self.holder.getOrder().getItems(),
             "fecha": self.date,
             "hora": self.hour,
