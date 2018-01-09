@@ -366,7 +366,7 @@ class StrokeBtn2(QAbstractButton):
     """
 
     def __init__(self, width, height, rounded, color, label, style,
-                 parent):
+                 parent, sWidth=None, hExpand=None, vExpand=None):
         """Init."""
         super().__init__(parent)
 
@@ -376,8 +376,16 @@ class StrokeBtn2(QAbstractButton):
         self.color = QColor(color)
         self.label = label
 
+        if sWidth:
+            self.sWidth = sWidth
+        else:
+            self.sWidth = 10
+
         # If this is activated the buttons will grow with the screen
-        self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        if hExpand:
+            self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        if vExpand:
+            self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
 
         self.label = QLabel(self.label)
         self.label.setStyleSheet(style)
@@ -412,8 +420,8 @@ class StrokeBtn2(QAbstractButton):
                             self.rounded, self.rounded)
 
         # Calculate the percentage ratio to get a 10 px margin
-        ratioX = (1 - ((10 / self.width()) * 2))
-        ratioY = (1 - ((10 / self.height()) * 2))
+        ratioX = (1 - ((self.sWidth / self.width()) * 2))
+        ratioY = (1 - ((self.sWidth / self.height()) * 2))
 
         # calculate the distance the shape has to be moved to be centered
         x = (self.width() - (self.width() * ratioX)) / 2
