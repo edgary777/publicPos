@@ -219,20 +219,42 @@ class Session(QWidget):
             };
             """
 
-        self.payBtn = Buttons.StrokeBtn2(100, 80, 15, qRgb(226,224,33),
-                                         "PAGAR", payStyle, self, sWidth=20,
+        self.payBtn = Buttons.StrokeBtn2(100, 60, 15, qRgb(226,224,33),
+                                         "PAGAR", payStyle, self, sWidth=10,
                                          hExpand=True)
         self.payBtn.clicked.connect(self.pay)
 
-        self.llevaBtn = Buttons.StrokeBtn2(100, 100, 15, qRgb(33,46,226),
+        self.llevaBtn = Buttons.StrokeBtn2(100, 60, 15, qRgb(33,46,226),
                                            "L?", llevaStyle, self, sWidth=10)
-
         self.llevaBtn.clicked.connect(self.toggleLleva)
 
-        self.npBtn = Buttons.StrokeBtn2(100, 100, 15, qRgb(33,46,226),
+        self.npBtn = Buttons.StrokeBtn2(100, 60, 15, qRgb(33,46,226),
                                            "P?", llevaStyle, self, sWidth=10)
-
         self.npBtn.clicked.connect(self.toggleNp)
+
+        sexM = QRadioButton("M")
+        sexH = QRadioButton("H")
+        sexo = QButtonGroup(self)
+        self.sexBtns = [sexM, sexH]
+        sexLayout = QHBoxLayout()
+        sexLayout.addStretch()
+        for btn in self.sexBtns:
+            sexo.addButton(btn)
+            sexLayout.addWidget(btn)
+        sexLayout.addStretch()
+
+        age1 = QRadioButton("1")
+        age2 = QRadioButton("2")
+        age3 = QRadioButton("3")
+        age4 = QRadioButton("4")
+        edad = QButtonGroup(self)
+        self.ageBtns = [age1, age2, age3, age4]
+        ageLayout = QHBoxLayout()
+        ageLayout.addStretch()
+        for btn in self.ageBtns:
+            edad.addButton(btn)
+            ageLayout.addWidget(btn)
+        ageLayout.addStretch()
 
         for category in categories:
             products = dBa.getProducts(category[0])
@@ -249,8 +271,14 @@ class Session(QWidget):
         self.nameField = TextInput.TextInputSmall(parent=self)
         self.nameField.setFixedHeight(55)
 
+        nameLayout = QVBoxLayout()
+        nameLayout.setSpacing(0)
+        nameLayout.addWidget(self.nameField)
+        nameLayout.addLayout(sexLayout)
+        nameLayout.addLayout(ageLayout)
+
         orderTopLayout = QHBoxLayout()
-        orderTopLayout.addWidget(self.nameField)
+        orderTopLayout.addLayout(nameLayout)
         orderTopLayout.addWidget(self.orderTotal)
 
         layoutC11 = QHBoxLayout()
@@ -339,6 +367,37 @@ class Session(QWidget):
             self.npBtn.setText("NP")
         else:
             self.npBtn.setText("PAG")
+
+    def getSex(self):
+        """Return customer sex.
+
+        0 is Mujer -- 1 is Hombre
+        """
+        x = 0
+        value = None
+        for item in self.sexBtns:
+            if item.isChecked():
+                value = x
+            x += 1
+
+        if value:
+            return value
+        else:
+            return None
+
+    def getAge(self):
+        """Return customer age."""
+        x = 1
+        value = None
+        for item in self.ageBtns:
+            if item.isChecked():
+                value = x
+            x += 1
+
+        if value:
+            return value
+        else:
+            return None
 
     def setTime(self):
         """Fix order time to current."""
@@ -439,8 +498,8 @@ class Session(QWidget):
             "nombre": self.nameField.getText(),
             "llevar": self.Llevar,  # Capitalized because different
             "pagado": self.Np,  # Capitalized because different
-            "sexo": 0,
-            "edad": 0,
+            "sexo": self.getSex(),
+            "edad": self.getAge(),
             "notas": self.inputField.getText(),
             "factura": self.factura,
             "total": self.orderTotal.getTotal(),
