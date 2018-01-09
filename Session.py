@@ -181,6 +181,7 @@ class Session(QWidget):
         self.hour = None
 
         self.llevar = None
+        self.np = None
 
         self.ID = None
         self.setID()
@@ -224,9 +225,14 @@ class Session(QWidget):
         self.payBtn.clicked.connect(self.pay)
 
         self.llevaBtn = Buttons.StrokeBtn2(100, 100, 15, qRgb(33,46,226),
-                                           "?", llevaStyle, self, sWidth=10)
+                                           "L?", llevaStyle, self, sWidth=10)
 
         self.llevaBtn.clicked.connect(self.toggleLleva)
+
+        self.npBtn = Buttons.StrokeBtn2(100, 100, 15, qRgb(33,46,226),
+                                           "P?", llevaStyle, self, sWidth=10)
+
+        self.npBtn.clicked.connect(self.toggleNp)
 
         for category in categories:
             products = dBa.getProducts(category[0])
@@ -248,6 +254,7 @@ class Session(QWidget):
         orderTopLayout.addWidget(self.orderTotal)
 
         layoutC11 = QHBoxLayout()
+        layoutC11.addWidget(self.npBtn)
         layoutC11.addWidget(self.llevaBtn)
         layoutC11.addWidget(self.payBtn)
 
@@ -320,6 +327,18 @@ class Session(QWidget):
             self.llevaBtn.setText("AQUI")
         else:
             self.llevaBtn.setText("LLEVAR")
+
+    def toggleNp(self):
+        """Print, record, and delete order."""
+        if self.np is False or self.np is True:
+            self.np = not self.np
+        else:
+            self.np = False
+
+        if self.np is False:
+            self.npBtn.setText("NP")
+        else:
+            self.npBtn.setText("PAG")
 
     def setTime(self):
         """Fix order time to current."""
@@ -403,7 +422,9 @@ class Session(QWidget):
         items = {"factura": self.orderTotal.getInvoice(),
                  "descuento": self.orderTotal.getDcto()[0],
                  "descuentoa": self.orderTotal.getDcto()[1],
-                 "descuentop": self.orderTotal.getDcto()[2]}
+                 "descuentop": self.orderTotal.getDcto()[2],
+                 "Np": self.np,
+                 "Llevar": self.llevar}
 
         for key, value in items.items():
             if not value or value is False:
@@ -416,8 +437,8 @@ class Session(QWidget):
         data = {
             "folio": self.getID(),
             "nombre": self.nameField.getText(),
-            "llevar": 0,
-            "pagado": 0,
+            "llevar": self.Llevar,  # Capitalized because different
+            "pagado": self.Np,  # Capitalized because different
             "sexo": 0,
             "edad": 0,
             "notas": self.inputField.getText(),
