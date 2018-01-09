@@ -28,18 +28,26 @@ class Db(object):
         descuentoa = data["descuentoa"]
         descuentop = data["descuentop"]
         cupon = "'" + str(data["cupon"]) + "'"
+        paga = data["paga"]
+        cambio = data["cambio"]
         cancelado = data["cancelado"]
         fecha = "'" + str(data["fecha"]) + "'"
         hora = "'" + str(data["hora"]) + "'"
+        rfc = "'" + str(data["rfc"]) + "'"
+        telefono = "'" + str(data["telefono"]) + "'"
+        email = "'" + str(data["email"]) + "'"
+        nombref = "'" + str(data["nombre2"]) + "'"
 
         productos = data["productos"]
 
         query = """INSERT INTO tickets VALUES({}, {}, {}, {}, {}, {}, {},
-                {}, {}, {}, {}, {}, {}, {}, {}, {},
-                {}, {});""".format(folio, nombre, llevar, pagado, sexo, edad,
-                                   notas, factura, total, subtotal, iva,
-                                   descuento, descuentop, descuentoa, cupon,
-                                   cancelado, fecha, hora)
+                {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
+                {}, {}, {}, {});""".format(folio, nombre, llevar, pagado, sexo,
+                                           edad, notas, factura, total,
+                                           subtotal, iva, descuento,
+                                           descuentop, descuentoa, cupon, paga,
+                                           cambio, cancelado, fecha, hora, rfc,
+                                           telefono, email, nombref)
         cursor.execute(query)
 
         for product in productos:
@@ -156,8 +164,9 @@ class Db(object):
                     nombre TEXT, llevar INT, pagado INT, sexo INT, edad INT,
                     notas TEXT, factura INT, total FLOAT, subtotal FLOAT,
                     iva FLOAT, descuento FLOAT, descuentoa FLOAT,
-                    descuentop FLOAT, cupon TEXT, cancelado INT, fecha DATE,
-                    hora TIME);"""
+                    descuentop FLOAT, cupon TEXT, paga INT, cambio INT,
+                    cancelado INT, fecha DATE, hora TIME, rfc TEXT,
+                    telefono VARCHAR, email VARCHAR, nombref TEXT);"""
         cursor.execute(query)
 
         query = """CREATE TABLE IF NOT EXISTS ticketProducts(folio INTEGER,
