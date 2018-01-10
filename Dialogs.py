@@ -379,3 +379,57 @@ class PayDialog(QDialog):
             self.parent.cambio = round(payment - self.total, 2)
             self.parent.printBoth()
             self.accept()
+
+
+class QuestionDialog(QDialog):
+    """Dialog to ask a question."""
+
+    def __init__(self, parent, question, style=None):
+        """Init."""
+        super().__init__(parent, Qt.FramelessWindowHint |
+                         Qt.WindowSystemMenuHint)
+
+        self.question = str(question)
+        self.style = style
+
+        self.initUi()
+
+    def initUi(self):
+        """Ui Setup."""
+        self.questionLabel = QLabel(self.question)
+        self.questionLabel.setWordWrap(True)
+
+        styleBtn = """
+        QPushButton {
+            font-family: Asap;
+            font-weight: bold;
+            font-size: 20pt;
+        }"""
+
+        if not self.style:
+            self.style = """
+            QLabel {
+                font-family: Asap;
+                font-weight: bold;
+                font-size: 45pt;
+            }"""
+        self.questionLabel.setStyleSheet(self.style)
+        self.questionLabel.setAlignment(Qt.AlignCenter)
+
+        btnOk = QPushButton("Aceptar")
+        btnOk.setStyleSheet(styleBtn)
+        btnOk.clicked.connect(self.accept)
+        btnCancel = QPushButton("Cancelar")
+        btnCancel.setStyleSheet(styleBtn)
+        btnCancel.clicked.connect(self.reject)
+
+        layout = QVBoxLayout()
+
+        btnLayout = QHBoxLayout()
+        btnLayout.addWidget(btnOk)
+        btnLayout.addWidget(btnCancel)
+
+        layout.addWidget(self.questionLabel)
+        layout.addLayout(btnLayout)
+
+        self.setLayout(layout)
