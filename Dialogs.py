@@ -366,7 +366,8 @@ class PayDialog(QDialog):
                 self.change.setText("ERROR")
             else:
                 self.ok = True
-                self.change.setText(str(round(float(self.payment.text()) - self.total)), 2)
+
+                self.change.setText(str(round(float(self.payment.text())- self.total, 2)))
         else:
             self.ok = False
             self.change.setText("ERROR")
