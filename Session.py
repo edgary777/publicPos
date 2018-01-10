@@ -418,6 +418,8 @@ class Session(QWidget):
         """Print simple and complete tickes."""
         # If the session has no set date the order hasn't been printed
         # before, so we print both, otherwise we just print the ticket.
+        if self.orderTotal.getTotal() == 0:
+            self.parent.deleteSession(self, self.parent.sessionIndex(self))
         if not self.date or forceBoth is True:
             self.printSimplified()
         self.printTicket()
