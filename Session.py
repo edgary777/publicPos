@@ -400,12 +400,12 @@ class Session(QWidget):
         0 is Mujer -- 1 is Hombre
         """
         sexo = self.sexo.checkedId()
-        if sexo < 0 return sexo else return 0
+        return 0 if sexo < 0 else sexo
 
     def getAge(self):
         """Return customer age."""
         edad = self.edad.checkedId()
-        if edad < 0 return edad else return 0
+        return 0 if edad < 0 else edad
 
     def setTime(self):
         """Fix order time to current."""
