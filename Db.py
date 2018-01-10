@@ -12,7 +12,6 @@ class Db(object):
         """Add order to database."""
         connection = sqlite3.connect(self.database)
         cursor = connection.cursor()
-
         folio = data["folio"]
         nombre = "'" + str(data["nombre"]) + "'"
         llevar = data["llevar"]

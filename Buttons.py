@@ -205,7 +205,7 @@ class SessionBtn(QAbstractButton):
             self.obj.switchSession(self.index)
         elif QMouseEvent.button() == Qt.RightButton:
             session = self.obj.sessions[self.index]
-            self.obj.deleteSession(session, self.index)
+            self.obj.cancelOrder(session, self.index)
 
     def paintEvent(self, event):
         """Paint Event."""
