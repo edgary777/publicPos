@@ -8,7 +8,6 @@ import Buttons
 import OrderTotal
 import Dialogs
 import Ticket
-import Printer
 import datetime
 from Db import Db
 
@@ -84,6 +83,14 @@ class MultiSession(QWidget):
         self.activeSession = self.sessions[index].getID()
         self.UpdateUi()
         self.sessionsLayout.setCurrentIndex(index)
+
+    def cancelOrder(self, session, index):
+        """Cancel passed session."""
+        question = "SEGURO QUE QUIERES CANCELAR ESTA ORDEN?"
+        dialog = Dialogs.QuestionDialog(self, question)
+        if dialog.exec_():
+            session.cancelado = 1
+            session.printBoth()
 
     def addEverything(self):
         """Add all Sessions to the layout."""
@@ -174,11 +181,14 @@ class Session(QWidget):
         self.date = None
         self.hour = None
 
-        self.paga = None
-        self.cambio = None
+        self.paga = 0
+        self.cambio = 0
 
         self.llevar = None
         self.np = None
+
+        self.sexo = 0
+        self.edad = 0
 
         self.cancelado = 0
 
@@ -389,11 +399,13 @@ class Session(QWidget):
 
         0 is Mujer -- 1 is Hombre
         """
-        return self.sexo.checkedId()
+        sexo = self.sexo.checkedId()
+        if sexo < 0 return sexo else return 0
 
     def getAge(self):
         """Return customer age."""
-        return self.edad.checkedId()
+        edad = self.edad.checkedId()
+        if edad < 0 return edad else return 0
 
     def setTime(self):
         """Fix order time to current."""
