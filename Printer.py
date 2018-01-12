@@ -25,7 +25,7 @@ class Print(object):
 
         dialog.render(pixmap)
 
-        pixmap.save(image, format="jpg")
+        pixmap.save("image", format="jpg")
 
         painter.end()
 
