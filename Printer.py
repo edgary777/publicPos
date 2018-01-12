@@ -17,9 +17,9 @@ class Print(object):
         p = dialog.palette()
         p.setColor(dialog.backgroundRole(), Qt.white)
         dialog.setPalette(p)
-        painter.begin(self)
-
         pixmap = QPixmap()
+        painter.begin(pixmap)
+
 
         rect = QRect(0, dialog.width(), 0, dialog.height())
 
