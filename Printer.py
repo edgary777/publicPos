@@ -2,6 +2,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
 from escpos.printer import Usb
+from PIL import Image
+import io
 
 
 class Print(object):
@@ -17,7 +19,7 @@ class Print(object):
         p = dialog.palette()
         p.setColor(dialog.backgroundRole(), Qt.white)
         dialog.setPalette(p)
-        pixmap = QPixmap()
+        pixmap = QImage()
         painter.begin(pixmap)
 
 
@@ -25,35 +27,44 @@ class Print(object):
 
         dialog.render(pixmap)
 
-        pixmap.save("image", format="jpg")
-
         painter.end()
 
-        self.printer(pixmap)
+        img = pixmap
+        buffer = QBuffer()
+        buffer.open(QIODevice.ReadWrite)
+        img.save(buffer, "PNG")
+
+        strio = io.BytesIO()
+        strio.write(buffer.data())
+        buffer.close()
+        strio.seek(0)
+        pil_im = Image.open(strio)
+
+        self.printer(pil_im)
 
     def printer(self, pixmap):
         """I."""
         """ Seiko Epson Corp. Receipt Printer (EPSON TM-T20) """
 
         p = Usb(0x04b8, 0x0e03, 0)
-        p.text("Hello World\n")
-        p.text("Hello World\n")
-        p.text("Hello World\n")
-        p.text("Hello World\n")
-        p.text("Hello World\n")
-        p.text("Hello World\n")
-        p.text("Hello World\n")
-        p.text("Hello World\n")
-        p.text("Hello World\n")
-        p.text("Hello World\n")
-        p.text("Hello World\n")
-        p.text("Hello World\n")
-        p.text("Hello World\n")
-        p.text("Hello World\n")
-        p.text("Hello World\n")
-        p.text("Hello World\n")
-        p.text("Hello World\n")
-        # p.image(pixmap)
+        # p.text("Hello World\n")
+        # p.text("Hello World\n")
+        # p.text("Hello World\n")
+        # p.text("Hello World\n")
+        # p.text("Hello World\n")
+        # p.text("Hello World\n")
+        # p.text("Hello World\n")
+        # p.text("Hello World\n")
+        # p.text("Hello World\n")
+        # p.text("Hello World\n")
+        # p.text("Hello World\n")
+        # p.text("Hello World\n")
+        # p.text("Hello World\n")
+        # p.text("Hello World\n")
+        # p.text("Hello World\n")
+        # p.text("Hello World\n")
+        # p.text("Hello World\n")
+        p.image(pixmap)
         # p.barcode('1324354657687', 'EAN13', 64, 2, '', '')
         p.cut()
         # pr = escpos.escpos.Escpos()
