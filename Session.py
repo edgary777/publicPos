@@ -9,6 +9,7 @@ import OrderTotal
 import Dialogs
 import Ticket
 import datetime
+import Printer
 from Db import Db
 
 
@@ -429,12 +430,12 @@ class Session(QWidget):
         if self.orderTotal.getTotal() > 0:
             self.setTime()
             ticket = Ticket.Ticket(self.collector(), self)
-            if ticket.exec_():
-                pass
-            # printer = Printer.Print()
-            # printer.Print(ticket)
-            # printer = None
-            # ticket.setParent(None)
+            # if ticket.exec_():
+            #     pass
+            printer = Printer.Print()
+            printer.dialogToImage(ticket)
+            printer = None
+            ticket.setParent(None)
             db = Db()
             db.recordTicket(self.collector())
             self.parent.deleteSession(self, self.parent.sessionIndex(self))
@@ -444,12 +445,12 @@ class Session(QWidget):
         if self.orderTotal.getTotal() > 0:
             self.setTime()
             ticket = Ticket.Ticket(self.collector(), self, simplified=True)
-            if ticket.exec_():
-                pass
-            # printer = Printer.Print()
-            # printer.Print(ticket, simplified=True)
-            # printer = None
-            # ticket.setParent(None)
+            # if ticket.exec_():
+            #     pass
+            printer = Printer.Print()
+            printer.dialogToImage(ticket, simplified=True)
+            printer = None
+            ticket.setParent(None)
 
     def separateItems(self):
         """Toggle and update discount."""

@@ -1,6 +1,7 @@
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
+from escpos.printer import Usb
 
 
 class Print(object):
@@ -10,33 +11,34 @@ class Print(object):
         """Init."""
         pass
 
-    def Print(self, dialog, simplified=None, other=None):
+    def dialogToImage(self, dialog, simplified=None):
         """Print the passed dialog."""
-        printer = QPrinter(QPrinter.HighResolution)
-        if simplified:
-            printer.setDocName("COMANDA")
-        elif other:
-            printer.setDocName(str(other))
-        else:
-            printer.setDocName("TICKET")
-        # dialog = QPrintDialog(printer,self)
-        # if (dialog.exec_() != QDialog.Accepted):
-        #     return
         painter = QPainter()
         p = dialog.palette()
         p.setColor(dialog.backgroundRole(), Qt.white)
         dialog.setPalette(p)
-        painter.begin(printer)
 
-        xscale = printer.pageRect().width() / dialog.width()
-        yscale = printer.pageRect().height() / dialog.height()
-        scale = min(xscale, yscale)
+        pixmap = QPixmap()
 
-        painter.translate(printer.paperRect().x() + printer.pageRect().width() / 2,
-                          dialog.height() * 1.39)  # dont know why but 1.39 works
+        rect = QRect(0, dialog.width(), 0, dialog.height())
 
-        painter.scale(scale, scale)
+        dialog.render(pixmap)
 
-        painter.translate(-1 * dialog.width() / 2, -1 * dialog.height() / 2)
-        dialog.render(painter)
         painter.end()
+
+        self.printer(pixmap)
+
+    def printer(self, pixmap):
+        """I."""
+        """ Seiko Epson Corp. Receipt Printer (EPSON TM-T20) """
+
+        p = Usb(0x04b8, 0x0e03, 0)
+        p.text("Hello World\n")
+        p.image("logo.gif")
+        p.barcode('1324354657687', 'EAN13', 64, 2, '', '')
+        p.cut()
+        # pr = escpos.escpos.Escpos()
+        # pr = escpos.printer.Usb()
+        # pr.image(pixmap)
+        # # pr = escpos.printer().usb(0x04b8, 0x0e03, 0)
+        # pr.cut()
