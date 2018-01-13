@@ -13,8 +13,12 @@ class Print(object):
         """Init."""
         pass
 
-    def dialogToImage(self, dialog, simplified=None):
-        """Print the passed dialog."""
+    def printLinux(self, dialog, simplified=None):
+        """Print the passed dialog.
+
+        Linux doesn't have raspberry pi drivers for the printer, so if running
+        on a raspberry pi print with this method
+        """
         painter = QPainter()
 
         p = dialog.palette()
@@ -23,14 +27,10 @@ class Print(object):
         dialog.setPalette(p)
 
         pixmap = QPixmap(dialog.width(), dialog.height())
-
         pixmap = QImage(pixmap.toImage())
-        # pixmap.fill(Qt.transparent)
 
         painter.begin(pixmap)
-
         dialog.render(pixmap)
-
         painter.end()
 
         buffer = QBuffer()
@@ -44,35 +44,6 @@ class Print(object):
         strio.seek(0)
         pil_im = Image.open(strio)
 
-        # self.printer(pil_im)
-
-    def printer(self, pixmap):
-        """I."""
-        """ Seiko Epson Corp. Receipt Printer (EPSON TM-T20) """
-
         p = Usb(0x04b8, 0x0e03, 0)
-        # p.text("Hello World\n")
-        # p.text("Hello World\n")
-        # p.text("Hello World\n")
-        # p.text("Hello World\n")
-        # p.text("Hello World\n")
-        # p.text("Hello World\n")
-        # p.text("Hello World\n")
-        # p.text("Hello World\n")
-        # p.text("Hello World\n")
-        # p.text("Hello World\n")
-        # p.text("Hello World\n")
-        # p.text("Hello World\n")
-        # p.text("Hello World\n")
-        # p.text("Hello World\n")
-        # p.text("Hello World\n")
-        # p.text("Hello World\n")
-        # p.text("Hello World\n")
-        p.image(pixmap)
-        # p.barcode('1324354657687', 'EAN13', 64, 2, '', '')
+        p.image(pil_im)
         p.cut()
-        # pr = escpos.escpos.Escpos()
-        # pr = escpos.printer.Usb()
-        # pr.image(pixmap)
-        # # pr = escpos.printer().usb(0x04b8, 0x0e03, 0)
-        # pr.cut()
