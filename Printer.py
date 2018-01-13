@@ -16,7 +16,7 @@ class Print(object):
 
     def Print(self, dialog, simplified=None, other=None):
         """Print."""
-        self.printLinux(dialog)
+        self.printLinux(dialog, simplified=simplified)
         # try:
         #     self.printLinux(dialog)
         # except:
@@ -52,7 +52,7 @@ class Print(object):
         dialog.render(painter)
         painter.end()
 
-    def printLinux(self, dialog):
+    def printLinux(self, dialog, simplified):
         """Print the passed dialog.
 
         Linux doesn't have raspberry pi drivers for the printer, so if running
@@ -64,12 +64,15 @@ class Print(object):
         p.setColor(dialog.backgroundRole(), Qt.white)
 
         dialog.setPalette(p)
-        
-        we = 400
-        
-        he = 1000
 
-        pixmap = QImage(400, 1000, QImage.Format_Grayscale8)
+        width = dialog.getSize()[0]
+
+        height = dialog.getSize()[1]
+
+        if not simplified:
+            height += 10
+
+        pixmap = QImage(width, height, QImage.Format_Grayscale8)
         # pixmap.fill(Qt.transparent)
 
         painter.begin(pixmap)
@@ -79,13 +82,15 @@ class Print(object):
         buffer = QBuffer()
         buffer.open(QIODevice.ReadWrite)
         pixmap.save(buffer, "PNG")
+        pixmap.save("Hi.png", "PNG")
 
         strio = io.BytesIO()
-        # strio.write(buffer.data)
         strio.write(buffer.data())
         buffer.close()
         strio.seek(0)
         pil_im = Image.open(strio)
+
+        buffer = None
 
         p = Usb(0x04b8, 0x0e03, 0)
         p.image(pil_im)
