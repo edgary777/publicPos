@@ -65,9 +65,9 @@ class Print(object):
 
         dialog.setPalette(p)
 
-        width = dialog.getSize()[0]
+        width = dialog.getSize()[0] * 2
 
-        height = dialog.getSize()[1]
+        height = dialog.getSize()[1] * 2
 
         if not simplified:
             height += 10
@@ -76,6 +76,7 @@ class Print(object):
         # pixmap.fill(Qt.transparent)
 
         painter.begin(pixmap)
+        painter.translate(width / 2, height / 2)
         dialog.render(painter)
         painter.end()
 
@@ -92,8 +93,10 @@ class Print(object):
 
         buffer = None
 
-        p = Usb(0x04b8, 0x0e03, 0)
-        p.image(pil_lm, impl="graphics", center=True, fragment_height=2000)
-        p.image(pil_lm, impl="bitImageColumn", center=True, fragment_height=2000)
-        p.image(pil_im, impl="bitImageRaster", center=True, fragment_height=2000)
-        p.cut()
+        # p = Usb(0x04b8, 0x0e03, 0)
+        # p.image
+        # p.set(align='center')
+        # p.image(pil_lm, impl="graphics", fragment_height=2000)
+        # p.image(pil_lm, impl="bitImageColumn", fragment_height=2000)
+        # p.image(pil_im, impl="bitImageRaster", fragment_height=2000)
+        # p.cut()
