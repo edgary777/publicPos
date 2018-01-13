@@ -385,7 +385,7 @@ class PayDialog(QDialog):
 class QuestionDialog(QDialog):
     """Dialog to ask a question."""
 
-    def __init__(self, parent, question, style=None):
+    def __init__(self, question, style=None, parent=None):
         """Init."""
         super().__init__(parent, Qt.FramelessWindowHint |
                          Qt.WindowSystemMenuHint)
