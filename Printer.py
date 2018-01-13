@@ -69,10 +69,7 @@ class Print(object):
 
         height = dialog.getSize()[1]
 
-        if not simplified:
-            height += 10
-
-        scale = 2
+        scale = 2.2
 
         pixmap = QImage(width * scale, height * scale, QImage.Format_Grayscale8)
 
@@ -97,7 +94,5 @@ class Print(object):
         p = Usb(0x04b8, 0x0e03, 0)
         p.image
         p.set(align='center')
-        p.image(pil_lm, impl="graphics", fragment_height=2000)
-        p.image(pil_lm, impl="bitImageColumn", fragment_height=2000)
-        p.image(pil_im, impl="bitImageRaster", fragment_height=2000)
+        p.image(pil_im, impl="graphics", fragment_height=2000)
         p.cut()
