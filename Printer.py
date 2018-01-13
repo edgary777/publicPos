@@ -93,5 +93,7 @@ class Print(object):
         buffer = None
 
         p = Usb(0x04b8, 0x0e03, 0)
-        p.image(pil_im)
+        p.image(pil_lm, impl="graphics", center=True, fragment_height=2000)
+        p.image(pil_lm, impl="bitImageColumn", center=True, fragment_height=2000)
+        p.image(pil_im, impl="bitImageRaster", center=True, fragment_height=2000)
         p.cut()
