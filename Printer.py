@@ -65,18 +65,19 @@ class Print(object):
 
         dialog.setPalette(p)
 
-        width = dialog.getSize()[0] * 2
+        width = dialog.getSize()[0]
 
-        height = dialog.getSize()[1] * 2
+        height = dialog.getSize()[1]
 
         if not simplified:
             height += 10
 
-        pixmap = QImage(width, height, QImage.Format_Grayscale8)
-        # pixmap.fill(Qt.transparent)
+        scale = 2
+
+        pixmap = QImage(width * scale, height * scale, QImage.Format_Grayscale8)
 
         painter.begin(pixmap)
-        painter.translate(width / 2, height / 2)
+        painter.scale(scale, scale)
         dialog.render(painter)
         painter.end()
 
@@ -93,10 +94,10 @@ class Print(object):
 
         buffer = None
 
-        # p = Usb(0x04b8, 0x0e03, 0)
-        # p.image
-        # p.set(align='center')
-        # p.image(pil_lm, impl="graphics", fragment_height=2000)
-        # p.image(pil_lm, impl="bitImageColumn", fragment_height=2000)
-        # p.image(pil_im, impl="bitImageRaster", fragment_height=2000)
-        # p.cut()
+        p = Usb(0x04b8, 0x0e03, 0)
+        p.image
+        p.set(align='center')
+        p.image(pil_lm, impl="graphics", fragment_height=2000)
+        p.image(pil_lm, impl="bitImageColumn", fragment_height=2000)
+        p.image(pil_im, impl="bitImageRaster", fragment_height=2000)
+        p.cut()
