@@ -64,8 +64,12 @@ class Print(object):
         p.setColor(dialog.backgroundRole(), Qt.white)
 
         dialog.setPalette(p)
+        
+        we = 400
+        
+        he = 1000
 
-        pixmap = QImage(dialog.width(), dialog.height(), QImage.Format_Grayscale8)
+        pixmap = QImage(400, 1000, QImage.Format_Grayscale8)
         # pixmap.fill(Qt.transparent)
 
         painter.begin(pixmap)
