@@ -4,7 +4,6 @@ from PyQt5.QtPrintSupport import *
 from escpos.printer import Usb
 from PIL import Image
 import io
-import Dialogs
 
 
 class Print(object):
@@ -16,13 +15,12 @@ class Print(object):
 
     def Print(self, dialog, simplified=None, other=None):
         """Print."""
-        self.printLinux(dialog, simplified=simplified)
-        # try:
-        #     self.printLinux(dialog)
-        # except:
-        #     self.PrintWindows(dialog, simplified=None, other=None)
-        # else:
-        #     pass
+        try:
+            self.printLinux(dialog)
+        except ValueError:
+            self.PrintWindows(dialog, simplified=None, other=None)
+        else:
+            pass
 
     def PrintWindows(self, dialog, simplified=None, other=None):
         """Print the passed dialog."""
@@ -52,7 +50,7 @@ class Print(object):
         dialog.render(painter)
         painter.end()
 
-    def printLinux(self, dialog, simplified):
+    def printLinux(self, dialog):
         """Print the passed dialog.
 
         Linux doesn't have raspberry pi drivers for the printer, so if running
@@ -81,7 +79,7 @@ class Print(object):
         buffer = QBuffer()
         buffer.open(QIODevice.ReadWrite)
         pixmap.save(buffer, "PNG")
-        pixmap.save("Hi.png", "PNG")
+        # pixmap.save("Hi.png", "PNG")  # just for testing
 
         strio = io.BytesIO()
         strio.write(buffer.data())
