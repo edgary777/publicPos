@@ -338,14 +338,14 @@ class Session(QWidget):
         layout = QVBoxLayout()
         for name in names:
             setattr(self, "picBtn" + name,
-                    Buttons.PicButton("resources/s-" + name,
-                                      "resources/h-" + name,
-                                      "resources/c-" + name, self))
+                    Buttons.PicButton("Resources/s-" + name,
+                                      "Resources/h-" + name,
+                                      "Resources/c-" + name, self))
             layout.addWidget(getattr(self, "picBtn" + name))
         layout.addStretch()
-        self.picBtngear = Buttons.PicButton("resources/s-gear",
-                                            "resources/h-gear",
-                                            "resources/c-gear",
+        self.picBtngear = Buttons.PicButton("Resources/s-gear",
+                                            "Resources/h-gear",
+                                            "Resources/c-gear",
                                             self)
         layout.addWidget(self.picBtngear)
 
@@ -429,12 +429,12 @@ class Session(QWidget):
         if self.orderTotal.getTotal() > 0:
             self.setTime()
             ticket = Ticket.Ticket(self.collector(), self)
-            if ticket.exec_():
-                pass
-            # printer = Printer.Print()
-            # printer.Print(ticket)
-            # printer = None
-            # ticket.setParent(None)
+            # if ticket.exec_():
+            #     pass
+            printer = Printer.Print()
+            printer.Print(ticket)
+            printer = None
+            ticket.setParent(None)
             db = Db()
             db.recordTicket(self.collector())
             self.parent.deleteSession(self, self.parent.sessionIndex(self))
@@ -444,12 +444,12 @@ class Session(QWidget):
         if self.orderTotal.getTotal() > 0:
             self.setTime()
             ticket = Ticket.Ticket(self.collector(), self, simplified=True)
-            if ticket.exec_():
-                pass
-            # printer = Printer.Print()
-            # printer.Print(ticket, simplified=True)
-            # printer = None
-            # ticket.setParent(None)
+            # if ticket.exec_():
+            #     pass
+            printer = Printer.Print()
+            printer.Print(ticket, simplified=True)
+            printer = None
+            ticket.setParent(None)
 
     def separateItems(self):
         """Toggle and update discount."""
