@@ -16,14 +16,13 @@ class Print(object):
 
     def Print(self, dialog, simplified=None, other=None):
         """Print."""
-        try:
-            self.PrintWindows(dialog, simplified=None, other=None)
-        except:
-            self.printLinux(dialog)
-        else:
-            dialog = Dialogs.QuestionDialog("ERROR AL IMPRIMIR")
-            if dialog.exec_():
-                return
+        self.printLinux(dialog)
+        # try:
+        #     self.printLinux(dialog)
+        # except:
+        #     self.PrintWindows(dialog, simplified=None, other=None)
+        # else:
+        #     pass
 
     def PrintWindows(self, dialog, simplified=None, other=None):
         """Print the passed dialog."""
@@ -66,11 +65,11 @@ class Print(object):
 
         dialog.setPalette(p)
 
-        pixmap = QPixmap(dialog.width(), dialog.height())
-        pixmap = QImage(pixmap.toImage())
+        pixmap = QImage(dialog.width(), dialog.height(), QImage.Format_Grayscale8)
+        # pixmap.fill(Qt.transparent)
 
         painter.begin(pixmap)
-        dialog.render(pixmap)
+        dialog.render(painter)
         painter.end()
 
         buffer = QBuffer()
@@ -78,7 +77,7 @@ class Print(object):
         pixmap.save(buffer, "PNG")
 
         strio = io.BytesIO()
-        strio.write(buffer.data)
+        # strio.write(buffer.data)
         strio.write(buffer.data())
         buffer.close()
         strio.seek(0)
