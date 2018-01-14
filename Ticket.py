@@ -393,6 +393,12 @@ class Ticket(QDialog):
         self.cancelado = data["cancelado"]
         self.products = data["productos"]
 
+    def getSize(self):
+        """Return ticket size."""
+        self.layout.update()
+        self.layout.activate()
+        return [self.width(), self.height()]
+
     def paintEvent(self, event):
         """Set window background color."""
         self.setAutoFillBackground(True)
