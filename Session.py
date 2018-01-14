@@ -351,7 +351,7 @@ class Session(QWidget):
 
         self.picBtnseparate.clicked.connect(self.separateItems)
 
-        self.picBtnprint.clicked.connect(self.printBoth)
+        self.picBtnprint.clicked.connect(self.printSimplified)
 
         self.picBtndcto.clicked.connect(self.setDcto)
 
