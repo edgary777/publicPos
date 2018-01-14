@@ -251,9 +251,15 @@ class ItemUI(QWidget):
         attr = ["Name", "Quant", "Price", "Total"]
         layout = QHBoxLayout()
         layout.setSpacing(0)
+        style = """QLabel {
+                     font-family: Lato Black;
+                     font-weight: bold;
+                     font-size: 18pt;
+                     }"""
         for x in attr:
             label = QLabel(str(getattr(self.item, "get" + x)()))
             label.setAlignment(Qt.AlignCenter)
+            label.setStyleSheet(style)
             setattr(self, x, WidgetItem(self, label))
             layout.addWidget(getattr(self, x))
             index = attr.index(x)
