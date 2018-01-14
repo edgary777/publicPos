@@ -8,6 +8,7 @@ import Buttons
 import OrderTotal
 import Dialogs
 import Ticket
+import Printer
 import datetime
 from Db import Db
 
