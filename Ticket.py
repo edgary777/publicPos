@@ -395,8 +395,8 @@ class Ticket(QDialog):
 
     def getSize(self):
         """Return ticket size."""
-        self.layout.update()
-        self.layout.activate()
+        self.layout().update()
+        self.layout().activate()
         return [self.width(), self.height()]
 
     def paintEvent(self, event):
