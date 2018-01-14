@@ -79,7 +79,7 @@ class Print(object):
         buffer = QBuffer()
         buffer.open(QIODevice.ReadWrite)
         pixmap.save(buffer, "PNG")
-        # pixmap.save("Hi.png", "PNG")  # just for testing
+        pixmap.save("Hi.png", "PNG")  # just for testing
 
         strio = io.BytesIO()
         strio.write(buffer.data())
@@ -92,5 +92,5 @@ class Print(object):
         p = Usb(0x04b8, 0x0e03, 0)
         p.image
         p.set(align='center')
-        p.image(pil_im, impl="graphics", fragment_height=2000)
+        p.image(pil_im, impl="bitImageRaster", fragment_height=3000)
         p.cut()
