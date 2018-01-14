@@ -47,10 +47,7 @@ class Ticket(QDialog):
         content = self.simplifiedContent()
         footer = self.simplifiedFooter()
 
-        if header:
-            layout.addLayout(header)
-        else:
-            layout.addSpacing(100)
+        layout.addSpacing(100)
         layout.addLayout(content)
         layout.addLayout(footer)
 
