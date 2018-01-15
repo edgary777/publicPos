@@ -16,9 +16,9 @@ class Print(object):
     def Print(self, dialog, simplified=None, other=None):
         """Print."""
         try:
-            self.printLinux(dialog)
+            self.printLinux(dialog, simplified)
         except ValueError:
-            self.PrintWindows(dialog, simplified=None, other=None)
+            self.PrintWindows(dialog, simplified, other)
         else:
             pass
 
@@ -50,7 +50,7 @@ class Print(object):
         dialog.render(painter)
         painter.end()
 
-    def printLinux(self, dialog):
+    def printLinux(self, dialog, simplified):
         """Print the passed dialog.
 
         Linux doesn't have raspberry pi drivers for the printer, so if running
@@ -69,7 +69,7 @@ class Print(object):
 
         scale = 2.2
 
-        pixmap = QImage(width * scale, height * scale, QImage.Format_Grayscale8)
+        pixmap = QImage(width * scale , height * scale, QImage.Format_Grayscale8)
 
         painter.begin(pixmap)
         painter.scale(scale, scale)
@@ -79,6 +79,8 @@ class Print(object):
         buffer = QBuffer()
         buffer.open(QIODevice.ReadWrite)
         pixmap.save(buffer, "PNG")
+        if simplified:
+            pixmap.save("HiS.png", "PNG")  # just for testing
         pixmap.save("Hi.png", "PNG")  # just for testing
 
         strio = io.BytesIO()
