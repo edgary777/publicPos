@@ -36,20 +36,22 @@ class Ticket(QDialog):
 
         if footer:
             layout.addLayout(footer)
+            
+        layout.addSpacing(10)
 
         self.setLayout(layout)
 
     def simplifiedTicket(self):
         """Simplified visualization is created here."""
-        layout = QVBoxLayout()
+        layout = QGridLayout()
 
         header = self.simplifiedHeader()
         content = self.simplifiedContent()
         footer = self.simplifiedFooter()
 
-        layout.addSpacing(100)
-        layout.addLayout(content)
-        layout.addLayout(footer)
+        layout.addLayout(header, 0, 0)
+        layout.addLayout(content, 1, 0)
+        layout.addLayout(footer, 2, 0)
 
         self.setLayout(layout)
 
@@ -89,14 +91,14 @@ class Ticket(QDialog):
                 color: black;
                 font-weight: bold;
                 font-size: 25pt;
-                font-family: Asap;
+                font-family: Lato Black;
             };"""
         styleSmall = """
             QLabel {
                 color: black;
                 font-weight: bold;
                 font-size: 15pt;
-                font-family: Asap;
+                font-family: Lato Black;
             };"""
 
         folioLabel = QLabel("FOLIO")
@@ -203,40 +205,51 @@ class Ticket(QDialog):
 
     def simplifiedHeader(self):
         """Simplified header is created here."""
-        header = QVBoxLayout()
+        headerContainer = QVBoxLayout()
+        header = QGridLayout()
 
         style = """
         QLabel {
             color: black;
             font-weight: bold;
-            font-size: 20pt;
-            font-family: Asap;
+            font-size: 18pt;
+            font-family: Lato Black;
         };"""
-
+        headerContainer.addSpacing(100)
         if self.nombre:
             nombre = QLabel(str(self.nombre))
             nombre.setWordWrap(True)
             nombre.setAlignment(Qt.AlignCenter)
             nombre.setStyleSheet(style)
-            header.addWidget(nombre)
+            header.addWidget(nombre, 0, 0)
 
         if self.nombre and self.notes:
             line = QLabel("______________")
             line.setAlignment(Qt.AlignCenter)
             line.setStyleSheet(style)
-            header.addWidget(line)
+            header.addWidget(line, 1, 0)
 
         if self.notes:
             notas = QLabel(str(self.notes))
+            notas.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
             notas.setWordWrap(True)
             notas.setAlignment(Qt.AlignCenter)
             notas.setStyleSheet(style)
-            header.addWidget(notas)
+            notas.setMinimumHeight(50)
+            notas.setMaximumHeight(900)
+            header.addWidget(notas, 2, 0)
+
+        lineBottom = QLabel("______________")
+        lineBottom.setAlignment(Qt.AlignCenter)
+        lineBottom.setStyleSheet(style)
 
         if self.nombre or self.notes:
-            return header
+            header.addWidget(lineBottom, 3, 0)
+            headerContainer.addLayout(header)
+            headerContainer.addSpacing(10)
+            return headerContainer
         else:
-            return None
+            return headerContainer
 
     def simplifiedContent(self):
         """Simplified ticket content is created here."""
@@ -248,8 +261,8 @@ class Ticket(QDialog):
         QLabel {
             color: black;
             font-weight: bold;
-            font-size: 18pt;
-            font-family: Asap;
+            font-size: 17pt;
+            font-family: Lato Black;
         };"""
 
         styleTotal = """
@@ -257,7 +270,7 @@ class Ticket(QDialog):
             color: black;
             font-weight: bold;
             font-size: 18pt;
-            font-family: Asap;
+            font-family: Lato Black;
             text-decoration: underline;
         };"""
 
@@ -266,7 +279,7 @@ class Ticket(QDialog):
             color: black;
             font-weight: bold;
             font-size: 18pt;
-            font-family: Asap;
+            font-family: Lato Black;
         };"""
 
         y = 1
@@ -312,29 +325,31 @@ class Ticket(QDialog):
         QLabel {
             color: black;
             font-weight: bold;
-            font-size: 35pt;
-            font-family: Asap;
+            font-size: 28pt;
+            font-family: Lato Black;
         };"""
         style2 = """
         QLabel {
             color: black;
             font-weight: bold;
             font-size: 25pt;
-            font-family: Asap;
+            font-family: Lato Black;
         };"""
 
         folio = QLabel(str(self.folio))
         folio.setAlignment(Qt.AlignCenter)
         folio.setStyleSheet(style)
 
-        if self.status is True:
+        if self.status == 0:
             np = QLabel("P")
         else:
             np = QLabel("NP")
         np.setAlignment(Qt.AlignCenter)
         np.setStyleSheet(style2)
+        
+        print(self.status)
 
-        if self.status is True:
+        if self.takeOut == 0:
             lleva = QLabel("LL")
         else:
             lleva = QLabel("AQ")
@@ -344,6 +359,7 @@ class Ticket(QDialog):
         footer.addWidget(folio)
         footer.addWidget(np)
         footer.addWidget(lleva)
+        footer.addSpacing(50)
 
         return footer
 
