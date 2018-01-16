@@ -347,8 +347,7 @@ class Session(QWidget):
         if self.orderTotal.getTotal() > 0:
             dcto = self.orderTotal.getDcto()
             dialog = Dialogs.DctDialog(self.orderTotal.getTotal(), parent=self,
-                                       percentage=dcto[1], amount=dcto[2],
-                                       code=dcto[3])
+                                       percentage=dcto[1], amount=dcto[2])
             if dialog.exec_():
                 pass
 

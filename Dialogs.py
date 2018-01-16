@@ -6,7 +6,7 @@ from PyQt5.QtCore import *
 class DctDialog(QDialog):
     """Pop-Up window to set a discount for an order."""
 
-    def __init__(self, total, parent, percentage=None, amount=None, code=None):
+    def __init__(self, total, parent, percentage=None, amount=None):
         """Init."""
         super().__init__(parent, Qt.FramelessWindowHint |
                          Qt.WindowSystemMenuHint)
@@ -16,7 +16,6 @@ class DctDialog(QDialog):
         self.newTotal = total
         self.percentage = percentage
         self.amount = amount
-        self.code = code
 
         self.initUi()
 
@@ -55,7 +54,7 @@ class DctDialog(QDialog):
         layout = QVBoxLayout()
         layout.addStretch()
 
-        items = {"percentage": "%:", "amount": "Cantidad:", "code": "Cupón:"}
+        items = {"percentage": "%:", "amount": "Cantidad:"}
         x = 0
         inputsLayout = QGridLayout()
         for key, value in items.items():
@@ -118,14 +117,6 @@ class DctDialog(QDialog):
             self.percentage = None
             self.newTotalUpdate()
 
-    def setCodeDcto(self, code):
-        """Search and apply a code discount.
-
-        The search returns a list with 2 items, the first item is the type of
-        discount, the second item is the amount of discount.
-        """
-        pass
-
     def newTotalUpdate(self):
         """Update total with new discounts."""
         self.newTotal = self.total
@@ -146,13 +137,12 @@ class DctDialog(QDialog):
     def returnDcto(self):
         """Update the order with the discount."""
         if self.newTotal != self.total:
-            dcto = [None, None, None, None]
+            dcto = [None, None, None]
             dcto[0] = 1 - (self.newTotal / self.total)
             dcto[1] = self.percentage
             dcto[2] = self.amount
-            dcto[3] = self.code
         else:
-            dcto = [0, None, None, None]
+            dcto = [0, None, None]
         self.parent.orderTotal.updateDcto(dcto)
         self.accept()
 
