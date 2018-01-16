@@ -378,7 +378,7 @@ class PayDialog(QDialog):
             payment = float(self.payment.text())
             self.parent.paga = round(payment, 2)
             self.parent.cambio = round(payment - self.total, 2)
-            self.parent.printBoth()
+            self.parent.printTicket()
             self.accept()
 
 
