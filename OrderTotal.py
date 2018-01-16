@@ -58,7 +58,7 @@ class OrderTotal(QWidget):
         """Update the total shown."""
         if dcto and dcto > 0:
             total = total * dcto
-        self.total = total
+        self.total = round(total, 2)
         self.updateUi()
 
     def toggleTax(self):
@@ -85,47 +85,47 @@ class OrderTotal(QWidget):
             if self.invoice:
                 total = round((self.total * (1 - self.dcto[0])) * 1.16, 2)
             else:
-                total = self.total * (1 - self.dcto[0])
+                total = round(self.total * (1 - self.dcto[0]), 2)
         else:
             if self.invoice:
                 total = round(self.total * 1.16, 2)
             else:
-                total = self.total
-        return total
+                total = round(self.total, 2)
+        return round(total, 2)
 
     def getSubtotal(self):
         """Return the order total before taxes."""
-        return self.subtotal
+        return round(self.subtotal, 2)
 
     def getVat(self):
         """Return the order VAT."""
-        return self.vat
+        return round(self.vat, 2)
 
     def updateUi(self):
         """Update the Ui."""
         if self.dcto:
             if self.invoice:
-                self.subtotal = (self.total * (1 - self.dcto[0])) if self.total > 0 else 0
+                self.subtotal = round(self.total * (1 - self.dcto[0]), 2) if self.total > 0 else 0
                 self.subtotal = round(self.subtotal, 2)
-                self.vat = self.subtotal * 0.16 if self.subtotal > 0 else 0
+                self.vat = round(self.subtotal * 0.16, 2) if self.subtotal > 0 else 0
                 self.vat = round(self.vat, 2)
                 self.subtotalLabel.setText(str(self.subtotal))
                 self.dctoLabel.setText(str(round(self.total * self.dcto[0], 2)))
                 self.vatLabel.setText(str(self.vat))
                 self.totalLabel.setText("$" + str(round((self.total * (1 - self.dcto[0])) * 1.16, 2)))
             else:
-                self.subtotal = self.total
+                self.subtotal = round(self.total, 2)
                 self.vat = 0
-                self.totalLabel.setText("$" + str(self.total * (1 - self.dcto[0])))
+                self.totalLabel.setText("$" + str(round(self.total * (1 - self.dcto[0]), 2)))
                 self.dctoLabel.setText(str(round(self.total * self.dcto[0], 2)))
                 self.subtotalLabel.setText(str(self.subtotal))
                 self.vatLabel.setText(str(self.vat))
         else:
             self.dcto = 0
             if self.invoice:
-                self.subtotal = self.total if self.total > 0 else 0
+                self.subtotal = round(self.total, 2) if self.total > 0 else 0
                 self.subtotal = round(self.subtotal, 2)
-                self.vat = self.subtotal * 0.16 if self.subtotal > 0 else 0
+                self.vat = round(self.subtotal * 0.16, 2) if self.subtotal > 0 else 0
                 self.vat = round(self.vat, 2)
                 self.subtotalLabel.setText(str(self.subtotal))
                 self.vatLabel.setText(str(self.vat))
@@ -133,9 +133,9 @@ class OrderTotal(QWidget):
             else:
                 self.subtotal = 0
                 self.vat = 0
-                self.totalLabel.setText("$" + str(self.total))
-                self.subtotalLabel.setText(str(self.subtotal))
-                self.vatLabel.setText(str(self.vat))
+                self.totalLabel.setText("$" + str(round(self.total, 2)))
+                self.subtotalLabel.setText(str(round(self.subtotal, 2)))
+                self.vatLabel.setText(str(round(self.vat, 2)))
 
     def extraData(self):
         """Extra data labels generator."""
