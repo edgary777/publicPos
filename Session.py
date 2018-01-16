@@ -246,44 +246,6 @@ class Session(QWidget):
                                          hExpand=True)
         self.payBtn.clicked.connect(self.pay)
 
-        self.llevaBtn = Buttons.StrokeBtn2(100, 60, 15, qRgb(33,46,226),
-                                           "L?", llevaStyle, self, sWidth=10)
-        self.llevaBtn.clicked.connect(self.toggleLleva)
-
-        self.npBtn = Buttons.StrokeBtn2(100, 60, 15, qRgb(33,46,226),
-                                           "P?", llevaStyle, self, sWidth=10)
-        self.npBtn.clicked.connect(self.toggleNp)
-
-        sexAgeLayout = QHBoxLayout()
-
-        sexAgeLayout.addStretch()
-        sexM = QRadioButton("M")
-        sexH = QRadioButton("H")
-        self.sexo = QButtonGroup(self)
-        self.sexBtns = [sexM, sexH]
-        z = 0
-        for btn in self.sexBtns:
-            btn.setStyleSheet(tinyStyle)
-            self.sexo.addButton(btn, x)
-            sexAgeLayout.addWidget(btn)
-            z += 1
-
-        sexAgeLayout.addSpacing(20)
-
-        age1 = QRadioButton("1")
-        age2 = QRadioButton("2")
-        age3 = QRadioButton("3")
-        age4 = QRadioButton("4")
-        self.edad = QButtonGroup(self)
-        self.ageBtns = [age1, age2, age3, age4]
-        z = 1
-        for btn in self.ageBtns:
-            btn.setStyleSheet(tinyStyle)
-            self.edad.addButton(btn, x)
-            sexAgeLayout.addWidget(btn)
-            z += 1
-        sexAgeLayout.addStretch()
-
         for category in categories:
             products = dBa.getProducts(category[0])
             setattr(self, "menu" + category[0], Menu.Menu(products,
@@ -296,27 +258,14 @@ class Session(QWidget):
         tabsLayout.addWidget(tabsWidget)
 
         self.inputField = TextInput.TextInput(parent=self)
-        self.nameField = TextInput.TextInputSmall(parent=self)
-        self.nameField.setFixedHeight(55)
-
-        nameLayout = QVBoxLayout()
-        nameLayout.setSpacing(0)
-        nameLayout.addWidget(self.nameField)
-        nameLayout.addLayout(sexAgeLayout)
 
         orderTopLayout = QHBoxLayout()
-        orderTopLayout.addLayout(nameLayout)
         orderTopLayout.addWidget(self.orderTotal)
-
-        layoutC11 = QHBoxLayout()
-        layoutC11.addWidget(self.npBtn)
-        layoutC11.addWidget(self.llevaBtn)
-        layoutC11.addWidget(self.payBtn)
 
         layoutC1 = QVBoxLayout()
         layoutC1.addLayout(orderTopLayout)
         layoutC1.addWidget(self.holder)
-        layoutC1.addLayout(layoutC11)
+        layoutC1.addWidget(self.payBtn)
 
         layoutH1C1 = QHBoxLayout()
         layoutH1C1.addLayout(self.imgBtns())
@@ -335,7 +284,7 @@ class Session(QWidget):
 
     def imgBtns(self):
         """Image buttons generator and layout creator."""
-        names = ["separate", "print", "dcto", "iva", "close"]
+        names = ["separate", "dcto", "iva", "close", "gear"]
         layout = QVBoxLayout()
         for name in names:
             setattr(self, "picBtn" + name,
@@ -343,16 +292,9 @@ class Session(QWidget):
                                       "Resources/h-" + name,
                                       "Resources/c-" + name, self))
             layout.addWidget(getattr(self, "picBtn" + name))
-        layout.addStretch()
-        self.picBtngear = Buttons.PicButton("Resources/s-gear",
-                                            "Resources/h-gear",
-                                            "Resources/c-gear",
-                                            self)
         layout.addWidget(self.picBtngear)
 
         self.picBtnseparate.clicked.connect(self.separateItems)
-
-        self.picBtnprint.clicked.connect(self.printSimplified)
 
         self.picBtndcto.clicked.connect(self.setDcto)
 
@@ -365,48 +307,10 @@ class Session(QWidget):
 
     def pay(self):
         """Print, record, and delete order."""
-        if self.llevar is not None:
-            dialog = Dialogs.PayDialog(self, self.orderTotal.getTotal())
+        dialog = Dialogs.PayDialog(self, self.orderTotal.getTotal())
 
-            if dialog.exec_():
-                pass
-
-    def toggleLleva(self):
-        """Print, record, and delete order."""
-        if self.llevar is False or self.llevar is True:
-            self.llevar = not self.llevar
-        else:
-            self.llevar = False
-
-        if self.llevar is False:
-            self.llevaBtn.setText("AQUI")
-        else:
-            self.llevaBtn.setText("LLEVAR")
-
-    def toggleNp(self):
-        """Print, record, and delete order."""
-        if self.np is False or self.np is True:
-            self.np = not self.np
-        else:
-            self.np = False
-
-        if self.np is False:
-            self.npBtn.setText("NP")
-        else:
-            self.npBtn.setText("PAG")
-
-    def getSex(self):
-        """Return customer sex.
-
-        0 is Mujer -- 1 is Hombre
-        """
-        sexo = self.sexo.checkedId()
-        return 0 if sexo < 0 else sexo
-
-    def getAge(self):
-        """Return customer age."""
-        edad = self.edad.checkedId()
-        return 0 if edad < 0 else edad
+        if dialog.exec_():
+            pass
 
     def setTime(self):
         """Fix order time to current."""
@@ -414,16 +318,6 @@ class Session(QWidget):
             self.date = datetime.date.today()
         if not self.hour:
             self.hour = datetime.datetime.now().time().strftime("%H:%M")
-
-    def printBoth(self, forceBoth=False):
-        """Print simple and complete tickes."""
-        # If the session has no set date the order hasn't been printed
-        # before, so we print both, otherwise we just print the ticket.
-        if self.orderTotal.getTotal() == 0:
-            self.parent.deleteSession(self, self.parent.sessionIndex(self))
-        if not self.date or forceBoth is True:
-            self.printSimplified()
-        self.printTicket()
 
     def printTicket(self):
         """Simplified ticket printer."""
@@ -439,18 +333,6 @@ class Session(QWidget):
             db = Db()
             db.recordTicket(self.collector())
             self.parent.deleteSession(self, self.parent.sessionIndex(self))
-
-    def printSimplified(self):
-        """Simplified ticket printer."""
-        if self.orderTotal.getTotal() > 0:
-            self.setTime()
-            ticket = Ticket.Ticket(self.collector(), self, simplified=True)
-            # if ticket.exec_():
-            #     pass
-            printer = Printer.Print()
-            printer.Print(ticket, simplified=True)
-            printer = None
-            ticket.setParent(None)
 
     def separateItems(self):
         """Toggle and update discount."""
@@ -492,9 +374,8 @@ class Session(QWidget):
         items = {"factura": self.orderTotal.getInvoice(),
                  "descuento": self.orderTotal.getDcto()[0],
                  "descuentoa": self.orderTotal.getDcto()[1],
-                 "descuentop": self.orderTotal.getDcto()[2],
-                 "Np": self.np,
-                 "Llevar": self.llevar}
+                 "descuentop": self.orderTotal.getDcto()[2]
+                 }
 
         for key, value in items.items():
             if not value or value is False:
@@ -506,12 +387,6 @@ class Session(QWidget):
 
         data = {
             "folio": self.getID(),
-            "nombre": self.nameField.getText(),
-            "llevar": self.Llevar,  # Capitalized because different
-            "pagado": self.Np,  # Capitalized because different
-            "sexo": self.getSex(),
-            "edad": self.getAge(),
-            "notas": self.inputField.getText(),
             "factura": self.factura,
             "total": self.orderTotal.getTotal(),
             "subtotal": self.orderTotal.getSubtotal(),
@@ -519,7 +394,6 @@ class Session(QWidget):
             "descuento": self.descuento,
             "descuentoa": self.descuentoa,
             "descuentop": self.descuentop,
-            "cupon": self.orderTotal.getDcto()[3],
             "paga": self.paga,
             "cambio": self.cambio,
             "cancelado": self.cancelado,

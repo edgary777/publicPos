@@ -13,12 +13,6 @@ class Db(object):
         connection = sqlite3.connect(self.database)
         cursor = connection.cursor()
         folio = data["folio"]
-        nombre = "'" + str(data["nombre"]) + "'"
-        llevar = data["llevar"]
-        pagado = data["pagado"]
-        sexo = data["sexo"]
-        edad = data["edad"]
-        notas = "'" + str(data["notas"]) + "'"
         factura = data["factura"]
         total = data["total"]
         subtotal = data["subtotal"]
@@ -26,7 +20,6 @@ class Db(object):
         descuento = data["descuento"]
         descuentoa = data["descuentoa"]
         descuentop = data["descuentop"]
-        cupon = "'" + str(data["cupon"]) + "'"
         paga = data["paga"]
         cambio = data["cambio"]
         cancelado = data["cancelado"]
@@ -40,12 +33,11 @@ class Db(object):
         productos = data["productos"]
 
         query = """INSERT INTO tickets VALUES({}, {}, {}, {}, {}, {}, {},
-                {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
-                {}, {}, {}, {});""".format(folio, nombre, llevar, pagado, sexo,
-                                           edad, notas, factura, total,
-                                           subtotal, iva, descuento,
-                                           descuentop, descuentoa, cupon, paga,
-                                           cambio, cancelado, fecha, hora, rfc,
+                {}, {}, {}, {}, {}, {},
+                {}, {}, {}, {});""".format(folio, factura, total, subtotal,
+                                           iva, descuento, descuentop,
+                                           descuentoa, paga, cambio, cancelado,
+                                           fecha, hora, rfc,
                                            telefono, email, nombref)
         cursor.execute(query)
 
@@ -160,10 +152,9 @@ class Db(object):
         cursor = connection.cursor()
 
         query = """CREATE TABLE IF NOT EXISTS tickets(folio INTEGER PRIMARY KEY,
-                    nombre TEXT, llevar INT, pagado INT, sexo INT, edad INT,
-                    notas TEXT, factura INT, total FLOAT, subtotal FLOAT,
+                    factura INT, total FLOAT, subtotal FLOAT,
                     iva FLOAT, descuento FLOAT, descuentoa FLOAT,
-                    descuentop FLOAT, cupon TEXT, paga INT, cambio INT,
+                    descuentop FLOAT, paga INT, cambio INT,
                     cancelado INT, fecha DATE, hora TIME, rfc TEXT,
                     telefono VARCHAR, email VARCHAR, nombref TEXT);"""
         cursor.execute(query)

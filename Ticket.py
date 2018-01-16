@@ -376,10 +376,6 @@ class Ticket(QDialog):
         self.hour = data["hora"]
 
         self.folio = data["folio"]
-        self.nombre = data["nombre"]
-        self.takeOut = data["llevar"]  # AQUÍ[FALSE] / LLEVAR[TRUE]
-        self.status = data["pagado"]  # PAG[TRUE] / NP[FALSE]
-        self.notes = data["notas"]
         self.factura = data["factura"]
         self.total = data["total"]
         self.subtotal = data["subtotal"]
