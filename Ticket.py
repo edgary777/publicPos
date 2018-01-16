@@ -8,7 +8,7 @@ from PyQt5.QtPrintSupport import *
 class Ticket(QDialog):
     """Ticket widget."""
 
-    def __init__(self, data, parent, simplified=None):
+    def __init__(self, data, parent, cancel, simplified=None):
         """Init."""
         super().__init__(parent)
 
@@ -18,10 +18,9 @@ class Ticket(QDialog):
 
         self.setFixedWidth(250)
 
-        if self.simplified:
-            self.simplifiedTicket()
-        else:
-            self.ticket()
+        self.cancel = cancel
+
+        self.ticket()
 
     def ticket(self):
         """Ticket visualization is created here."""
@@ -29,27 +28,13 @@ class Ticket(QDialog):
 
         header = self.ticketHeader()
         content = self.ticketContent()
-        footer = self.ticketFooter()
+        footer = self.ticketFooter(self.cancel)
 
         layout.addLayout(header)
         layout.addLayout(content)
 
         if footer:
             layout.addLayout(footer)
-
-        self.setLayout(layout)
-
-    def simplifiedTicket(self):
-        """Simplified visualization is created here."""
-        layout = QVBoxLayout()
-
-        header = self.simplifiedHeader()
-        content = self.simplifiedContent()
-        footer = self.simplifiedFooter()
-
-        layout.addSpacing(100)
-        layout.addLayout(content)
-        layout.addLayout(footer)
 
         self.setLayout(layout)
 
@@ -197,155 +182,23 @@ class Ticket(QDialog):
 
         return content
 
-    def ticketFooter(self):
+    def ticketFooter(self, cancel):
         """Ticket footer is created here."""
-        return None
+        if cancel is True:
+            footer = QVBoxLayout()
+            style = """
+                QLabel {
+                    color: black;
+                    font-weight: bold;
+                    font-size: 25pt;
+                };"""
+            cancelLabel = QLabel("CANCELADO")
+            cancelLabel.setStyleSheet(style)
+            footer.addWidget(cancelLabel)
 
-    def simplifiedHeader(self):
-        """Simplified header is created here."""
-        header = QVBoxLayout()
-
-        style = """
-        QLabel {
-            color: black;
-            font-weight: bold;
-            font-size: 20pt;
-            font-family: Asap;
-        };"""
-
-        if self.nombre:
-            nombre = QLabel(str(self.nombre))
-            nombre.setWordWrap(True)
-            nombre.setAlignment(Qt.AlignCenter)
-            nombre.setStyleSheet(style)
-            header.addWidget(nombre)
-
-        if self.nombre and self.notes:
-            line = QLabel("______________")
-            line.setAlignment(Qt.AlignCenter)
-            line.setStyleSheet(style)
-            header.addWidget(line)
-
-        if self.notes:
-            notas = QLabel(str(self.notes))
-            notas.setWordWrap(True)
-            notas.setAlignment(Qt.AlignCenter)
-            notas.setStyleSheet(style)
-            header.addWidget(notas)
-
-        if self.nombre or self.notes:
-            return header
+            return footer
         else:
             return None
-
-    def simplifiedContent(self):
-        """Simplified ticket content is created here."""
-        content = QGridLayout()
-
-        titles = {"Quant": "Cant.", "Name": "Descripción"}
-
-        styleProducts = """
-        QLabel {
-            color: black;
-            font-weight: bold;
-            font-size: 18pt;
-            font-family: Asap;
-        };"""
-
-        styleTotal = """
-        QLabel {
-            color: black;
-            font-weight: bold;
-            font-size: 18pt;
-            font-family: Asap;
-            text-decoration: underline;
-        };"""
-
-        styleHour = """
-        QLabel {
-            color: black;
-            font-weight: bold;
-            font-size: 18pt;
-            font-family: Asap;
-        };"""
-
-        y = 1
-        for product in self.products:
-            x = 0
-            for key, value in titles.items():
-                val = getattr(product, "get" + key)()
-                setattr(self, key, QLabel(str(val)))
-                getattr(self, key).setStyleSheet(styleProducts)
-                if x == 0:
-                    getattr(self, key).setAlignment(Qt.AlignCenter)
-                else:
-                    getattr(self, key).setAlignment(Qt.AlignLeft)
-                content.addWidget(getattr(self, key), y, x)
-                x += 1
-            y += 1
-
-        if self.factura:
-            total = QLabel("$" + str(self.total))
-            total.setAlignment(Qt.AlignCenter)
-            total.setStyleSheet(styleTotal)
-            content.addWidget(total, y + 1, 1)
-        else:
-            total = QLabel("$" + str(self.total))
-            total.setAlignment(Qt.AlignCenter)
-            total.setStyleSheet(styleTotal)
-            content.addWidget(total, y + 1, 1)
-
-        hour = QLabel(str(self.hour))
-
-        hour.setStyleSheet(styleHour)
-        hour.setAlignment(Qt.AlignCenter)
-
-        content.addWidget(hour, y + 1, 0)
-
-        return content
-
-    def simplifiedFooter(self):
-        """Simplified footer is created here."""
-        footer = QHBoxLayout()
-
-        style = """
-        QLabel {
-            color: black;
-            font-weight: bold;
-            font-size: 35pt;
-            font-family: Asap;
-        };"""
-        style2 = """
-        QLabel {
-            color: black;
-            font-weight: bold;
-            font-size: 25pt;
-            font-family: Asap;
-        };"""
-
-        folio = QLabel(str(self.folio))
-        folio.setAlignment(Qt.AlignCenter)
-        folio.setStyleSheet(style)
-
-        if self.status is True:
-            np = QLabel("P")
-        else:
-            np = QLabel("NP")
-        np.setAlignment(Qt.AlignCenter)
-        np.setStyleSheet(style2)
-
-        if self.status is True:
-            lleva = QLabel("LL")
-        else:
-            lleva = QLabel("AQ")
-        lleva.setAlignment(Qt.AlignCenter)
-        lleva.setStyleSheet(style2)
-
-        footer.addWidget(folio)
-        footer.addWidget(np)
-        footer.addWidget(lleva)
-
-        return footer
 
     def parseData(self, data):
         """Parse and organize the data for the ticket."""
