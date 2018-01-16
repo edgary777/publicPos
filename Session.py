@@ -368,6 +368,10 @@ class Session(QWidget):
         """Return the order parent."""
         return self.parent
 
+    def getTotal(self):
+        """Return the order total."""
+        return self.orderTotal.getTotal()
+
     def collector(self):
         """Collect and return all data to be recorded on the database."""
         items = {"factura": self.orderTotal.getInvoice(),
