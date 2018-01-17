@@ -87,7 +87,7 @@ class Visualizer(QWidget):
     def updateTables(self):
         """Update tables."""
         db = Db.Db()
-        tables = ["tickets", "ticketProducts", "productos", "cupones",
+        tables = ["tickets", "ticketProducts", "productos",
                   "categorias", "configuraciones"]
         t = 0
         for table in tables:
